@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Controller
 @RequestMapping("/admin/login")
 public class LoginController {
+
+    //Login controller
     @GetMapping
     public String page() {
         return "login";
