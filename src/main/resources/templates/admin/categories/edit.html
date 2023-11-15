@@ -1,0 +1,105 @@
+<div th:fragment="modal_edit">
+    <script>
+        function napThongTinCapNhat(id) {
+            const idLabel = document.querySelector('#editModal div.label')
+            idLabel.innerText = id
+            fetch('/category/get?id=' + id, {
+                ...genConfig()
+            }).then(res => {
+                if (res.ok) {
+                    res.json().then(data => {
+                        document.querySelector('#editModal input[name=name]').value = data.name
+                        const options = Array.from(document.querySelectorAll('#editModal select option'));
+                        const select = document.querySelector('#editModal select')
+                        /**
+                         * @type {number[]}
+                         */
+                        const selectedId = data.products.map(i => i.id);
+                        select.innerHTML = "";
+                        fetch('/product/get', { ...genConfig() }).then(res => res.json())
+                            .then(data => {
+                                data.forEach(product => {
+                                    const option = document.createElement('option')
+                                    option.value = product.id
+                                    option.innerText = product.name
+                                    option.selected = selectedId.includes(product.id)
+                                    select.appendChild(option)
+                                })
+                            })
+                    })
+                }
+            })
+        }
+    </script>
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-success">
+                    <h5 class="modal-title" id="editModalLabel" style="color: white;">Chỉnh sửa bản ghi
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" style="color: white;">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        <div class="form-group row">
+                            <label for="val-table-number" class="form-label col-sm-3">ID <span
+                                    class="text-danger">*</span></label>
+                            <div class="form-control col-sm-8 label">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="val-number-of-people" class="form-label col-sm-3">Tên sản phẩm<span
+                                    class="text-danger">*</span></label>
+                            <input type="text" name="name" required class="form-control col-sm-8"
+                                id="val-number-of-people" placeholder="Nhập ...">
+                        </div>
+
+                        <div class="form-group row items-push">
+                            <label for="val-select2-multiple-role" class="form-label col-sm-3">Sản phẩm<span
+                                    class="text-danger">*</span></label>
+                            <div class="form-control col-sm-8 p-0 border-0">
+                                <select class="form-control js-select2" style="width: 100%;"
+                                    data-placeholder="Chọn quyền" multiple>
+                                    <option></option>
+                                    <!-- Required for data-placeholder attribute to work with Select2 plugin -->
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                            <button type="button" class="btn btn-success" onclick="capNhat()">Xác nhận</button>
+                        </div>
+
+                        <script>
+                            function capNhat() {
+                                const id = document.getElementById('editModal').dataset.id
+                                const form = document.querySelector('#editModal form')
+                                const data = new FormData(form)
+                                const obj = Object.fromEntries(data.entries());
+                                const options = Array.from(document.querySelectorAll('#editModal select option'))
+                                obj.productIds = options.filter(i => i.selected).map(i=>i.value).map(parseInt)
+                                const body = JSON.stringify(obj)
+                                fetch('/category/update?id=' + id, {
+                                    ...genConfig(),
+                                    method: 'PUT',
+                                    body
+                                }).then(res => {
+                                    if (res.ok) {
+                                        $('#editModal').modal('hide')
+                                        $('table').DataTable().ajax.reload()
+                                    }
+                                })
+                            }
+                        </script>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

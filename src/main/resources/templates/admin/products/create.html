@@ -1,0 +1,56 @@
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true"
+    th:fragment="modal_create">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="addModalLabel" style="color: white;">Thêm quyền</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="color: white;">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="tao-moi" method="POST" enctype="multipart/form-data">
+                    <div class="form-group row">
+                        <label for="val-table-number" class="form-label col-sm-3">Tên sản phẩm <span
+                                class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control col-sm-8" id="val-table-number"
+                            placeholder="Nhập tên quyền" required>
+                    </div>
+                    
+                    <div class="form-group row">
+                        <label for="val-table-number" class="form-label col-sm-3">Giá <span
+                                class="text-danger">*</span></label>
+                        <input type="text" name="retail" class="form-control col-sm-8" id="val-table-number"
+                            placeholder="Nhập giá" required>
+                    </div>
+                    <script>
+                        function taoMoi() {
+                            const options = genConfig()
+                            delete options.headers['Content-Type']
+                            const form = document.getElementById('tao-moi')
+                            body = new FormData(form)
+                            fetch('/product/insert', {
+                                method: 'POST',
+                                body,
+                                ...options,
+
+                            })
+                                .then(res => {
+                                    if (res.ok) {
+                                        $('#addModal').modal('hide')
+                                        $("table").DataTable().ajax.reload()
+                                    }
+                                })
+                        }
+                    </script>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-primary" onclick="taoMoi()">Xác nhận</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

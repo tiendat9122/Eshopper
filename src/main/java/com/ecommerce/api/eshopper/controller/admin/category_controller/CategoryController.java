@@ -11,6 +11,9 @@ public class CategoryController {
     @GetMapping
     public String page(Model model) {
         model.addAttribute("contentFragment", "admin/categories/index.html");
+        model.addAttribute("modalCreate", "admin/categories/create.html");
+        model.addAttribute("modalEdit", "admin/categories/edit.html");
+        model.addAttribute("modalDelete", "admin/categories/delete.html");
         return "admin/layouts/app";
     }
 }
