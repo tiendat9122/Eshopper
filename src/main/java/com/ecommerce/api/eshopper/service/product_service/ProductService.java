@@ -1,16 +1,18 @@
 package com.ecommerce.api.eshopper.service.product_service;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
 import com.ecommerce.api.eshopper.entity.Category;
 import com.ecommerce.api.eshopper.entity.Product;
 import com.ecommerce.api.eshopper.repository.CategoryRepository;
 import com.ecommerce.api.eshopper.repository.ProductRepository;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +30,10 @@ public class ProductService implements IProductService {
         return productRepository.findAll();
     }
 
+    public List<Product> findAllById(Iterable<Long> ids) {
+        return productRepository.findAllById(ids);
+    }
+
     @Override
     public Optional<Product> findProductById(Long id) {
         return productRepository.findById(id);
@@ -37,6 +43,10 @@ public class ProductService implements IProductService {
     @Override
     public Product saveProduct(Product product) {
         return productRepository.save(product);
+    }
+
+    public Iterable<Product> saveAll(Iterable<Product> products) {
+        return productRepository.saveAll(products);
     }
 
     @Override
