@@ -4,7 +4,7 @@
         <div class="content content-full">
             <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
                 <h1 class="flex-sm-fill h3 my-2">
-                    Quản lý quyền <small
+                    Quản lý thể loại <small
                         class="d-block d-sm-inline-block mt-2 mt-sm-0 font-size-base font-w400 text-muted">Danh
                         sách phân quyền hệ thống Eshopper</small>
                 </h1>
@@ -91,6 +91,44 @@
 
 <script th:fragment="script_after">
     $(() => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = '/content/admin/assets/js/plugins/select2/css/select2.min.css';
+        document.head.appendChild(link);
+
+        const scriptFiles = [
+            '/content/admin/assets/js/plugins/select2/js/select2.full.min.js',
+        ];
+
+        scriptFiles.forEach(file => {
+            const script = document.createElement('script');
+            script.onload = () => {
+                jQuery(function () {
+                    One.helpers('select2');
+                    $('.js-select2').select2({
+                        ajax: {
+                            url: '/product/get',
+                            type: 'GET',
+                            headers: {
+                                "Authorization": "Bearer " + getJwtToken()
+                            },
+                            processResults: function (data) {
+                                return {
+                                  results: data.map(i => ({
+                                    id: i.id,
+                                    text: i.name
+                                  }))
+                                };
+                              }
+                        }
+                    });
+                });
+
+            }
+            script.src = file;
+
+            document.body.appendChild(script);
+        });
         $("table").dataTable({ destroy: true })
         $('table').dataTable({
             ajax: {
