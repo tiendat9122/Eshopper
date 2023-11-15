@@ -33,10 +33,9 @@ public class SecurityConfig {
                         .requestMatchers("/register").permitAll()
                         .requestMatchers("/role/**").permitAll()
                         .requestMatchers("/user/**").permitAll()
-                        .requestMatchers("/content/**").permitAll()
+                        .requestMatchers("/category/**").permitAll()
+                        .requestMatchers("/product/**").permitAll()
                         .requestMatchers("/greeting/**").hasAnyAuthority("ROLE_ADMIN")
-                        .requestMatchers("/greeting/hello").hasAnyAuthority("ROLE_ADMIN")
-                        .requestMatchers("/users").hasAnyAuthority("ROLE_SUPER_ADMIN")
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

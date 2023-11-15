@@ -1,0 +1,86 @@
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true"
+    th:fragment="modal_create">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="addModalLabel" style="color: white;">Thêm người dùng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="color: white;">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="tao-moi" method="POST">
+                    <div class="form-group row">
+                        <label for="val-name" class="form-label col-sm-3">Họ tên <span
+                                class="text-danger">*</span></label>
+                        <input type="text" name="full_name" class="form-control col-sm-8" id="val-name"
+                            placeholder="Nhập họ tên" required>
+                    </div>
+                    <div class="form-group row">
+                        <label for="val-email" class="form-label col-sm-3">Email <span
+                                class="text-danger">*</span></label>
+                        <input type="text" name="email" class="form-control col-sm-8" id="val-email"
+                            placeholder="Nhập tên email" required>
+                    </div>
+                    <div class="form-group row">
+                        <label for="val-user-name" class="form-label col-sm-3">Tên đăng nhập <span
+                                class="text-danger">*</span></label>
+                        <input type="text" name="user_name" class="form-control col-sm-8" id="val-user-name"
+                            placeholder="Nhập tên đăng nhập" required>
+                    </div>
+                    <div class="form-group row">
+                        <label for="val-password" class="form-label col-sm-3">Mật khẩu <span
+                                class="text-danger">*</span></label>
+                        <input type="password" name="password" class="form-control col-sm-8" id="val-password"
+                            placeholder="Nhập mật khẩu..">
+                    </div>
+                    <div class="form-group row items-push">
+                        <label for="val-select2-multiple-role" class="form-label col-sm-3">Thêm quyền <span
+                                class="text-danger">*</span></label>
+                        <div class="form-control col-sm-8 p-0 border-0">
+                            <select class="form-control js-select2" id="val-select2-multiple-role"
+                                name="roleIds" style="width: 100%;"
+                                data-placeholder="Chọn quyền" multiple>
+                                <option></option>
+                                <!-- Required for data-placeholder attribute to work with Select2 plugin -->
+                            </select>
+                        </div>
+
+                    </div>
+
+
+                    <script>
+                        function taoMoi() {
+                            const form = document.getElementById('tao-moi')
+                            data = new FormData(form)
+                            const obj = Object.fromEntries(data.entries());
+                            obj.roleIds = []
+                            document.getElementById('val-select2-multiple-role').selectedOptions.forEach(i => {
+                                obj.roleIds.push(i.value);
+                            });
+                            body = JSON.stringify(obj)
+                            fetch('/user/insert', {
+                                method: 'POST',
+                                body,
+                                ...genConfig(),
+
+                            })
+                                .then(res => {
+                                    if (res.ok) {
+                                        $('#addModal').modal('hide')
+                                        $("table").DataTable().ajax.reload()
+                                    }
+                                })
+                        }
+                    </script>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-primary" onclick="taoMoi()">Xác nhận</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

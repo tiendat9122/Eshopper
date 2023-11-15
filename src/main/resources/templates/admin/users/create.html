@@ -34,6 +34,7 @@
                         <input type="password" name="password" class="form-control col-sm-8" id="val-password"
                             placeholder="Nhập mật khẩu..">
                     </div>
+
                     <div class="form-group row items-push">
                         <label for="val-select2-multiple-role" class="form-label col-sm-3">Thêm quyền <span
                                 class="text-danger">*</span></label>
@@ -45,24 +46,54 @@
                                 <!-- Required for data-placeholder attribute to work with Select2 plugin -->
                             </select>
                         </div>
-
                     </div>
 
+                    <div class="form-group row">
+                        <label for="val-name" class="form-label col-sm-3">Địa chỉ <span
+                                class="text-danger">*</span></label>
+                        <input type="text" name="address" class="form-control col-sm-8" id="val-name"
+                               placeholder="Nhập địa chỉ" required>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="val-name" class="form-label col-sm-3">Số điện thoại <span
+                                class="text-danger">*</span></label>
+                        <input type="text" name="phone_number" class="form-control col-sm-8" id="val-name"
+                               placeholder="Nhập số điện thoại" required>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="val-name" class="form-label col-sm-3">Ngày sinh <span
+                                class="text-danger">*</span></label>
+                        <input type="text" name="birth_day" class="form-control col-sm-8" id="val-name"
+                               placeholder="Nhập ngày sinh" required>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="val-name" class="form-label col-sm-3">Ảnh đại diện <span
+                                class="text-danger">*</span></label>
+                        <input type="file" name="avatar" class="form-control col-sm-8" id="val-name"
+                               placeholder="Nhập ảnh đại diện" required>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="val-name" class="form-label col-sm-3">Kích hoạt <span
+                                class="text-danger">*</span></label>
+                        <input type="number" name="active" class="form-control col-sm-8" id="val-name"
+                               placeholder="Nhập kích hoạt" required>
+                    </div>
 
                     <script>
                         function taoMoi() {
                             const form = document.getElementById('tao-moi')
                             data = new FormData(form)
-                            const obj = Object.fromEntries(data.entries());
-                            obj.roleIds = []
-                            document.getElementById('val-select2-multiple-role').selectedOptions.forEach(i => {
-                                obj.roleIds.push(i.value);
-                            });
-                            body = JSON.stringify(obj)
+                            body = data
+                            let headers = {...genConfig().headers}
+                            delete headers['Content-Type']
                             fetch('/user/insert', {
                                 method: 'POST',
                                 body,
-                                ...genConfig(),
+                                headers,
 
                             })
                                 .then(res => {

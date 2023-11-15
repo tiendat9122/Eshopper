@@ -3,7 +3,6 @@ package com.ecommerce.api.eshopper.controller.admin.role_controller;
 import com.ecommerce.api.eshopper.dto.RoleDto;
 import com.ecommerce.api.eshopper.entity.Role;
 import com.ecommerce.api.eshopper.entity.User;
-import com.ecommerce.api.eshopper.service.role_service.IRoleService;
 import com.ecommerce.api.eshopper.service.role_service.RoleService;
 import com.ecommerce.api.eshopper.service.user_service.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -42,30 +41,34 @@ public class RoleApi {
 
     @PostMapping("/insert")
     public ResponseEntity<?> insertRole(@RequestBody RoleDto roleDto) {
-        Role role = new Role();
-        role.setName(roleDto.getName());
+        try {
+            Role role = new Role();
+            role.setName(roleDto.getName());
 
-        List<Long> userIds = roleDto.getUserIds();
-        Set<User> users = new HashSet<>();
+            List<Long> userIds = roleDto.getUserIds();
+            Set<User> users = new HashSet<>();
 
-        if(userIds == null) {
-            users = null;
-        } else {
-            for(Long userId : userIds) {
-                User user = userService.findUserById(userId).orElseThrow();
-                user.getRole().add(role);
-                users.add(user);
+            if(userIds == null) {
+                users = null;
+            } else {
+                for(Long userId : userIds) {
+                    User user = userService.findUserById(userId).orElseThrow();
+                    user.getRole().add(role);
+                    users.add(user);
+                }
             }
+
+            role.setUser(users);
+            Role roleInserted = roleService.saveRole(role);
+
+            return new ResponseEntity<>(roleInserted, HttpStatus.OK);
+        } catch (EntityNotFoundException exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }
-
-        role.setUser(users);
-        Role roleInserted = roleService.saveRole(role);
-
-        return new ResponseEntity<>(roleInserted, HttpStatus.OK);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateRole(@RequestParam(name = "id", required = false) Long id,
+    public ResponseEntity<?> updateRole(@RequestParam(name = "id") Long id,
                                         @RequestBody RoleDto roleDto) {
         try {
             if(id != null) {
@@ -97,7 +100,7 @@ public class RoleApi {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteRole(@RequestParam(name = "id", required = false) Long id) {
+    public ResponseEntity<?> deleteRole(@RequestParam(name = "id") Long id) {
         try {
             if(id != null) {
                 Role role = roleService.findRoleById(id).orElseThrow(()->new EntityNotFoundException("Cannot find role with id = " + id));

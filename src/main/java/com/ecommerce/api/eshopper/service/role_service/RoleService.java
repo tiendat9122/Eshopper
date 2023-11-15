@@ -18,17 +18,25 @@ import java.util.Optional;
 @Transactional
 @Slf4j
 public class RoleService implements IRoleService {
+
     private final UserRepository userRepository;
 
     private final RoleRepository roleRepository;
 
     private final PasswordEncoder passwordEncoder;
 
+    // Get and find
     @Override
     public List<Role> findAllRole() {
         return roleRepository.findAll();
     }
 
+    @Override
+    public Optional<Role> findRoleById(Long id) {
+        return roleRepository.findById(id);
+    }
+
+    // Save and update
     @Override
     public User saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -47,11 +55,8 @@ public class RoleService implements IRoleService {
         role.getUser().add(user);
     }
 
-    @Override
-    public Optional<Role> findRoleById(Long id) {
-        return roleRepository.findById(id);
-    }
 
+    // Remove
     @Override
     public void deleteRole(Role role) {
         roleRepository.delete(role);

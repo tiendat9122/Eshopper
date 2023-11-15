@@ -1,22 +1,49 @@
 <div th:fragment="modal_edit">
     <script>
         function napThongTinCapNhat(id) {
-            const idLabel = document.querySelector('#editModal div.label')
-            idLabel.innerText = id
-            fetch('/user/get?id=' + id, {
-                ...genConfig()
-            }).then(res => {
-                if (res.ok) {
-                    res.json().then(data => {
-                        Object.keys(data).forEach(key => {
-                            const dom = document.querySelector(`#editModal input[name=${key}]`)
-                            if (dom != null) {
-                                dom.value = data[key];
-                            }
-                        })
-                    })
-                }
-            })
+            const idLabel = document.querySelector("#editModal div.label");
+            idLabel.innerText = id;
+            fetch("/role/get", { ...genConfig() })
+                .then((res) => {
+                    if (res.ok) {
+                        const select = document.getElementById("edit-role-select");
+                        select.innerHTML=""
+                        res.json().then((data) => {
+                            data.forEach((item) => {
+                                const option = document.createElement("option");
+                                option.innerText = item.name;
+                                option.value = item.id;
+                                select.appendChild(option);
+                            });
+                        });
+                    }
+                })
+                .then(() => {
+                    fetch("/user/get?id=" + id, {
+                        ...genConfig(),
+                    }).then((res) => {
+                        if (res.ok) {
+                            res.json().then((data) => {
+                                const options = Array.from(document.querySelectorAll('#edit-role-select option'));
+                                data.role.forEach(i=>{
+                                    options.find(y=>y.value == i.id).selected = true;
+                                })
+                                document.getElementById('edit-avatar-url').value = data.avatar
+                                $('#edit-role-select').select2();
+                                Object.keys(data).forEach((key) => {
+                                    if (!["role", "avatar"].includes(key)) {
+                                        const dom = document.querySelector(
+                                            `#editModal input[name=${key}]`
+                                        );
+                                        if (dom != null) {
+                                            dom.value = data[key];
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                    });
+                });
         }
     </script>
     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
@@ -24,10 +51,11 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-success">
-                    <h5 class="modal-title" id="editModalLabel" style="color: white;">Chỉnh sửa bản ghi
+                    <h5 class="modal-title" id="editModalLabel" style="color: white">
+                        Chỉnh sửa bản ghi
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true" style="color: white;">&times;</span>
+                        <span aria-hidden="true" style="color: white">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
@@ -35,62 +63,160 @@
                         <div class="form-group row">
                             <label for="val-table-number" class="form-label col-sm-3">ID <span
                                     class="text-danger">*</span></label>
-                            <div class="form-control col-sm-8 label">
-                            </div>
+                            <div class="form-control col-sm-8 label"></div>
                         </div>
 
                         <div class="form-group row">
                             <label for="val-name" class="form-label col-sm-3">Họ tên<span
                                     class="text-danger">*</span></label>
                             <input type="text" name="full_name" required class="form-control col-sm-8" id="val-name"
-                                placeholder="Nhập ...">
+                                placeholder="Nhập ..." />
                         </div>
 
                         <div class="form-group row">
                             <label for="val-email" class="form-label col-sm-3">Email<span
                                     class="text-danger">*</span></label>
                             <input type="text" name="email" required class="form-control col-sm-8" id="val-email"
-                                placeholder="Nhập ...">
+                                placeholder="Nhập ..." />
                         </div>
 
                         <div class="form-group row">
                             <label for="val-user-name" class="form-label col-sm-3">Tên đăng nhập<span
                                     class="text-danger">*</span></label>
                             <input type="text" name="user_name" required class="form-control col-sm-8"
-                                id="val-user-name" placeholder="Nhập ...">
+                                id="val-user-name" placeholder="Nhập ..." />
                         </div>
 
                         <div class="form-group row">
                             <label for="val-password" class="form-label col-sm-3">Mật khẩu <span
                                     class="text-danger">*</span></label>
                             <input type="password" name="password" required class="form-control col-sm-8"
-                                id="val-password" placeholder="Nhập mật khẩu..">
+                                id="val-password" placeholder="Nhập mật khẩu.." />
+                        </div>
+
+                        <div class="form-group row items-push">
+                            <label for="val-select2-multiple-role" class="form-label col-sm-3">Thêm quyền <span
+                                    class="text-danger">*</span></label>
+                            <div class="form-control col-sm-8 p-0 border-0">
+                                <select class="form-control js-select2" id="edit-role-select" name="roleIds"
+                                    style="width: 100%" data-placeholder="Chọn quyền" multiple>
+                                    <option></option>
+                                    <!-- Required for data-placeholder attribute to work with Select2 plugin -->
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="val-name" class="form-label col-sm-3">Địa chỉ <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" name="address" class="form-control col-sm-8" id="val-name"
+                                placeholder="Nhập địa chỉ" required />
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="val-name" class="form-label col-sm-3">Số điện thoại <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" name="phone_number" class="form-control col-sm-8" id="val-name"
+                                placeholder="Nhập số điện thoại" required />
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="val-name" class="form-label col-sm-3">Ngày sinh <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" name="birth_day" class="form-control col-sm-8" id="val-name"
+                                placeholder="Nhập ngày sinh" required />
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="val-name" class="form-label col-sm-3">Ảnh đại diện <span
+                                    class="text-danger">*</span></label>
+                            <input type="file" name="avatar" class="form-control col-sm-8" id="val-name"
+                                placeholder="Nhập ảnh đại diện" required />
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="val-name" class="form-label col-sm-3">Tên ảnh <span
+                                    class="text-danger">*</span></label>
+                            <input type="text"  class="form-control col-sm-8" id="edit-avatar-url" readonly />
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="val-name" class="form-label col-sm-3">Kích hoạt <span
+                                    class="text-danger">*</span></label>
+                            <input type="number" name="active" class="form-control col-sm-8" id="val-name"
+                                placeholder="Nhập kích hoạt" required />
                         </div>
 
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                            <button type="button" class="btn btn-success" onclick="capNhat()">Xác nhận</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Đóng
+                            </button>
+                            <button type="button" class="btn btn-success" onclick="capNhat()">
+                                Xác nhận
+                            </button>
                         </div>
+
+                        <!--                        <script>-->
+                        <!--                            function capNhat() {-->
+                        <!--                                const id = document.getElementById('editModal').dataset.id-->
+                        <!--                                const form = document.querySelector('#editModal form')-->
+                        <!--                                data = new FormData(form)-->
+                        <!--                                body = JSON.stringify(Object.fromEntries(data.entries()))-->
+                        <!--                                fetch('/user/update?id=' + id, {-->
+                        <!--                                    ...genConfig(),-->
+                        <!--                                    method: 'PUT',-->
+                        <!--                                    body-->
+                        <!--                                }).then(res => {-->
+                        <!--                                    if (res.ok) {-->
+                        <!--                                        $('#editModal').modal('hide')-->
+                        <!--                                        $('table').DataTable().ajax.reload()-->
+                        <!--                                    }-->
+                        <!--                                })-->
+                        <!--                            }-->
+                        <!--                        </script>-->
 
                         <script>
                             function capNhat() {
-                                const id = document.getElementById('editModal').dataset.id
-                                const form = document.querySelector('#editModal form')
-                                data = new FormData(form)
-                                body = JSON.stringify(Object.fromEntries(data.entries()))
-                                fetch('/user/update?id=' + id, {
-                                    ...genConfig(),
-                                    method: 'PUT',
-                                    body
-                                }).then(res => {
+                                const id = document.getElementById("editModal").dataset.id;
+                                const form = document.querySelector("#editModal form");
+                                data = new FormData(form);
+                                body = data
+                                let headers = { ...genConfig().headers };
+                                delete headers["Content-Type"];
+                                fetch("/user/update?id=" + id, {
+                                    method: "PUT",
+                                    body,
+                                    headers,
+                                }).then((res) => {
                                     if (res.ok) {
-                                        $('#editModal').modal('hide')
-                                        $('table').DataTable().ajax.reload()
+                                        $("#editModal").modal("hide");
+                                        $("table").DataTable().ajax.reload();
                                     }
-                                })
+                                });
                             }
                         </script>
 
+                        <!--                        <script>-->
+                        <!--                        function taoMoi() {-->
+                        <!--                            const form = document.getElementById('tao-moi')-->
+                        <!--                            data = new FormData(form)-->
+                        <!--                            body = data-->
+                        <!--                            let headers = {...genConfig().headers}-->
+                        <!--                            delete headers['Content-Type']-->
+                        <!--                            fetch('/user/insert', {-->
+                        <!--                                method: 'POST',-->
+                        <!--                                body,-->
+                        <!--                                headers,-->
+
+                        <!--                            })-->
+                        <!--                                .then(res => {-->
+                        <!--                                    if (res.ok) {-->
+                        <!--                                        $('#addModal').modal('hide')-->
+                        <!--                                        $("table").DataTable().ajax.reload()-->
+                        <!--                                    }-->
+                        <!--                                })-->
+                        <!--                        }-->
+                        <!--                    </script>-->
                     </form>
                 </div>
             </div>

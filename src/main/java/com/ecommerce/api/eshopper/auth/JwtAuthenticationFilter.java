@@ -40,23 +40,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 String token = authorizationHeader.substring("Bearer ".length());
                 if (token.length() == 0) {
-                    token = Stream.of(request.getCookies()).filter(i -> i.getName().equals("AUTHORIZATION")).findFirst()
-                            .orElseThrow().getValue();
+                    try {
+                        token = Stream.of(request.getCookies()).filter(i -> i.getName().equals("AUTHORIZATION"))
+                                .findFirst()
+                                .orElseThrow().getValue().substring("Bearer ".length());
+                    } catch (Exception e) {
+                        token = "";
+                    }
                 }
-                Algorithm algorithm = Algorithm.HMAC256(Secret_key.getBytes());
-                JWTVerifier verifier = JWT.require(algorithm).build();
-                DecodedJWT decodedJWT = verifier.verify(token);
-                String username = decodedJWT.getSubject();
-                String[] roles = decodedJWT.getClaim("role").asArray(String.class);
 
-                Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                Arrays.stream(roles).forEach(role -> {
-                    authorities.add(new SimpleGrantedAuthority(role));
-                });
+                if (token.length() != 0) {
 
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                        username, null, authorities);
-                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                    Algorithm algorithm = Algorithm.HMAC256(Secret_key.getBytes());
+                    JWTVerifier verifier = JWT.require(algorithm).build();
+                    DecodedJWT decodedJWT = verifier.verify(token);
+                    String username = decodedJWT.getSubject();
+                    String[] roles = decodedJWT.getClaim("role").asArray(String.class);
+
+                    Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+                    Arrays.stream(roles).forEach(role -> {
+                        authorities.add(new SimpleGrantedAuthority(role));
+                    });
+
+                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                            username, null, authorities);
+                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                }
 
                 filterChain.doFilter(request, response);
             } catch (Exception exception) {

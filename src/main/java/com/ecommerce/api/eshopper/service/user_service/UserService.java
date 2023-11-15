@@ -7,7 +7,6 @@ import com.ecommerce.api.eshopper.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,11 +25,23 @@ public class UserService implements IUserService {
 
     private final PasswordEncoder passwordEncoder;
 
+    // Get and find
     @Override
     public List<User> findAllUser() {
         return userRepository.findAll();
     }
 
+    @Override
+    public Optional<User> findUserById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    // Save and update
     @Override
     public User saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -49,18 +60,16 @@ public class UserService implements IUserService {
         user.getRole().add(role);
     }
 
+    // Remove
     @Override
     public void deleteUser(User user) {
         userRepository.delete(user);
     }
 
-    @Override
-    public Optional<User> findUserById(Long id) {
-        return userRepository.findById(id);
-    }
 
     @Override
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
     }
+
 }

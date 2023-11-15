@@ -6,12 +6,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Controller
-@RequestMapping("/admin/login")
+@RequestMapping("/admin")
 public class LoginController {
 
     //Login controller
-    @GetMapping
+    @GetMapping("/login")
     public String page() {
-        return "login";
+        return "admin/login";
+    }
+
+    @GetMapping("/forgot")
+    public String forgotPassword() {
+        return "admin/forgot";
     }
 }

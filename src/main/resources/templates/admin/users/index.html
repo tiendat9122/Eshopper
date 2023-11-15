@@ -74,9 +74,9 @@
                     <thead>
                         <tr>
                             <th class="text-center" style="width: 80px;">ID</th>
-                            <th>Full Name</th>
-                            <th>User Name</th>
-                            <th>Email</th>
+                            <th>Họ và tên</th>
+                            <th>Tên tài khoản</th>
+                            <th>Địa chỉ email</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -127,11 +127,11 @@
     if (currentPath === '/admin/user') {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = '/content/assets/js/plugins/select2/css/select2.min.css';
+        link.href = '/content/admin/assets/js/plugins/select2/css/select2.min.css';
         document.head.appendChild(link);
 
         const scriptFiles = [
-            '/content/assets/js/plugins/select2/js/select2.full.min.js',
+            '/content/admin/assets/js/plugins/select2/js/select2.full.min.js',
         ];
 
         scriptFiles.forEach(file => {
