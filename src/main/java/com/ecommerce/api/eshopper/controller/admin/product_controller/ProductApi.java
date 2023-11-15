@@ -1,17 +1,5 @@
 package com.ecommerce.api.eshopper.controller.admin.product_controller;
 
-import com.ecommerce.api.eshopper.dto.ProductDto;
-import com.ecommerce.api.eshopper.entity.Category;
-import com.ecommerce.api.eshopper.entity.Product;
-import com.ecommerce.api.eshopper.service.category_service.CategoryService;
-import com.ecommerce.api.eshopper.service.product_service.ProductService;
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -22,6 +10,27 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ecommerce.api.eshopper.dto.ProductDto;
+import com.ecommerce.api.eshopper.entity.Category;
+import com.ecommerce.api.eshopper.entity.Product;
+import com.ecommerce.api.eshopper.service.category_service.CategoryService;
+import com.ecommerce.api.eshopper.service.product_service.ProductService;
+
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -63,7 +72,7 @@ public class ProductApi {
             product.setInventory(productDto.getInventory());
 
             // add picture for product
-            if (productDto.getPicture().isEmpty() || productDto.getPicture() == null) {
+            if (productDto.getPicture() == null || productDto.getPicture().isEmpty()) {
                 product.setPicture(null);
             } else {
                 Path path = Paths.get(FILE_DIRECTORY, "products");
@@ -125,7 +134,7 @@ public class ProductApi {
 
                 // update picture for product
                 File fileOld = new File(FILE_DIRECTORY + "/products/" + product.getPicture());
-                if (productDto.getPicture().isEmpty() || productDto.getPicture() == null) {
+                if (productDto.getPicture() == null || productDto.getPicture().isEmpty()) {
                     if (fileOld.exists()) {
                         fileOld.delete();
                     }
