@@ -1,5 +1,19 @@
 package com.ecommerce.api.eshopper.controller.admin.product_controller;
 
+import com.ecommerce.api.eshopper.dto.ProductDto;
+import com.ecommerce.api.eshopper.entity.Author;
+import com.ecommerce.api.eshopper.entity.Category;
+import com.ecommerce.api.eshopper.entity.Product;
+import com.ecommerce.api.eshopper.service.author_service.IAuthorService;
+import com.ecommerce.api.eshopper.service.category_service.ICategoryService;
+import com.ecommerce.api.eshopper.service.product_service.IProductService;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -11,35 +25,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.ecommerce.api.eshopper.dto.ProductDto;
-import com.ecommerce.api.eshopper.entity.Category;
-import com.ecommerce.api.eshopper.entity.Product;
-import com.ecommerce.api.eshopper.service.category_service.CategoryService;
-import com.ecommerce.api.eshopper.service.product_service.ProductService;
-
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/product")
 public class ProductApi {
 
-    private final ProductService productService;
+    private final IProductService productService;
 
-    private final CategoryService categoryService;
+    private final ICategoryService categoryService;
+
+    private final IAuthorService authorService;
 
     @Value("${file.upload-dir}")
     private String FILE_DIRECTORY;
@@ -70,6 +65,11 @@ public class ProductApi {
             product.setName(productDto.getName());
             product.setRetail(productDto.getRetail());
             product.setInventory(productDto.getInventory());
+
+            // add author for product
+            Long authorId = productDto.getAuthorId();
+            Author author = authorService.findAuthorById(authorId).orElseThrow();
+            product.setAuthor(author);
 
             // add picture for product
             if (productDto.getPicture() == null || productDto.getPicture().isEmpty()) {
@@ -131,6 +131,11 @@ public class ProductApi {
                 product.setName(productDto.getName());
                 product.setRetail(productDto.getRetail());
                 product.setInventory(productDto.getInventory());
+
+                // update author for product
+                Long authorId = productDto.getAuthorId();
+                Author author = authorService.findAuthorById(authorId).orElseThrow();
+                product.setAuthor(author);
 
                 // update picture for product
                 File fileOld = new File(FILE_DIRECTORY + "/products/" + product.getPicture());

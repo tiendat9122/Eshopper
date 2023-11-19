@@ -3,8 +3,8 @@ package com.ecommerce.api.eshopper.controller.admin.user_controller;
 import com.ecommerce.api.eshopper.dto.UserDto;
 import com.ecommerce.api.eshopper.entity.Role;
 import com.ecommerce.api.eshopper.entity.User;
-import com.ecommerce.api.eshopper.service.role_service.RoleService;
-import com.ecommerce.api.eshopper.service.user_service.UserService;
+import com.ecommerce.api.eshopper.service.role_service.IRoleService;
+import com.ecommerce.api.eshopper.service.user_service.IUserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -34,9 +34,9 @@ public class UserApi {
 
     Logger logger = LoggerFactory.getLogger(UserApi.class);
 
-    private final UserService userService;
+    private final IUserService userService;
 
-    private final RoleService roleService;
+    private final IRoleService roleService;
 
     @Value("${file.upload-dir}")
     private String FILE_DIRECTORY;

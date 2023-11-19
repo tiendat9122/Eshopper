@@ -2,6 +2,7 @@ package com.ecommerce.api.eshopper.entity;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
@@ -36,7 +37,7 @@ public class Category {
 
     @ManyToMany(mappedBy = "categories", cascade = { CascadeType.PERSIST, CascadeType.REFRESH,
             CascadeType.MERGE }, fetch = FetchType.EAGER)
-    @JsonIgnoreProperties("categories")
+    @JsonIgnore
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<Product> products;

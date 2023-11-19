@@ -41,6 +41,11 @@ public class ProductService implements IProductService {
 
     // Save and update
     @Override
+    public List<Product> saveAllProduct(List<Product> products) {
+        return productRepository.saveAll(products);
+    }
+
+    @Override
     public Product saveProduct(Product product) {
         return productRepository.save(product);
     }
@@ -64,4 +69,5 @@ public class ProductService implements IProductService {
     public void deleteProductById(Long id) {
         productRepository.deleteById(id);
     }
+
 }

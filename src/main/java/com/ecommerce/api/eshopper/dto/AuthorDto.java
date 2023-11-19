@@ -11,9 +11,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CategoryDto {
+public class AuthorDto {
 
     private String name;
+
+    private String story;
 
 //    private List<Long> productIds;
 

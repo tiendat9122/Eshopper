@@ -3,8 +3,8 @@ package com.ecommerce.api.eshopper.controller.admin.role_controller;
 import com.ecommerce.api.eshopper.dto.RoleDto;
 import com.ecommerce.api.eshopper.entity.Role;
 import com.ecommerce.api.eshopper.entity.User;
-import com.ecommerce.api.eshopper.service.role_service.RoleService;
-import com.ecommerce.api.eshopper.service.user_service.UserService;
+import com.ecommerce.api.eshopper.service.role_service.IRoleService;
+import com.ecommerce.api.eshopper.service.user_service.IUserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,9 +20,9 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class RoleApi {
 
-    private final RoleService roleService;
+    private final IRoleService roleService;
 
-    private final UserService userService;
+    private final IUserService userService;
 
     @GetMapping("/get")
     public ResponseEntity<?> getRole(@RequestParam(name = "id", required = false) Long id) {

@@ -25,13 +25,27 @@ public class Product {
 
     private String picture;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "author_id", nullable = true)
+    @JsonIgnoreProperties("products")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Author author;
+
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, fetch = FetchType.EAGER)
-    @JoinTable(name = "product_category",
+    @JoinTable(name = "product_categories",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     @JsonIgnoreProperties("products")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<Category> categories;
+
+    @PreRemove
+    public void preRemove() {
+        for (Category category : categories) {
+            category.getProducts().remove(this);
+        }
+    }
 
 }

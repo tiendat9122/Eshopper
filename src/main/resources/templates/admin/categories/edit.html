@@ -82,7 +82,7 @@
                                 const data = new FormData(form)
                                 const obj = Object.fromEntries(data.entries());
                                 const options = Array.from(document.querySelectorAll('#editModal select option'))
-                                obj.productIds = options.filter(i => i.selected).map(i=>i.value).map(parseInt)
+                                obj.productIds = options.filter(i => i.selected).map(i=>parseInt(i.value.trim()))
                                 const body = JSON.stringify(obj)
                                 fetch('/category/update?id=' + id, {
                                     ...genConfig(),

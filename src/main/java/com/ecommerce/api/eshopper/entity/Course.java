@@ -12,27 +12,25 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "Author")
-public class Author {
+@Table(name = "Course")
+public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
 
-    private String story;
-
-    @OneToMany(mappedBy = "author")
-    @JsonIgnore
+    @ManyToMany(mappedBy = "courses", cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("courses")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<Product> products;
+    private Set<Student> students;
 
     @PreRemove
     public void preRemove() {
-        for(Product product : products) {
-            product.setAuthor(null);
+        for(Student student : students) {
+            student.getCourses().remove(this);
         }
     }
-    
+
 }

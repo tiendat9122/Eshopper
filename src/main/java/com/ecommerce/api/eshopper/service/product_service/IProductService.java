@@ -13,6 +13,8 @@ public interface IProductService {
     Optional<Product> findProductById(Long id);
 
     // Save and update
+    List<Product> saveAllProduct(List<Product> products);
+
     Product saveProduct(Product product);
 
     Category saveCategory(Category category);
@@ -21,5 +23,7 @@ public interface IProductService {
     void deleteProduct(Product product);
 
     void deleteProductById(Long id);
+
+    List<Product> findAllById(Iterable<Long> id);
 
 }

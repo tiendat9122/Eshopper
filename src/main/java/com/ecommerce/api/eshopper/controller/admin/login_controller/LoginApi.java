@@ -5,8 +5,8 @@ import com.ecommerce.api.eshopper.dto.RegisterDto;
 import com.ecommerce.api.eshopper.entity.Role;
 import com.ecommerce.api.eshopper.entity.User;
 import com.ecommerce.api.eshopper.service.authentication_service.AuthenticationService;
-import com.ecommerce.api.eshopper.service.role_service.RoleService;
-import com.ecommerce.api.eshopper.service.user_service.UserService;
+import com.ecommerce.api.eshopper.service.role_service.IRoleService;
+import com.ecommerce.api.eshopper.service.user_service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +22,9 @@ public class LoginApi {
 
     private final AuthenticationService authenticationService;
 
-    private final UserService userService;
+    private final IUserService userService;
 
-    private final RoleService roleService;
+    private final IRoleService roleService;
 
     @PostMapping("/login")
     public ResponseEntity<?> loginAuth(@RequestBody AuthenticationRequest authenticationRequest) {

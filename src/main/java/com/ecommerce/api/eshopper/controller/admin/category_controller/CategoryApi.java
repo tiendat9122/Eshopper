@@ -1,36 +1,30 @@
 package com.ecommerce.api.eshopper.controller.admin.category_controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.ecommerce.api.eshopper.dto.CategoryDto;
 import com.ecommerce.api.eshopper.entity.Category;
 import com.ecommerce.api.eshopper.entity.Product;
-import com.ecommerce.api.eshopper.service.category_service.CategoryService;
-import com.ecommerce.api.eshopper.service.product_service.ProductService;
-
+import com.ecommerce.api.eshopper.service.category_service.ICategoryService;
+import com.ecommerce.api.eshopper.service.product_service.IProductService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/category")
 public class CategoryApi {
 
-    private final CategoryService categoryService;
+    private final ICategoryService categoryService;
 
-    private final ProductService productService;
+    private final IProductService productService;
 
     @GetMapping("/get")
     public ResponseEntity<?> getCategory(@RequestParam(name = "id", required = false) Long id) {
@@ -55,10 +49,21 @@ public class CategoryApi {
         try {
             Category category = new Category();
             category.setName(categoryDto.getName());
+
+            /*List<Long> productIds = categoryDto.getProductIds();
+            Set<Product> setProducts = new HashSet<>();
+            for(Long productId : productIds) {
+                Product product = productService.findProductById(productId).orElseThrow();
+                setProducts.add(product);
+            }
+            category.setProducts(setProducts);*/
+
             Category categoryInserted = categoryService.saveCategory(category);
-            var products = productService.findAllById(categoryDto.getProductIds());
+
+            /*var products = productService.findAllById(categoryDto.getProductIds());
             products.forEach(product -> product.getCategories().add(categoryInserted));
-            productService.saveAll(products);
+            productService.saveAllProduct(products);*/
+
             return new ResponseEntity<>(categoryInserted, HttpStatus.OK);
         } catch (EntityNotFoundException exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
@@ -67,34 +72,51 @@ public class CategoryApi {
     }
 
     @PutMapping("/update")
+    @Transactional
     public ResponseEntity<?> updateCategory(@RequestParam(name = "id") Long id, @RequestBody CategoryDto categoryDto) {
         try {
             if (id != null) {
                 Category category = categoryService.findCategoryById(id)
                         .orElseThrow(() -> new EntityNotFoundException("Cannot find category with id = " + id));
                 category.setName(categoryDto.getName());
-                //prodct sẽ bị xóa khỏi categories
-                var productDeleteds = new ArrayList<Product>();
-                var products = productService.findAllById(categoryDto.getProductIds());
-                category.getProducts()
-                        .stream()
-                        .filter(i -> !products.contains(i))
-                        .forEach(i -> {
-                            //thêm vào danh sách để cập nhật riêng cho những product bị loại ra
-                            productDeleteds.add(i);
-                            //xóa category bên prodcut
-                            i.getCategories().removeIf(y -> y.getId().equals(category.getId()));
-                        });
-                
-                //xóa product bên category
-                category.getProducts().removeIf(i -> !products.contains(i));
 
-                category.getProducts().addAll(products);
-                //thêm hai bên
-                products.forEach(product -> product.getCategories().add(category));
+                /*var productsFromDB = category.getProducts();
 
-                productService.saveAll(productDeleteds);
-                productService.saveAll(category.getProducts());
+                List<Long> productIds = categoryDto.getProductIds();
+
+                List<Product> productsWillRemove = new ArrayList<>();
+                for(Product product : productsFromDB) {
+                    if(!productIds.contains(product.getId())) {
+                        productsWillRemove.add(product);
+                    }
+                }
+
+                productsFromDB.removeAll(productsWillRemove);
+
+                for(Product product: productsWillRemove) {
+                    var categories = product.getCategories();
+                    categories.remove(category);
+                }
+
+                var productIdFromDB = new ArrayList<Long>();
+                for(var product: productsFromDB) {
+                    productIdFromDB.add(product.getId());
+                }
+
+                var productIdsWillAdd = new ArrayList<Long>();
+                for(var idFromDTO : productIds) {
+                    if (!productIdFromDB.contains(idFromDTO))
+                        productIdsWillAdd.add(idFromDTO);
+                }
+
+                var prodcutWillAdd = productService.findAllById(productIdsWillAdd);
+
+                productsFromDB.addAll(prodcutWillAdd);
+
+                for(var product: prodcutWillAdd) {
+                    product.getCategories().add(category);
+                }*/
+
                 Category categoryUpdated = categoryService.saveCategory(category);
 
                 return new ResponseEntity<>(categoryUpdated, HttpStatus.OK);

@@ -47,7 +47,7 @@ public class User implements UserDetails {
     private boolean active;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role",
+    @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     @JsonIgnoreProperties("user")
