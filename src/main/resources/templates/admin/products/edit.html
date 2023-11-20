@@ -31,7 +31,7 @@
                                          * @type {HTMLOptionElement[]}
                                          */
                                         const options = Array.from(dom.querySelectorAll('option'))
-                                        options.forEach(i=>i.selected = false)
+                                        options.forEach(i => i.selected = false)
                                         data.categories.forEach(category => {
                                             /**
                                              * @type {HTMLOptionElement|null}
@@ -42,7 +42,7 @@
                                             }
                                         })
                                         $('#edit-role-select').select2()
-                                        
+
                                     })
                                 }
                             })
@@ -83,6 +83,16 @@
                             <div class="form-control col-sm-8 p-0 border-0">
                                 <select class="form-control js-select2" id="edit-role-select" name="categoryIds"
                                     style="width: 100%" data-placeholder="Chọn quyền" multiple>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row items-push">
+                            <label for="val-select2-multiple-role" class="form-label col-sm-3">Tác giả<span
+                                    class="text-danger">*</span></label>
+                            <div class="form-control col-sm-8 p-0 border-0">
+                                <select class="form-control js-select2" id="edit-author" name="categoryIds"
+                                    style="width: 100%;" data-placeholder="Chọn quyền" multiple>
                                 </select>
                             </div>
                         </div>

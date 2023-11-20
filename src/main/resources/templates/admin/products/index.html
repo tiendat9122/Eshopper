@@ -117,7 +117,7 @@
             ],
             "bDestroy": true
         })
-        
+
 
         const link = document.createElement('link');
         link.rel = 'stylesheet';
@@ -142,12 +142,30 @@
                             },
                             processResults: function (data) {
                                 return {
-                                  results: data.map(i => ({
-                                    id: i.id,
-                                    text: i.name
-                                  }))
+                                    results: data.map(i => ({
+                                        id: i.id,
+                                        text: i.name
+                                    }))
                                 };
-                              }
+                            }
+                        }
+                    });
+
+                    $('#create-author, #edit-author').select2({
+                        ajax: {
+                            url: '/author/get',
+                            type: 'GET',
+                            headers: {
+                                "Authorization": "Bearer " + getJwtToken()
+                            },
+                            processResults: function (data) {
+                                return {
+                                    results: data.map(i => ({
+                                        id: i.id,
+                                        text: i.name
+                                    }))
+                                };
+                            }
                         }
                     });
                 });
