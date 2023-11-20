@@ -91,9 +91,19 @@
     </div>
     <!-- END Page Content -->
 </main>
-
 <script th:fragment="script_after">
     $(() => {
+        globalThis.capNhatActive = function capNhatActive(id, active) {
+        fetch("/user/active", {
+            ...genConfig(),
+            method: "PUT",
+            body: JSON.stringify({id,active})
+        }).then(res=>{
+            if(res.ok) {
+                $("table").DataTable().ajax.reload()
+            }
+        })
+    }
         $("table").dataTable({ destroy: true })
         $('table').dataTable({
             ajax: {
@@ -111,8 +121,8 @@
                 { targets: 3, data: 'email', className: "font-w600 font-size-sm" },
                 { targets: 4, data: 'active', clasName: 'font-w600 font-size-sm', defaultContent: '', render: (d,t,r,m) => `
                 <div class="custom-control custom-switch custom-control-lg custom-control-inline mb-2">
-                    <input type="checkbox" class="custom-control-input" id="switch-${d}" name="example-sw-custom-inline-lg1" ${r.active?"checked":""}>
-                    <label class="custom-control-label" for="switch-${d}"> </label>
+                    <input type="checkbox" class="custom-control-input" id="switch-${r.id}" name="example-sw-custom-inline-lg1" ${r.active?"checked":""}>
+                    <label class="custom-control-label" for="switch-${r.id}" onclick="capNhatActive(${r.id}, ${!r.active})"></label>
                 </div>
                 `},
                 {
