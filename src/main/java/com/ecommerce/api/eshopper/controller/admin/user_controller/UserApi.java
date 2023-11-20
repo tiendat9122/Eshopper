@@ -1,5 +1,6 @@
 package com.ecommerce.api.eshopper.controller.admin.user_controller;
 
+import com.ecommerce.api.eshopper.dto.UserActiveDto;
 import com.ecommerce.api.eshopper.dto.UserDto;
 import com.ecommerce.api.eshopper.entity.Orders;
 import com.ecommerce.api.eshopper.entity.Role;
@@ -164,7 +165,6 @@ public class UserApi {
                 user.setFull_name(userDto.getFull_name());
                 user.setUser_name(userDto.getUser_name());
                 user.setEmail(userDto.getEmail());
-                user.setPassword(userDto.getPassword());
                 user.setAddress(userDto.getAddress());
                 user.setPhone_number(userDto.getPhone_number());
                 user.setBirth_day(userDto.getBirth_day());
@@ -232,6 +232,20 @@ public class UserApi {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }
 
+    }
+
+    @PutMapping("/active")
+    public ResponseEntity<?> activeUser(@RequestBody UserActiveDto userActiveDto) {
+        try {
+            Long userId = userActiveDto.getId();
+            User user = userService.findUserById(userId).orElseThrow(() -> new EntityNotFoundException("Cannot find user with id = " + userId));
+
+            user.setActive(userActiveDto.isActive());
+            userService.saveUser(user);
+            return new ResponseEntity<>("Changed state active of user", HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/delete")
