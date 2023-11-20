@@ -1,5 +1,6 @@
 package com.ecommerce.api.eshopper.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,12 +26,21 @@ public class Product {
 
     private String picture;
 
+    private boolean active;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id", nullable = true)
     @JsonIgnoreProperties("products")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Author author;
+
+    @OneToMany(mappedBy = "product")
+    @JsonIgnoreProperties("product")
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<OrderDetail> orderDetails;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name = "product_categories",

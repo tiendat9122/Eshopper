@@ -1,11 +1,10 @@
 package com.ecommerce.api.eshopper.repository;
 
+import com.ecommerce.api.eshopper.entity.OrderDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.ecommerce.api.eshopper.entity.Student;
-
 @Repository
-public interface StudentRepository extends JpaRepository<Student, Long> {
-    
+public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> {
+
 }

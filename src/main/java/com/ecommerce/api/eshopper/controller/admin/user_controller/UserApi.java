@@ -1,11 +1,14 @@
 package com.ecommerce.api.eshopper.controller.admin.user_controller;
 
 import com.ecommerce.api.eshopper.dto.UserDto;
+import com.ecommerce.api.eshopper.entity.Orders;
 import com.ecommerce.api.eshopper.entity.Role;
 import com.ecommerce.api.eshopper.entity.User;
+import com.ecommerce.api.eshopper.service.orders_service.IOrdersService;
 import com.ecommerce.api.eshopper.service.role_service.IRoleService;
 import com.ecommerce.api.eshopper.service.user_service.IUserService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.Order;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +40,8 @@ public class UserApi {
     private final IUserService userService;
 
     private final IRoleService roleService;
+
+    private final IOrdersService ordersService;
 
     @Value("${file.upload-dir}")
     private String FILE_DIRECTORY;
@@ -245,6 +250,12 @@ public class UserApi {
                     }
                 } catch (Exception e) {
                     logger.info("Cannot read file image because it's haven't been exists");
+                }
+
+                // delete user's orders
+                Set<Orders> orders = user.getOrders();
+                for(Orders order : orders) {
+                    order.setUser(null);
                 }
 
                 userService.deleteUser(user);

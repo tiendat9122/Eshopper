@@ -22,6 +22,8 @@ public class ProductDto {
 
     private MultipartFile picture;
 
+    private boolean active;
+
     private Long authorId;
 
     private List<Long> categoryIds;

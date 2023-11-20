@@ -3,9 +3,11 @@ package com.ecommerce.api.eshopper.controller.admin.product_controller;
 import com.ecommerce.api.eshopper.dto.ProductDto;
 import com.ecommerce.api.eshopper.entity.Author;
 import com.ecommerce.api.eshopper.entity.Category;
+import com.ecommerce.api.eshopper.entity.OrderDetail;
 import com.ecommerce.api.eshopper.entity.Product;
 import com.ecommerce.api.eshopper.service.author_service.IAuthorService;
 import com.ecommerce.api.eshopper.service.category_service.ICategoryService;
+import com.ecommerce.api.eshopper.service.orderdetail_service.IOrderDetailService;
 import com.ecommerce.api.eshopper.service.product_service.IProductService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +37,8 @@ public class ProductApi {
     private final ICategoryService categoryService;
 
     private final IAuthorService authorService;
+
+    private final IOrderDetailService orderDetailService;
 
     @Value("${file.upload-dir}")
     private String FILE_DIRECTORY;
@@ -207,6 +211,12 @@ public class ProductApi {
         try {
             if (id != null) {
                 Product product = productService.findProductById(id).orElseThrow();
+
+                // set null orderdetail that contain product = null before delete product
+                Set<OrderDetail> orderDetails = product.getOrderDetails();
+                for(OrderDetail orderDetail : orderDetails) {
+                    orderDetail.setProduct(null);
+                }
 
                 // delete book's picture on server
                 try {
