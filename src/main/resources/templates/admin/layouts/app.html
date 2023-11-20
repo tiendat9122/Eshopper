@@ -24,15 +24,18 @@
         <!-- Icons -->
         <!-- The following icons can be replaced with your own, they are used b y desktop and mobile browsers -->
         <link rel="shortcut icon" href="/content/admin/assets/media/favicons/favicon.png">
-        <link rel="icon" type="image/png" sizes="192x192" href="/content/admin/assets/media/favicons/favicon-192x192.png">
-        <link rel="apple-touch-icon" sizes="180x180" href="/content/admin/assets/media/favicons/apple-touch-icon-180x180.png">
+        <link rel="icon" type="image/png" sizes="192x192"
+            href="/content/admin/assets/media/favicons/favicon-192x192.png">
+        <link rel="apple-touch-icon" sizes="180x180"
+            href="/content/admin/assets/media/favicons/apple-touch-icon-180x180.png">
         <!-- END Icons -->
 
         <!-- Stylesheets -->
         <!-- Page JS Plugins CSS -->
         <link rel="stylesheet" href="/content/admin/assets/js/plugins/datatables/dataTables.bootstrap4.css">
-        <link rel="stylesheet" href="/content/admin/assets/js/plugins/datatables/buttons-bs4/buttons.bootstrap4.min.css">
-        
+        <link rel="stylesheet"
+            href="/content/admin/assets/js/plugins/datatables/buttons-bs4/buttons.bootstrap4.min.css">
+
         <!-- Fonts and OneUI framework -->
         <link rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
@@ -179,6 +182,17 @@
                 $('#deleteModal form').attr('data-id', id);
                 $('#deleteModal').modal('show');
             }
+
+            const user = getUserInfo()
+            document.querySelectorAll('.need-fullname').forEach(e => {
+                e.innerText = user.full_name
+            })
+            document.querySelectorAll('.need-rolename').forEach(e => {
+                e.innerText = user.role.map(i => i.displayName).join(" / ")
+            })
+            document.querySelectorAll('.need-avatar').forEach(e=>{
+                e.src = "/user/download/" + user.avatar
+            })
         </script>
     </body>
 

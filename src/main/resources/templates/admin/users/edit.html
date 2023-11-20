@@ -1,8 +1,7 @@
 <div th:fragment="modal_edit">
     <script>
         function napThongTinCapNhat(id) {
-            const idLabel = document.querySelector("#editModal div.label");
-            idLabel.innerText = id;
+            
             fetch("/role/get", { ...genConfig() })
                 .then((res) => {
                     if (res.ok) {
@@ -30,7 +29,7 @@
                                 data.role.forEach(i=>{
                                     options.find(y=>y.value == i.id).selected = true;
                                 })
-                                document.getElementById('edit-avatar-url').value = data.avatar
+                                // document.getElementById('edit-avatar-url').value = data.avatar
                                 $('#edit-role-select').select2();
                                 Object.keys(data).forEach((key) => {
                                     if (!["role", "avatar"].includes(key)) {
@@ -65,7 +64,8 @@
                         <div class="form-group row">
                             <label for="val-table-number" class="form-label col-sm-3">ID <span
                                     class="text-danger">*</span></label>
-                            <div class="form-control col-sm-8 label"></div>
+                            <!-- <div class="form-control col-sm-8 label"></div> -->
+                            <input type="text" readonly class="form-control col-sm-8" name="id" />
                         </div>
 
                         <div class="form-group row">
@@ -78,7 +78,7 @@
                         <div class="form-group row">
                             <label for="val-email" class="form-label col-sm-3">Email<span
                                     class="text-danger">*</span></label>
-                            <input type="text" name="email" required class="form-control col-sm-8" id="val-email"
+                            <input type="text" readonly name="email" required class="form-control col-sm-8" id="val-email"
                                 placeholder="Nhập ..." />
                         </div>
 
@@ -125,15 +125,14 @@
                         <div class="form-group row">
                             <label for="val-name" class="form-label col-sm-3">Ảnh đại diện <span
                                     class="text-danger">*</span></label>
-                            <input type="file" name="avatar" class="form-control col-sm-8" id="val-name"
-                                placeholder="Nhập ảnh đại diện" required />
+                            <input type="file" name="avatar" class="form-control col-sm-8" id="val-name" required />
                         </div>
 
-                        <div class="form-group row">
+                        <!-- <div class="form-group row">
                             <label for="val-name" class="form-label col-sm-3">Tên ảnh <span
                                     class="text-danger">*</span></label>
                             <input type="text"  class="form-control col-sm-8" id="edit-avatar-url" readonly />
-                        </div>
+                        </div> -->
 
                         <div class="form-group row">
                             <label for="edit-active" class="form-label col-sm-3">Kích hoạt<span class="text-danger">*</span></label>

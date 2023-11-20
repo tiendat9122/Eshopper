@@ -1,20 +1,54 @@
 <div th:fragment="modal_edit">
     <script>
         function napThongTinCapNhat(id) {
-            const idLabel = document.querySelector('#editModal div.label')
-            idLabel.innerText = id
-            fetch('/product/get?id=' + id, {
-                ...genConfig()
-            }).then(res => {
-                if (res.ok) {
-                    res.json().then(data => {
-                        const dom = document.querySelector('#editModal input[name=name]')
-                        if(dom != null) {
-                            dom.value = data.name
-                        }
-                    })
-                }
-            })
+            fetch("/category/get", { ...genConfig() })
+                .then((res) => {
+                    if (res.ok) {
+                        const select = document.getElementById("edit-role-select");
+                        select.innerHTML = ""
+                        res.json().then((data) => {
+                            data.forEach((item) => {
+                                const option = document.createElement("option");
+                                option.innerText = item.name;
+                                option.value = item.id;
+                                select.appendChild(option);
+                            });
+                        }).then(() => {
+                            fetch('/product/get?id=' + id, {
+                                ...genConfig()
+                            }).then(res => {
+                                if (res.ok) {
+                                    res.json().then(data => {
+                                        const dom = document.querySelector('#editModal form')
+                                        Object.keys(data).forEach(i => {
+                                            if (!["categoryIds"].includes(i)) {
+                                                const input = dom.querySelector(`input[name=${i}]`)
+                                                if (input != null)
+                                                    input.value = data[i]
+                                            }
+                                        })
+                                        /**
+                                         * @type {HTMLOptionElement[]}
+                                         */
+                                        const options = Array.from(dom.querySelectorAll('option'))
+                                        options.forEach(i=>i.selected = false)
+                                        data.categories.forEach(category => {
+                                            /**
+                                             * @type {HTMLOptionElement|null}
+                                             */
+                                            const option = options.find(i => i.value == category.id)
+                                            if (option != null) {
+                                                option.selected = true
+                                            }
+                                        })
+                                        $('#edit-role-select').select2()
+                                        
+                                    })
+                                }
+                            })
+                        })
+                    }
+                })
         }
     </script>
     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
@@ -33,21 +67,32 @@
                         <div class="form-group row">
                             <label for="val-table-number" class="form-label col-sm-3">ID <span
                                     class="text-danger">*</span></label>
-                            <div class="form-control col-sm-8 label">
-                            </div>
+                            <input class="form-control col-sm-8 label" name="id" readonly />
                         </div>
 
                         <div class="form-group row">
-                            <label for="val-number-of-people" class="form-label col-sm-3">Tên quyền<span
+                            <label for="val-number-of-people" class="form-label col-sm-3">Tên<span
                                     class="text-danger">*</span></label>
                             <input type="text" name="name" required class="form-control col-sm-8"
                                 id="val-number-of-people" placeholder="Nhập ...">
+                        </div>
+
+                        <div class="form-group row items-push">
+                            <label for="val-select2-multiple-role" class="form-label col-sm-3">Thể loại<span
+                                    class="text-danger">*</span></label>
+                            <div class="form-control col-sm-8 p-0 border-0">
+                                <select class="form-control js-select2" id="edit-role-select" name="categoryIds"
+                                    style="width: 100%" data-placeholder="Chọn quyền" multiple>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
                             <button type="button" class="btn btn-success" onclick="capNhat()">Xác nhận</button>
                         </div>
+
+
 
                         <script>
                             function capNhat() {

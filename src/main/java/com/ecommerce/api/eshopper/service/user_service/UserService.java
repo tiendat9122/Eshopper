@@ -23,8 +23,6 @@ public class UserService implements IUserService {
 
     private final RoleRepository roleRepository;
 
-    private final PasswordEncoder passwordEncoder;
-
     // Get and find
     @Override
     public List<User> findAllUser() {
@@ -44,7 +42,6 @@ public class UserService implements IUserService {
     // Save and update
     @Override
     public User saveUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 

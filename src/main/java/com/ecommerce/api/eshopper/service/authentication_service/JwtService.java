@@ -19,6 +19,7 @@ public class JwtService {
         return JWT.create()
                 .withSubject(user.getEmail())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 50 * 60 * 1000))
+                .withClaim("userId", user.getId())
                 .withClaim("role", authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
     }

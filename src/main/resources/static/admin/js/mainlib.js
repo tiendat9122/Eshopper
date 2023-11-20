@@ -35,6 +35,10 @@ function genConfig() {
   };
 }
 
+function getUserInfo() {
+  return JSON.parse(localStorage.getItem("user"))
+}
+
 //Lấy dữ liệu JWT trong Local Storage
 function getJwtToken() {
     return JSON.parse(localStorage.getItem("jwt")).token;
@@ -47,3 +51,7 @@ function dangXuat() {
 }
 
 
+function disableSubmit(e) {
+  e.preventDefault()
+  return false;
+}

@@ -23,6 +23,18 @@
                         <input type="text" name="retail" class="form-control col-sm-8" id="val-table-number"
                             placeholder="Nhập giá" required>
                     </div>
+
+                    <div class="form-group row items-push">
+                        <label for="val-select2-multiple-role" class="form-label col-sm-3">Thể loại<span
+                                class="text-danger">*</span></label>
+                        <div class="form-control col-sm-8 p-0 border-0">
+                            <select class="form-control js-select2" id="val-select2-multiple-role"
+                                name="categoryIds" style="width: 100%;"
+                                data-placeholder="Chọn quyền" multiple>
+                            </select>
+                        </div>
+                    </div>
+
                     <script>
                         function taoMoi() {
                             const options = genConfig()
