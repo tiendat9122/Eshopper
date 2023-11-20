@@ -62,7 +62,7 @@ public class GreetingController {
         }
         Set<Role> role = new HashSet<>(userRepository.findRolesByEmail(user.getEmail()));
         Set<Role> set = new HashSet<>();
-        role.stream().forEach(c->set.add(new Role(c.getId(), c.getName(), new HashSet<>())));
+        // role.stream().forEach(c->set.add(new Role(c.getId(), c.getName(), new HashSet<>())));
         user.getRole().addAll(set);
 
         return new ResponseEntity<>(user, HttpStatus.OK);
@@ -75,7 +75,7 @@ public class GreetingController {
         User user = userRepository.findByEmail(email);
         Set<Role> role = userRepository.findRolesByEmail(user.getEmail());
         Set<Role> set = new HashSet<>();
-        role.stream().forEach(c->set.add(new Role(c.getId(), c.getName(), new HashSet<>())));
+        // role.stream().forEach(c->set.add(new Role(c.getId(), c.getName(), new HashSet<>())));
         user.getRole().addAll(set);
 
         return new ResponseEntity<>(user, HttpStatus.OK);

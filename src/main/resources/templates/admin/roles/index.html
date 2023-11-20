@@ -74,7 +74,8 @@
                     <thead>
                         <tr>
                             <th class="text-center" style="width: 80px;">ID</th>
-                            <th>Name</th>
+                            <th>Tên quyền</th>
+                            <th>Tên hiển thị</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -104,8 +105,9 @@
             columnDefs: [
                 { targets: 0, data: 'id', className: "text-center font-size-sm" },
                 { targets: 1, data: 'name', className: "font-w600 font-size-sm" },
+                { targets: 2, data: 'displayName', className: "font-w600 font-size-sm" },
                 {
-                    targets: 2, data: 'id', defaultContent: "", render: (d, t, r, m) => `
+                    targets: 3, data: 'id', defaultContent: "", render: (d, t, r, m) => `
                     <div class='btn-group'>
                         <a class='btn btn-sm btn-alt-success' onclick='editModal(${d})'
                             title='Edit'><i class='fa fa-fw fa-pencil-alt'></i></a>

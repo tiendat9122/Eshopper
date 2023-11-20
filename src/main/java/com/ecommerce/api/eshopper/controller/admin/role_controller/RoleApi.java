@@ -44,6 +44,7 @@ public class RoleApi {
         try {
             Role role = new Role();
             role.setName(roleDto.getName());
+            role.setDisplayName(roleDto.getDisplayName());
 
             List<Long> userIds = roleDto.getUserIds();
             Set<User> users = new HashSet<>();
@@ -74,6 +75,7 @@ public class RoleApi {
             if(id != null) {
                 Role role = roleService.findRoleById(id).orElseThrow(()->new EntityNotFoundException("Cannot find role with id = " + id));
                 role.setName(roleDto.getName());
+                role.setDisplayName(roleDto.getDisplayName());
 
                 List<Long> userIds = roleDto.getUserIds();
                 Set<User> users = new HashSet<>();

@@ -15,6 +15,8 @@ public class RoleDto {
 
     private String name;
 
+    private String displayName;
+
     private List<Long> userIds;
 
 }

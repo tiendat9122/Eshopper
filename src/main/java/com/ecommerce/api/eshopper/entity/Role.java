@@ -19,6 +19,8 @@ public class Role {
 
     private String name;
 
+    private String displayName;
+
     @ManyToMany(mappedBy = "role", cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
     @JsonIgnore
     @EqualsAndHashCode.Exclude

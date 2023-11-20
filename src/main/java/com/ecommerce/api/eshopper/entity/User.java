@@ -32,7 +32,7 @@ public class User implements UserDetails {
     private String user_name;
 
     @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birth_day;
 
     private String address;

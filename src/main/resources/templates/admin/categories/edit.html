@@ -9,23 +9,6 @@
                 if (res.ok) {
                     res.json().then(data => {
                         document.querySelector('#editModal input[name=name]').value = data.name
-                        const options = Array.from(document.querySelectorAll('#editModal select option'));
-                        const select = document.querySelector('#editModal select')
-                        /**
-                         * @type {number[]}
-                         */
-                        const selectedId = data.products.map(i => i.id);
-                        select.innerHTML = "";
-                        fetch('/product/get', { ...genConfig() }).then(res => res.json())
-                            .then(data => {
-                                data.forEach(product => {
-                                    const option = document.createElement('option')
-                                    option.value = product.id
-                                    option.innerText = product.name
-                                    option.selected = selectedId.includes(product.id)
-                                    select.appendChild(option)
-                                })
-                            })
                     })
                 }
             })
@@ -58,18 +41,6 @@
                                 id="val-number-of-people" placeholder="Nhập ...">
                         </div>
 
-                        <div class="form-group row items-push">
-                            <label for="val-select2-multiple-role" class="form-label col-sm-3">Sản phẩm<span
-                                    class="text-danger">*</span></label>
-                            <div class="form-control col-sm-8 p-0 border-0">
-                                <select class="form-control js-select2" style="width: 100%;"
-                                    data-placeholder="Chọn quyền" multiple>
-                                    <option></option>
-                                    <!-- Required for data-placeholder attribute to work with Select2 plugin -->
-                                </select>
-                            </div>
-                        </div>
-
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
                             <button type="button" class="btn btn-success" onclick="capNhat()">Xác nhận</button>
@@ -81,8 +52,6 @@
                                 const form = document.querySelector('#editModal form')
                                 const data = new FormData(form)
                                 const obj = Object.fromEntries(data.entries());
-                                const options = Array.from(document.querySelectorAll('#editModal select option'))
-                                obj.productIds = options.filter(i => i.selected).map(i=>parseInt(i.value.trim()))
                                 const body = JSON.stringify(obj)
                                 fetch('/category/update?id=' + id, {
                                     ...genConfig(),

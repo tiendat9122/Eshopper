@@ -18,6 +18,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
@@ -43,6 +44,8 @@ public class UserApi {
     private final IRoleService roleService;
 
     private final IOrdersService ordersService;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${file.upload-dir}")
     private String FILE_DIRECTORY;
@@ -98,11 +101,14 @@ public class UserApi {
                 user.setFull_name(userDto.getFull_name());
                 user.setUser_name(userDto.getUser_name());
                 user.setEmail(userDto.getEmail());
-                user.setPassword(userDto.getPassword());
                 user.setAddress(userDto.getAddress());
                 user.setPhone_number(userDto.getPhone_number());
                 user.setBirth_day(userDto.getBirth_day());
                 user.setActive(userDto.isActive());
+                
+                // set encrypassword
+                user.setPassword(userDto.getPassword());
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
 
                 // add avatar for user
                 if (userDto.getAvatar() == null || userDto.getAvatar().isEmpty()) {

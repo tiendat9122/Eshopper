@@ -72,8 +72,12 @@ public class ProductApi {
 
             // add author for product
             Long authorId = productDto.getAuthorId();
-            Author author = authorService.findAuthorById(authorId).orElseThrow();
-            product.setAuthor(author);
+            if(authorId != null) {
+                Author author = authorService.findAuthorById(authorId).orElseThrow();
+                product.setAuthor(author);
+            } else {
+                product.setAuthor(null);
+            }
 
             // add picture for product
             if (productDto.getPicture() == null || productDto.getPicture().isEmpty()) {
@@ -138,8 +142,12 @@ public class ProductApi {
 
                 // update author for product
                 Long authorId = productDto.getAuthorId();
-                Author author = authorService.findAuthorById(authorId).orElseThrow();
-                product.setAuthor(author);
+                if(authorId != null) {
+                    Author author = authorService.findAuthorById(authorId).orElseThrow();
+                    product.setAuthor(author);
+                } else {
+                    product.setAuthor(null);
+                }
 
                 // update picture for product
                 File fileOld = new File(FILE_DIRECTORY + "/products/" + product.getPicture());
