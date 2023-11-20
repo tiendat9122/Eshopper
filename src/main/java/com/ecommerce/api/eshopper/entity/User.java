@@ -43,6 +43,7 @@ public class User implements UserDetails {
 
     private String email;
 
+    @JsonIgnore
     private String password;
 
     private boolean active;
