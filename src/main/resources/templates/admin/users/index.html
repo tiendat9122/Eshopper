@@ -77,6 +77,7 @@
                             <th>Họ và tên</th>
                             <th>Tên tài khoản</th>
                             <th>Địa chỉ email</th>
+                            <th>Kích hoạt</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -108,8 +109,14 @@
                 { targets: 1, data: 'full_name', className: "font-w600 font-size-sm" },
                 { targets: 2, data: 'user_name', className: "font-w600 font-size-sm" },
                 { targets: 3, data: 'email', className: "font-w600 font-size-sm" },
+                { targets: 4, data: 'active', clasName: 'font-w600 font-size-sm', defaultContent: '', render: (d,t,r,m) => `
+                <div class="custom-control custom-switch custom-control-lg custom-control-inline mb-2">
+                    <input type="checkbox" class="custom-control-input" id="switch-${d}" name="example-sw-custom-inline-lg1" ${r.active?"checked":""}>
+                    <label class="custom-control-label" for="switch-${d}"> </label>
+                </div>
+                `},
                 {
-                    targets: 4, data: 'id', defaultContent: "", render: (d, t, r, m) => `
+                    targets: 5, data: 'id', defaultContent: "", render: (d, t, r, m) => `
                     <div class='btn-group'>
                         <a class='btn btn-sm btn-alt-success' onclick='editModal(${d})'
                             title='Edit'><i class='fa fa-fw fa-pencil-alt'></i></a>

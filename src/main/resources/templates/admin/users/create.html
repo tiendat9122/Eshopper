@@ -65,7 +65,7 @@
                     <div class="form-group row">
                         <label for="val-name" class="form-label col-sm-3">Ngày sinh <span
                                 class="text-danger">*</span></label>
-                        <input type="text" name="birth_day" class="form-control col-sm-8" id="val-name"
+                        <input type="date" name="birth_day" class="form-control col-sm-8" id="val-name"
                                placeholder="Nhập ngày sinh" required>
                     </div>
 
@@ -76,17 +76,20 @@
                                placeholder="Nhập ảnh đại diện" required>
                     </div>
 
+      
                     <div class="form-group row">
-                        <label for="val-name" class="form-label col-sm-3">Kích hoạt <span
-                                class="text-danger">*</span></label>
-                        <input type="number" name="active" class="form-control col-sm-8" id="val-name"
-                               placeholder="Nhập kích hoạt" required>
+                        <label for="create-active" class="form-label col-sm-3">Kích hoạt<span class="text-danger">*</span></label>
+                        <div class="custom-control custom-switch custom-control-lg custom-control-inline mb-2">
+                            <input type="checkbox" class="custom-control-input" id="create-active" name="active">
+                            <label class="custom-control-label" for="create-active"> </label>
+                        </div>
                     </div>
 
                     <script>
                         function taoMoi() {
                             const form = document.getElementById('tao-moi')
                             data = new FormData(form)
+                            data.set('active', document.getElementById('create-active').checked)
                             body = data
                             let headers = {...genConfig().headers}
                             delete headers['Content-Type']
