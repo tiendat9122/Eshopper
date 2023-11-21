@@ -133,7 +133,30 @@
             script.onload = () => {
                 jQuery(function () {
                     One.helpers('select2');
-                    $('#val-select2-multiple-role').select2({
+
+                    $('#create-author, #edit-author').select2({
+                        placeholder: "Chọn tác giả",
+                        allowClear: true,
+                        ajax: {
+                            url: '/author/get',
+                            type: 'GET',
+                            headers: {
+                                "Authorization": "Bearer " + getJwtToken()
+                            },
+                            processResults: function (data) {
+                                return {
+                                    results: data.map(i => ({
+                                        id: i.id,
+                                        text: i.name
+                                    }))
+                                };
+                            }
+                        }
+                    });
+
+                    $('#create-categories, #edit-categories').select2({
+                        placeholder: "Chọn thể loại",
+                        allowClear: true,
                         ajax: {
                             url: '/category/get',
                             type: 'GET',
@@ -151,23 +174,6 @@
                         }
                     });
 
-                    $('#create-author, #edit-author').select2({
-                        ajax: {
-                            url: '/author/get',
-                            type: 'GET',
-                            headers: {
-                                "Authorization": "Bearer " + getJwtToken()
-                            },
-                            processResults: function (data) {
-                                return {
-                                    results: data.map(i => ({
-                                        id: i.id,
-                                        text: i.name
-                                    }))
-                                };
-                            }
-                        }
-                    });
                 });
 
             }

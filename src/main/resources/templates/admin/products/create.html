@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-info">
-                <h5 class="modal-title" id="addModalLabel" style="color: white;">Thêm quyền</h5>
+                <h5 class="modal-title" id="addModalLabel" style="color: white;">Thêm</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true" style="color: white;">&times;</span>
                 </button>
@@ -28,7 +28,7 @@
                         <label for="val-select2-multiple-role" class="form-label col-sm-3">Thể loại<span
                                 class="text-danger">*</span></label>
                         <div class="form-control col-sm-8 p-0 border-0">
-                            <select class="form-control js-select2" id="val-select2-multiple-role" name="categoryIds"
+                            <select class="form-control js-select2" id="create-categories" name="categoryIds"
                                 style="width: 100%;" data-placeholder="Chọn quyền" multiple>
                             </select>
                         </div>
@@ -38,9 +38,18 @@
                         <label for="val-select2-multiple-role" class="form-label col-sm-3">Tác giả<span
                                 class="text-danger">*</span></label>
                         <div class="form-control col-sm-8 p-0 border-0">
-                            <select class="form-control js-select2" id="create-author" name="categoryIds"
+                            <select class="form-control js-select2" id="create-author" name="authorId"
                                 style="width: 100%;" data-placeholder="Chọn quyền" multiple>
                             </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="create-active" class="form-label col-sm-3">Kích hoạt<span
+                                class="text-danger">*</span></label>
+                        <div class="custom-control custom-switch custom-control-lg custom-control-inline mb-2">
+                            <input type="checkbox" class="custom-control-input" id="create-active" name="active">
+                            <label class="custom-control-label" for="create-active"> </label>
                         </div>
                     </div>
 
@@ -50,6 +59,7 @@
                             delete options.headers['Content-Type']
                             const form = document.getElementById('tao-moi')
                             body = new FormData(form)
+                            body.set('active', document.getElementById('create-active').checked)
                             fetch('/product/insert', {
                                 method: 'POST',
                                 body,

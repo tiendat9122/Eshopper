@@ -1,51 +1,90 @@
 <div th:fragment="modal_edit">
     <script>
         function napThongTinCapNhat(id) {
-            fetch("/category/get", { ...genConfig() })
-                .then((res) => {
+            fetch('/product/get?id=' + id, { ...genConfig() })
+                .then(res => {
                     if (res.ok) {
-                        const select = document.getElementById("edit-role-select");
-                        select.innerHTML = ""
-                        res.json().then((data) => {
-                            data.forEach((item) => {
-                                const option = document.createElement("option");
-                                option.innerText = item.name;
-                                option.value = item.id;
-                                select.appendChild(option);
-                            });
-                        }).then(() => {
-                            fetch('/product/get?id=' + id, {
-                                ...genConfig()
-                            }).then(res => {
-                                if (res.ok) {
-                                    res.json().then(data => {
-                                        const dom = document.querySelector('#editModal form')
-                                        Object.keys(data).forEach(i => {
-                                            if (!["categoryIds"].includes(i)) {
-                                                const input = dom.querySelector(`input[name=${i}]`)
-                                                if (input != null)
-                                                    input.value = data[i]
-                                            }
-                                        })
-                                        /**
-                                         * @type {HTMLOptionElement[]}
-                                         */
-                                        const options = Array.from(dom.querySelectorAll('option'))
-                                        options.forEach(i => i.selected = false)
-                                        data.categories.forEach(category => {
-                                            /**
-                                             * @type {HTMLOptionElement|null}
-                                             */
-                                            const option = options.find(i => i.value == category.id)
-                                            if (option != null) {
-                                                option.selected = true
-                                            }
-                                        })
-                                        $('#edit-role-select').select2()
+                        res.json().then(data => {
+                            const dom = document.querySelector('#editModal form')
 
-                                    })
+                            Object.keys(data).forEach(i => {
+                                if (!["categoryIds", "authorId"].includes(i)) {
+                                    const input = dom.querySelector(`input[name=${i}]`)
+                                    if (input != null)
+                                        input.value = data[i]
                                 }
                             })
+
+                            $('#edit-author option').remove()
+                            if(data.author != null)
+                            {
+                                $('#edit-author').select2({
+                                    placeholder: "Chọn tác giả",
+                                    allowClear: true,
+                                    ajax: {
+                                        url: '/author/get',
+                                        type: 'GET',
+                                        headers: {
+                                            "Authorization": "Bearer " + getJwtToken()
+                                        },
+                                        processResults: function (data) {
+                                            return {
+                                                results: data.map(i => ({
+                                                    id: i.id,
+                                                    text: i.name
+                                                }))
+                                            };
+                                        }
+                                    }
+                                })
+                                const authorSelecter = $('#edit-author')
+                                var option = new Option(data.author.name, data.author.id, true, true)
+                                authorSelecter.append(option).trigger('change')
+                                authorSelecter.trigger({
+                                    type: 'select2:select',
+                                    params: {
+                                        data: {id:data.author.id,text:data.author.name}
+                                    }
+                                })
+                            }
+
+                            $('#edit-categories option').remove()
+                            if(data.categories != null)
+                            {
+                                $('#edit-categories').select2({
+                                    placeholder: "Chọn thể loại",
+                                    allowClear: true,
+                                    ajax: {
+                                        url: '/category/get',
+                                        type: 'GET',
+                                        headers: {
+                                            "Authorization": "Bearer " + getJwtToken()
+                                        },
+                                        processResults: function (data) {
+                                            return {
+                                                results: data.map(i => ({
+                                                    id: i.id,
+                                                    text: i.name
+                                                }))
+                                            };
+                                        }
+                                    }
+                                })
+                                const selecter = $('#edit-categories')
+                                data.categories.forEach(i=>{
+                                    var option = new Option(i.name, i.id, true, true)
+                                    selecter.append(option)
+                                })
+                                selecter.trigger('change')
+                                selecter.trigger({
+                                    type: 'select2:select',
+                                    params: {
+                                        data: data.categories.map(i=> ({id: i.id, text: i.name}))
+                                    }
+                                })
+                            }
+
+
                         })
                     }
                 })
@@ -81,8 +120,8 @@
                             <label for="val-select2-multiple-role" class="form-label col-sm-3">Thể loại<span
                                     class="text-danger">*</span></label>
                             <div class="form-control col-sm-8 p-0 border-0">
-                                <select class="form-control js-select2" id="edit-role-select" name="categoryIds"
-                                    style="width: 100%" data-placeholder="Chọn quyền" multiple>
+                                <select class="form-control js-select2" id="edit-categories" name="categoryIds"
+                                    style="width: 100%" multiple>
                                 </select>
                             </div>
                         </div>
@@ -91,8 +130,8 @@
                             <label for="val-select2-multiple-role" class="form-label col-sm-3">Tác giả<span
                                     class="text-danger">*</span></label>
                             <div class="form-control col-sm-8 p-0 border-0">
-                                <select class="form-control js-select2" id="edit-author" name="categoryIds"
-                                    style="width: 100%;" data-placeholder="Chọn quyền" multiple>
+                                <select class="form-control js-select2" id="edit-author" name="authorId"
+                                    style="width: 100%;" multiple>
                                 </select>
                             </div>
                         </div>
