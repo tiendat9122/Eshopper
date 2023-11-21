@@ -1,0 +1,183 @@
+<div th:fragment="modal_edit">
+    <script>
+        function napThongTinCapNhat(id) {
+            fetch('/product/get?id=' + id, { ...genConfig() })
+                .then(res => {
+                    if (res.ok) {
+                        res.json().then(data => {
+                            const dom = document.querySelector('#editModal form')
+
+                            Object.keys(data).forEach(i => {
+                                if (!["categoryIds", "authorId", "active"].includes(i)) {
+                                    const input = dom.querySelector(`input[name=${i}]`)
+                                    if (input != null)
+                                        input.value = data[i]
+                                }
+                            })
+                            const activeDom = dom.querySelector('select [name=active]')
+                            if(activeDom != null) {
+                                activeDom.checked = data.active
+                            }
+                            $('#edit-author option').remove()
+                            if(data.author != null)
+                            {
+                                $('#edit-author').select2({
+                                    placeholder: "Chọn tác giả",
+                                    allowClear: true,
+                                    ajax: {
+                                        url: '/author/get',
+                                        type: 'GET',
+                                        headers: {
+                                            "Authorization": "Bearer " + getJwtToken()
+                                        },
+                                        processResults: function (data) {
+                                            return {
+                                                results: data.map(i => ({
+                                                    id: i.id,
+                                                    text: i.name
+                                                }))
+                                            };
+                                        }
+                                    }
+                                })
+                                const authorSelecter = $('#edit-author')
+                                var option = new Option(data.author.name, data.author.id, true, true)
+                                authorSelecter.append(option).trigger('change')
+                                authorSelecter.trigger({
+                                    type: 'select2:select',
+                                    params: {
+                                        data: {id:data.author.id,text:data.author.name}
+                                    }
+                                })
+                            }
+
+                            $('#edit-categories option').remove()
+                            if(data.categories != null)
+                            {
+                                $('#edit-categories').select2({
+                                    placeholder: "Chọn thể loại",
+                                    allowClear: true,
+                                    ajax: {
+                                        url: '/category/get',
+                                        type: 'GET',
+                                        headers: {
+                                            "Authorization": "Bearer " + getJwtToken()
+                                        },
+                                        processResults: function (data) {
+                                            return {
+                                                results: data.map(i => ({
+                                                    id: i.id,
+                                                    text: i.name
+                                                }))
+                                            };
+                                        }
+                                    }
+                                })
+                                const selecter = $('#edit-categories')
+                                data.categories.forEach(i=>{
+                                    var option = new Option(i.name, i.id, true, true)
+                                    selecter.append(option)
+                                })
+                                selecter.trigger('change')
+                                selecter.trigger({
+                                    type: 'select2:select',
+                                    params: {
+                                        data: data.categories.map(i=> ({id: i.id, text: i.name}))
+                                    }
+                                })
+                            }
+
+
+                        })
+                    }
+                })
+        }
+    </script>
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-success">
+                    <h5 class="modal-title" id="editModalLabel" style="color: white;">Chỉnh sửa bản ghi
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" style="color: white;">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="form-group row">
+                            <label for="val-table-number" class="form-label col-sm-3">ID <span
+                                    class="text-danger">*</span></label>
+                            <input class="form-control col-sm-8 label" name="id" readonly />
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="val-number-of-people" class="form-label col-sm-3">Tên<span
+                                    class="text-danger">*</span></label>
+                            <input type="text" name="name" required class="form-control col-sm-8"
+                                id="val-number-of-people" placeholder="Nhập ...">
+                        </div>
+
+                        <div class="form-group row items-push">
+                            <label for="val-select2-multiple-role" class="form-label col-sm-3">Thể loại<span
+                                    class="text-danger">*</span></label>
+                            <div class="form-control col-sm-8 p-0 border-0">
+                                <select class="form-control js-select2" id="edit-categories" name="categoryIds"
+                                    style="width: 100%" multiple>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row items-push">
+                            <label for="val-select2-multiple-role" class="form-label col-sm-3">Tác giả<span
+                                    class="text-danger">*</span></label>
+                            <div class="form-control col-sm-8 p-0 border-0">
+                                <select class="form-control js-select2" id="edit-author" name="authorId"
+                                    style="width: 100%;" multiple>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="edit-active" class="form-label col-sm-3">Kích hoạt<span
+                                    class="text-danger">*</span></label>
+                            <div class="custom-control custom-switch custom-control-lg custom-control-inline mb-2">
+                                <input type="checkbox" class="custom-control-input" id="edit-active" name="active">
+                                <label class="custom-control-label" for="edit-active"> </label>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                            <button type="button" class="btn btn-success" onclick="capNhat()">Xác nhận</button>
+                        </div>
+
+
+
+                        <script>
+                            function capNhat() {
+                                const id = document.getElementById('editModal').dataset.id
+                                const form = document.querySelector('#editModal form')
+                                body = new FormData(form)
+                                const options = genConfig();
+                                delete options.headers["Content-Type"]
+                                fetch('/product/update?id=' + id, {
+                                    ...options,
+                                    method: 'PUT',
+                                    body
+                                }).then(res => {
+                                    if (res.ok) {
+                                        $('#editModal').modal('hide')
+                                        $('table').DataTable().ajax.reload()
+                                    }
+                                })
+                            }
+                        </script>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
