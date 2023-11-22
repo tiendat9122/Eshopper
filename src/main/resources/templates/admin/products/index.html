@@ -6,7 +6,7 @@
                 <h1 class="flex-sm-fill h3 my-2">
                     Quản lý sản phẩm <small
                         class="d-block d-sm-inline-block mt-2 mt-sm-0 font-size-base font-w400 text-muted">Danh
-                        sách phân quyền hệ thống Eshopper</small>
+                        sách sản phẩm hệ thống Eshopper</small>
                 </h1>
                 <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
                     <ol class="breadcrumb breadcrumb-alt">
@@ -41,25 +41,25 @@
                 </a>
             </div>
             <div class="col-6 col-lg-4">
-                <a class="block block-rounded block-link-shadow text-center" href="javascript:void(0)">
+                <a class="block block-rounded block-link-shadow text-center" href="#">
                     <div class="block-content block-content-full">
-                        <div class="font-size-h2 text-danger">24</div>
+                        <div class="font-size-h2 text-danger">224936</div>
                     </div>
                     <div class="block-content py-2 bg-body-light">
                         <p class="font-w600 font-size-sm text-danger mb-0">
-                            Nhân viên quản lý
+                            Sản phẩm đã bán
                         </p>
                     </div>
                 </a>
             </div>
             <div class="col-6 col-lg-4">
-                <a class="block block-rounded block-link-shadow text-center" href="be_pages_ecom_dashboard.html">
+                <a class="block block-rounded block-link-shadow text-center" href="#">
                     <div class="block-content block-content-full">
                         <div class="font-size-h2 text-dark">14503</div>
                     </div>
                     <div class="block-content py-2 bg-body-light">
                         <p class="font-w600 font-size-sm text-muted mb-0">
-                            Người dùng
+                            Hàng tồn kho
                         </p>
                     </div>
                 </a>
@@ -74,7 +74,8 @@
                     <thead>
                         <tr>
                             <th class="text-center" style="width: 80px;">ID</th>
-                            <th>Name</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Giá bán lẻ</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -104,8 +105,9 @@
             columnDefs: [
                 { targets: 0, data: 'id', className: "text-center font-size-sm" },
                 { targets: 1, data: 'name', className: "font-w600 font-size-sm" },
+                { targets: 2, data: 'retail', className: "font-w600 font-size-sm" },
                 {
-                    targets: 2, data: 'id', defaultContent: "", render: (d, t, r, m) => `
+                    targets: 3, data: 'id', defaultContent: "", render: (d, t, r, m) => `
                     <div class='btn-group'>
                         <a class='btn btn-sm btn-alt-success' onclick='editModal(${d})'
                             title='Edit'><i class='fa fa-fw fa-pencil-alt'></i></a>
