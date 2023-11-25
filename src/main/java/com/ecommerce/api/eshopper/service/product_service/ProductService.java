@@ -39,6 +39,26 @@ public class ProductService implements IProductService {
         return productRepository.findById(id);
     }
 
+    @Override
+    public Optional<Product> findProductByName(String name) {
+        return productRepository.findByName(name);
+    }
+
+    @Override
+    public List<Product> findProductByNameContaining(String name) {
+        return productRepository.findByNameContaining(name);
+    }
+
+    @Override
+    public List<Product> findProductByAuthor(String author) {
+        return productRepository.findByAuthorName(author);
+    }
+
+    @Override
+    public List<Product> findProductByKeyWord(String name) {
+        return productRepository.findByKeyword(name);
+    }
+
     // Save and update
     @Override
     public List<Product> saveAllProduct(List<Product> products) {

@@ -1,6 +1,6 @@
-const form = document.getElementById("login");
-const errorMsg = document.getElementById("error");
-const loginButton = document.getElementById("login-button");
+const form = document.getElementById("user-login");
+const errorMsg = document.getElementById("user-loginerror");
+const loginButton = document.getElementById("user-loginbutton");
 
 function parseJwt (token) {
   var base64Url = token.split('.')[1];
@@ -33,7 +33,7 @@ loginButton.addEventListener("click", () => {
           if (res.ok) {
             res.json().then(userInfo => {
               localStorage.setItem("user", JSON.stringify(userInfo))
-              location.href = "/admin/user";
+              location.href = "/eshopper/store";
             })
           }
         })

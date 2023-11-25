@@ -107,8 +107,7 @@ public class UserApi {
                 user.setActive(userDto.isActive());
                 
                 // set encrypassword
-                user.setPassword(userDto.getPassword());
-                user.setPassword(passwordEncoder.encode(user.getPassword()));
+                user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
                 // add avatar for user
                 if (userDto.getAvatar() == null || userDto.getAvatar().isEmpty()) {
@@ -242,6 +241,7 @@ public class UserApi {
 
     @PutMapping("/active")
     public ResponseEntity<?> activeUser(@RequestBody UserActiveDto userActiveDto) {
+
         try {
             Long userId = userActiveDto.getId();
             User user = userService.findUserById(userId).orElseThrow(() -> new EntityNotFoundException("Cannot find user with id = " + userId));
@@ -252,6 +252,7 @@ public class UserApi {
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
         }
+        
     }
 
     @DeleteMapping("/delete")

@@ -9,19 +9,26 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="tao-moi" method="POST" enctype="multipart/form-data">
+                <form id="tao-moi" >
                     <div class="form-group row">
                         <label for="val-table-number" class="form-label col-sm-3">Tên sản phẩm <span
                                 class="text-danger">*</span></label>
                         <input type="text" name="name" class="form-control col-sm-8" id="val-table-number"
-                            placeholder="Nhập tên quyền" required>
+                            placeholder="Nhập tên sản phẩm..." required>
                     </div>
 
                     <div class="form-group row">
                         <label for="val-table-number" class="form-label col-sm-3">Giá <span
                                 class="text-danger">*</span></label>
-                        <input type="text" name="retail" class="form-control col-sm-8" id="val-table-number"
-                            placeholder="Nhập giá" required>
+                        <input type="number" name="retail" class="form-control col-sm-8" id="val-table-number"
+                            placeholder="Nhập giá bán lẻ..." required>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="val-table-number" class="form-label col-sm-3">Hàng tồn kho <span
+                                class="text-danger">*</span></label>
+                        <input type="number" name="inventory" class="form-control col-sm-8" id="val-table-number"
+                            placeholder="Nhập số lượng tồn kho..." required>
                     </div>
 
                     <div class="form-group row items-push">
@@ -42,6 +49,13 @@
                                 style="width: 100%;" data-placeholder="Chọn quyền" multiple>
                             </select>
                         </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="val-table-number" class="form-label col-sm-3">Hình ảnh <span
+                                class="text-danger">*</span></label>
+                        <input type="file" name="picture" class="form-control col-sm-8" id="val-table-number"
+                            placeholder="Nhập giá" required>
                     </div>
 
                     <div class="form-group row">

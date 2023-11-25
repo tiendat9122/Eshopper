@@ -84,6 +84,32 @@ public class ProductApi {
 
     }
 
+    @GetMapping("/category")
+    public ResponseEntity<?> filterCategory(@RequestParam(name = "id") Long id) {
+
+        try {
+            Category category = categoryService.findCategoryById(id).orElseThrow(() -> new EntityNotFoundException("Cannot find category with id = " + id));
+            Set<Product> products = category.getProducts();
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    @GetMapping("/author")
+    public ResponseEntity<?> filterAuthor(@RequestParam(name = "id") Long id) {
+
+        try {
+            Author author = authorService.findAuthorById(id).orElseThrow(() -> new EntityNotFoundException("Cannot find author with id = " + id));
+            Set<Product> products = author.getProducts();
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        
+    }
+
     @PostMapping("/insert")
     public ResponseEntity<?> insertProduct(@ModelAttribute ProductDto productDto) {
 
@@ -232,6 +258,22 @@ public class ProductApi {
             }
         } catch (EntityNotFoundException exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    @PutMapping("/active")
+    public ResponseEntity<?> activeProduct(@RequestBody ProductDto productDto) {
+
+        try {
+            Long productId = productDto.getId();
+            Product product = productService.findProductById(productId).orElseThrow(() -> new EntityNotFoundException("Cannot find product with id = " + productId));
+            
+            product.setActive(productDto.isActive());
+            Product productActived = productService.saveProduct(product);
+            return new ResponseEntity<>(productActived, HttpStatus.OK);
+        } catch(EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
 
     }

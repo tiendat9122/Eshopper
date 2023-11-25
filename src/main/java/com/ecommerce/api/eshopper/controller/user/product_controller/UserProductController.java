@@ -16,6 +16,14 @@ public class UserProductController {
         return "user/shop";
     }
 
+    @GetMapping("/store")
+    public String userStore(Model model) {
+        model.addAttribute("page", 0);
+        model.addAttribute("size", 0);
+        model.addAttribute("eshopperContentFragment", "user/components/store.html");
+        return "user/layouts/app";
+    }
+
     @GetMapping("/product/detail")
     public String userProductDetail(Model model) {
         model.addAttribute("eshopperContentFragment", "user/components/detail.html");

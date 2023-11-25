@@ -12,6 +12,14 @@ public interface IProductService {
 
     Optional<Product> findProductById(Long id);
 
+    Optional<Product> findProductByName(String name);
+
+    List<Product> findProductByNameContaining(String name);
+
+    List<Product> findProductByAuthor(String name);
+
+    List<Product> findProductByKeyWord(String name);
+
     // Save and update
     List<Product> saveAllProduct(List<Product> products);
 

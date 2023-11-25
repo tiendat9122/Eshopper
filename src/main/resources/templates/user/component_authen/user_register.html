@@ -1,0 +1,76 @@
+<div th:fragment="eshopperAuthen" class="contact-form bg-white">
+  <div id="success"></div>
+  <div class="p-5">
+    <h4 class="pb-4">Đăng ký</h4>
+    <form name="sentMessage" id="user-register" novalidate="novalidate">
+      <div class="control-group">
+        <input type="text" class="form-control" name="full_name" placeholder="Họ và tên" required="required"
+          data-validation-required-message="Bạn chưa nhập họ và tên" />
+        <p class="help-block text-danger"></p>
+      </div>
+      <div class="control-group">
+        <input type="text" class="form-control" name="user_name" placeholder="Tên đăng nhập" required="required"
+          data-validation-required-message="Bạn chưa nhập tên đăng nhập" />
+        <p class="help-block text-danger"></p>
+      </div>
+      <div class="control-group">
+        <input type="email" class="form-control" name="email" placeholder="Địa chỉ email" required="required"
+          data-validation-required-message="Bạn chưa nhập địa chỉ email" />
+        <p class="help-block text-danger"></p>
+      </div>
+      <div class="control-group">
+        <input type="text" class="form-control" name="phone_number" placeholder="Số điện thoại" required="required"
+          data-validation-required-message="Bạn chưa nhập số điện thoại" />
+        <p class="help-block text-danger"></p>
+      </div>
+      <div class="control-group">
+        <input type="text" class="form-control" name="address" placeholder="Địa chỉ" required="required"
+          data-validation-required-message="Bạn chưa nhập địa chỉ" />
+        <p class="help-block text-danger"></p>
+      </div>
+      <div class="control-group">
+        <input type="date" class="form-control" name="birth_day" placeholder="Ngày sinh" required="required"
+          data-validation-required-message="Bạn chưa nhập ngày sinh" />
+        <p class="help-block text-danger"></p>
+      </div>
+      <div class="control-group">
+        <input type="password" class="form-control" name="password" placeholder="Mật khẩu" required="required"
+          data-validation-required-message="Bạn chưa nhập mật khẩu" />
+        <p class="help-block text-danger"></p>
+      </div>
+      <div>
+        <button class="btn btn-primary py-2 px-4" type="button" id="user-registerbutton">
+          Đăng ký
+        </button>
+      </div>
+    </form>
+    <div class="pt-3">
+      <p>Bạn đã có tài khoản Eshopper? <a href="/userauth/login">Đăng nhập</a></p>
+    </div>
+  </div>
+
+  <script>
+    const formRegister = document.getElementById("user-register");
+    const errorRegisterMsg = document.getElementById("user-registererror");
+    const registerButton = document.getElementById("user-registerbutton");
+
+    registerButton.addEventListener("click", () => {
+      const formData = new FormData(formRegister);
+      const data = Object.fromEntries(formData.entries());
+      console.log("done bind register");
+      fetch("/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }).then((res) => {
+        if (res.ok) {
+          res.json().then((success) => {
+            location.href = "/userauth/login";
+          })
+        }
+      })
+    })
+  </script>
+</div>

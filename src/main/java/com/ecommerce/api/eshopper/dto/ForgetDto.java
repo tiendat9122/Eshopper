@@ -1,7 +1,10 @@
 package com.ecommerce.api.eshopper.dto;
-
 import java.util.Date;
+import java.util.List;
+
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
+
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
@@ -13,24 +16,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RegisterDto {
+public class ForgetDto {
     
-    private String full_name;
-
-    private String user_name;
-
-    @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date birth_day;
-
-    private String address;
-
-    private String phone_number;
-
     private String email;
 
-    private String password;
+    // private String phone_number;
 
-    private boolean active;
+    private String new_password;
 
 }
