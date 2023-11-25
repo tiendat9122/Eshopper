@@ -105,20 +105,20 @@ public class UserApi {
                 user.setPhone_number(userDto.getPhone_number());
                 user.setBirth_day(userDto.getBirth_day());
                 user.setActive(userDto.isActive());
-                
+
                 // set encrypassword
                 user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
                 // add avatar for user
-                if (userDto.getAvatar() == null || userDto.getAvatar().isEmpty()) {
+                if (userDto.getAvatar_file() == null || userDto.getAvatar_file().isEmpty()) {
                     user.setAvatar(null);
                 } else {
                     Path path = Paths.get(FILE_DIRECTORY, "users");
 
                     try {
-                        InputStream inputStream = userDto.getAvatar().getInputStream();
+                        InputStream inputStream = userDto.getAvatar_file().getInputStream();
                         long timeStamp = new Date().getTime();
-                        String fileName = userDto.getAvatar().getOriginalFilename();
+                        String fileName = userDto.getAvatar_file().getOriginalFilename();
                         int lastDotIndex = fileName.lastIndexOf('.');
                         String extension;
                         if (lastDotIndex > 0) {
@@ -126,7 +126,7 @@ public class UserApi {
                         } else {
                             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
                         }
-                        String fileSave = userDto.getUser_name() + "_" + userDto.getAvatar().getName() + timeStamp
+                        String fileSave = userDto.getUser_name() + "_" + userDto.getAvatar_file().getName() + timeStamp
                                 + extension;
 
                         Files.copy(inputStream, path.resolve(fileSave),
@@ -177,17 +177,12 @@ public class UserApi {
 
                 // update avatar for user
                 File fileOld = new File(FILE_DIRECTORY + "/users/" + user.getAvatar());
-                if (userDto.getAvatar() == null || userDto.getAvatar().isEmpty()) {
-                    if (fileOld.exists()) {
-                        fileOld.delete();
-                    }
-                    user.setAvatar(null);
-                } else {
+                if (userDto.getAvatar_file() != null && !userDto.getAvatar_file().isEmpty()) {
                     try {
                         Path path = Paths.get(FILE_DIRECTORY, "users");
-                        InputStream inputStream = userDto.getAvatar().getInputStream();
+                        InputStream inputStream = userDto.getAvatar_file().getInputStream();
                         long timeStamp = new Date().getTime();
-                        String fileName = userDto.getAvatar().getOriginalFilename();
+                        String fileName = userDto.getAvatar_file().getOriginalFilename();
                         int lastDotIndex = fileName.lastIndexOf('.');
                         String extension;
                         if (lastDotIndex > 0) {
@@ -196,9 +191,9 @@ public class UserApi {
                             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
                         }
 
-                        String fileSave = userDto.getUser_name() + "_" + userDto.getAvatar().getName() + timeStamp
-                                    + extension;
-                        
+                        String fileSave = userDto.getUser_name() + "_" + userDto.getAvatar_file().getName() + timeStamp
+                                + extension;
+
                         if (fileOld.exists()) {
                             fileOld.delete();
                             Files.copy(inputStream, path.resolve(fileSave),
@@ -213,8 +208,12 @@ public class UserApi {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                } else if (userDto.getAvatar().isBlank()) {
+                    if (fileOld.exists()) {
+                        fileOld.delete();
+                    }
+                    user.setAvatar(null);
                 }
-
                 // update roles for user
                 List<Long> roleIds = userDto.getRoleIds();
                 Set<Role> roles = new HashSet<>();
@@ -244,7 +243,8 @@ public class UserApi {
 
         try {
             Long userId = userActiveDto.getId();
-            User user = userService.findUserById(userId).orElseThrow(() -> new EntityNotFoundException("Cannot find user with id = " + userId));
+            User user = userService.findUserById(userId)
+                    .orElseThrow(() -> new EntityNotFoundException("Cannot find user with id = " + userId));
 
             user.setActive(userActiveDto.isActive());
             userService.saveUser(user);
@@ -252,7 +252,7 @@ public class UserApi {
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
         }
-        
+
     }
 
     @DeleteMapping("/delete")
@@ -275,7 +275,7 @@ public class UserApi {
 
                 // delete user's orders
                 Set<Orders> orders = user.getOrders();
-                for(Orders order : orders) {
+                for (Orders order : orders) {
                     order.setUser(null);
                 }
 

@@ -1,12 +1,12 @@
 <div th:fragment="modal_edit">
     <script>
         function napThongTinCapNhat(id) {
-            
+            document.querySelector('#editModal form').reset()
             fetch("/role/get", { ...genConfig() })
                 .then((res) => {
                     if (res.ok) {
                         const select = document.getElementById("edit-role-select");
-                        select.innerHTML=""
+                        select.innerHTML = ""
                         res.json().then((data) => {
                             data.forEach((item) => {
                                 const option = document.createElement("option");
@@ -26,13 +26,20 @@
                                 const switchDOM = document.getElementById('edit-active')
                                 switchDOM.checked = data.active
                                 const options = Array.from(document.querySelectorAll('#edit-role-select option'));
-                                data.role.forEach(i=>{
-                                    options.find(y=>y.value == i.id).selected = true;
+                                data.role.forEach(i => {
+                                    options.find(y => y.value == i.id).selected = true;
                                 })
                                 // document.getElementById('edit-avatar-url').value = data.avatar
+
+                                const img = document.getElementById('edit-avatar-img')
+                                if (data.avatar != null)
+                                    img.src = "/user/download/" + data.avatar
+                                else
+                                    img.src = "/content/admin/assets/media/avatars/avatar0.jpg"
+
                                 $('#edit-role-select').select2();
                                 Object.keys(data).forEach((key) => {
-                                    if (!["role", "avatar"].includes(key)) {
+                                    if (!["role"].includes(key)) {
                                         const dom = document.querySelector(
                                             `#editModal input[name=${key}]`
                                         );
@@ -78,8 +85,8 @@
                         <div class="form-group row">
                             <label for="val-email" class="form-label col-sm-3">Email<span
                                     class="text-danger">*</span></label>
-                            <input type="text" readonly name="email" required class="form-control col-sm-8" id="val-email"
-                                placeholder="Nhập địa chỉ Email..." />
+                            <input type="text" readonly name="email" required class="form-control col-sm-8"
+                                id="val-email" placeholder="Nhập địa chỉ Email..." />
                         </div>
 
                         <div class="form-group row">
@@ -125,7 +132,13 @@
                         <div class="form-group row">
                             <label for="val-name" class="form-label col-sm-3">Ảnh đại diện <span
                                     class="text-danger">*</span></label>
-                            <input type="file" name="avatar" class="form-control col-sm-8" id="val-name" required />
+                            <div>
+                                <img id="edit-avatar-img" width="250" />
+                                <input type="file" name="avatar_file" class="form-control col-sm-8" id="val-name"
+                                    required />
+                                <input type="hidden" name="avatar">
+                                <button type="button" onclick="xoaAvatar()">xoá avatar</button>
+                            </div>
                         </div>
 
                         <!-- <div class="form-group row">
@@ -135,7 +148,8 @@
                         </div> -->
 
                         <div class="form-group row">
-                            <label for="edit-active" class="form-label col-sm-3">Kích hoạt<span class="text-danger">*</span></label>
+                            <label for="edit-active" class="form-label col-sm-3">Kích hoạt<span
+                                    class="text-danger">*</span></label>
                             <div class="custom-control custom-switch custom-control-lg custom-control-inline mb-2">
                                 <input type="checkbox" class="custom-control-input" id="edit-active" name="active">
                                 <label class="custom-control-label" for="edit-active"> </label>
@@ -171,6 +185,22 @@
                         <!--                        </script>-->
 
                         <script>
+                            const uploadInput = document.querySelector('#editModal input[name=avatar_file]')
+                            uploadInput.addEventListener("change", (e) => {
+                                const file = e.target.files[0]
+                                const fileReader = new FileReader()
+                                fileReader.onload = () => {
+                                    const img = document.getElementById('edit-avatar-img')
+                                    img.src = fileReader.result
+                                }
+                                fileReader.readAsDataURL(file)
+                            })
+
+                            function xoaAvatar() {
+                                document.querySelector('#editModal input[name=avatar]').value = ""
+                                document.querySelector('#edit-avatar-img').src = "/content/admin/assets/media/avatars/avatar0.jpg"
+                            }
+
                             function capNhat() {
                                 const id = document.getElementById("editModal").dataset.id;
                                 const form = document.querySelector("#editModal form");
@@ -186,6 +216,13 @@
                                     headers,
                                 }).then((res) => {
                                     if (res.ok) {
+                                        const currentUser = getUserInfo();
+                                        if (currentUser.id == id) {
+                                            layThongTinNguoiDungHienTai().then(() => {
+                                                capNhatThongTinNguoiDungHienTai();
+                                            })
+                                        }
+
                                         $("#editModal").modal("hide");
                                         $("table").DataTable().ajax.reload();
                                     }

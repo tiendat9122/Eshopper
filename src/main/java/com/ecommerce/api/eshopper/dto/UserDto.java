@@ -31,7 +31,9 @@ public class UserDto {
 
     private String phone_number;
 
-    private MultipartFile avatar;
+    private MultipartFile avatar_file;
+
+    private String avatar;
 
     private String email;
 
