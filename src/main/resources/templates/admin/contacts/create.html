@@ -1,0 +1,74 @@
+<div th:fragment="modal_create" class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="addModalLabel" style="color: white;">Thêm liên hệ</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="color: white;">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="tao-moi">
+                    <div class="form-group row items-push">
+                        <label for="val-select2-multiple-role" class="form-label col-sm-3">Người dùng <span
+                                class="text-danger">*</span></label>
+                        <div class="form-control col-sm-8 p-0 border-0">
+                            <select class="form-control js-select2" id="create-user" name="userId" style="width: 100%;"
+                                data-placeholder="Chọn người dùng" multiple>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="val-table-number" class="form-label col-sm-3">Tiêu đề <span
+                                class="text-danger">*</span></label>
+                        <input type="text" name="title" class="form-control col-sm-8" id="val-table-number"
+                            placeholder="Nhập tiêu đề liên hệ..." required>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="val-table-number" class="form-label col-sm-3">Nội dung <span
+                                class="text-danger">*</span></label>
+                        <input type="text" name="content" class="form-control col-sm-8" id="val-table-number"
+                            placeholder="Nhập nội dung liên hệ..." required>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="val-table-number" class="form-label col-sm-3">Ngày gửi <span
+                                class="text-danger">*</span></label>
+                        <input type="datetime-local" name="contactDate" class="form-control col-sm-8" id="val-table-number"
+                            placeholder="Nhập nội dung liên hệ..." required>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-primary" onclick="taoMoi()">Xác nhận</button>
+                    </div>
+
+                    <script>
+                        function taoMoi() {
+                            const options = genConfig()
+                            const form = document.getElementById('tao-moi')
+                            const body = new FormData(form)
+                            fetch('/contact/insert', {
+                                method: 'POST',
+                                body: JSON.stringify(Object.fromEntries(body.entries())),
+                                ...options,
+
+                            })
+                                .then(res => {
+                                    if (res.ok) {
+                                        $('#addModal').modal('hide')
+                                        $("table").DataTable().ajax.reload()
+                                        $('#create-user option').remove()
+                                        form.reset()
+                                    }
+                                })
+                        }
+                    </script>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

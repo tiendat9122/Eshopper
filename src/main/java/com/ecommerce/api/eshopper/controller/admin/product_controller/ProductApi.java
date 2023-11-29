@@ -183,8 +183,8 @@ public class ProductApi {
     public ResponseEntity<?> updateProduct(@RequestParam(name = "id") Long id, @ModelAttribute ProductDto productDto) {
 
         try {
-            if (id != null) {
-                Product product = productService.findProductById(id).orElseThrow();
+            if(id != null) {
+                Product product = productService.findProductById(id).orElseThrow(() -> new EntityNotFoundException("Cannot find product with id = " + id));
                 product.setName(productDto.getName());
                 product.setRetail(productDto.getRetail());
                 product.setInventory(productDto.getInventory());
@@ -192,7 +192,7 @@ public class ProductApi {
                 // update author for product
                 Long authorId = productDto.getAuthorId();
                 if(authorId != null) {
-                    Author author = authorService.findAuthorById(authorId).orElseThrow();
+                    Author author = authorService.findAuthorById(authorId).orElseThrow(() -> new EntityNotFoundException("Cannot find author with id = " + id));
                     product.setAuthor(author);
                 } else {
                     product.setAuthor(null);
@@ -200,42 +200,38 @@ public class ProductApi {
 
                 // update picture for product
                 File fileOld = new File(FILE_DIRECTORY + "/products/" + product.getPicture());
-                if (productDto.getPicture() == null || productDto.getPicture().isEmpty()) {
-                    if (fileOld.exists()) {
-                        fileOld.delete();
-                    }
-                    product.setPicture(null);
-                } else {
+                if (productDto.getPicture_file() != null && !productDto.getPicture_file().isEmpty()) {
                     try {
                         Path path = Paths.get(FILE_DIRECTORY, "products");
-                        InputStream inputStream = productDto.getPicture().getInputStream();
+                        InputStream inputStream = productDto.getPicture_file().getInputStream();
                         long timeStamp = new Date().getTime();
-                        String fileName = productDto.getPicture().getOriginalFilename();
+                        String fileName = productDto.getPicture_file().getOriginalFilename();
                         int lastDotIndex = fileName.lastIndexOf('.');
                         String extension;
-                        if (lastDotIndex > 0) {
+                        if(lastDotIndex > 0) {
                             extension = fileName.substring(lastDotIndex);
                         } else {
                             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
                         }
 
-                        String fileSave = productDto.getName() + "_" + productDto.getPicture().getName() + timeStamp
-                                + extension;
+                        String fileSave = productDto.getName() + "_" + productDto.getPicture_file().getName() + timeStamp + extension;
 
-                        if (fileOld.exists()) {
+                        if(fileOld.exists()) {
                             fileOld.delete();
-                            Files.copy(inputStream, path.resolve(fileSave),
-                                    StandardCopyOption.REPLACE_EXISTING);
+                            Files.copy(inputStream, path.resolve(fileSave), StandardCopyOption.REPLACE_EXISTING);
                             product.setPicture(fileSave);
                         } else {
-                            Files.copy(inputStream, path.resolve(fileSave),
-                                    StandardCopyOption.REPLACE_EXISTING);
+                            Files.copy(inputStream, path.resolve(fileSave), StandardCopyOption.REPLACE_EXISTING);
                             product.setPicture(fileSave);
                         }
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                } else if (productDto.getPicture().isBlank()) {
+                    if(fileOld.exists()) {
+                        fileOld.delete();
+                    }
+                    product.setPicture(null);
                 }
 
                 // update categories for product
@@ -256,9 +252,87 @@ public class ProductApi {
             } else {
                 return new ResponseEntity<>("Required pass request param", HttpStatus.BAD_REQUEST);
             }
-        } catch (EntityNotFoundException exception) {
-            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+
+        // try {
+        //     if (id != null) {
+        //         Product product = productService.findProductById(id).orElseThrow();
+        //         product.setName(productDto.getName());
+        //         product.setRetail(productDto.getRetail());
+        //         product.setInventory(productDto.getInventory());
+
+        //         // update author for product
+        //         Long authorId = productDto.getAuthorId();
+        //         if(authorId != null) {
+        //             Author author = authorService.findAuthorById(authorId).orElseThrow();
+        //             product.setAuthor(author);
+        //         } else {
+        //             product.setAuthor(null);
+        //         }
+
+        //         // update picture for product
+        //         File fileOld = new File(FILE_DIRECTORY + "/products/" + product.getPicture());
+        //         if (productDto.getPicture() == null || productDto.getPicture().isEmpty()) {
+        //             if (fileOld.exists()) {
+        //                 fileOld.delete();
+        //             }
+        //             product.setPicture(null);
+        //         } else {
+        //             try {
+        //                 Path path = Paths.get(FILE_DIRECTORY, "products");
+        //                 InputStream inputStream = productDto.getPicture().getInputStream();
+        //                 long timeStamp = new Date().getTime();
+        //                 String fileName = productDto.getPicture().getOriginalFilename();
+        //                 int lastDotIndex = fileName.lastIndexOf('.');
+        //                 String extension;
+        //                 if (lastDotIndex > 0) {
+        //                     extension = fileName.substring(lastDotIndex);
+        //                 } else {
+        //                     return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        //                 }
+
+        //                 String fileSave = productDto.getName() + "_" + productDto.getPicture().getName() + timeStamp
+        //                         + extension;
+
+        //                 if (fileOld.exists()) {
+        //                     fileOld.delete();
+        //                     Files.copy(inputStream, path.resolve(fileSave),
+        //                             StandardCopyOption.REPLACE_EXISTING);
+        //                     product.setPicture(fileSave);
+        //                 } else {
+        //                     Files.copy(inputStream, path.resolve(fileSave),
+        //                             StandardCopyOption.REPLACE_EXISTING);
+        //                     product.setPicture(fileSave);
+        //                 }
+
+        //             } catch (Exception e) {
+        //                 e.printStackTrace();
+        //             }
+        //         }
+
+        //         // update categories for product
+        //         List<Long> categoryIds = productDto.getCategoryIds();
+        //         Set<Category> categories = new HashSet<>();
+        //         if (categoryIds == null) {
+        //             categories = new HashSet<>();
+        //         } else {
+        //             for (Long categoryId : categoryIds) {
+        //                 Category category = categoryService.findCategoryById(categoryId).orElseThrow();
+        //                 categories.add(category);
+        //             }
+        //         }
+        //         product.setCategories(categories);
+
+        //         Product productInserted = productService.saveProduct(product);
+        //         return new ResponseEntity<>(productInserted, HttpStatus.OK);
+        //     } else {
+        //         return new ResponseEntity<>("Required pass request param", HttpStatus.BAD_REQUEST);
+        //     }
+        // } catch (EntityNotFoundException exception) {
+        //     return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        // }
 
     }
 

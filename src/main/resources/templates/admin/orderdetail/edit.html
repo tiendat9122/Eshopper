@@ -1,0 +1,163 @@
+<div th:fragment="modal_edit">
+    <script>
+        function napThongTinCapNhat(id) {
+            document.querySelector('#editModal form').reset()
+            fetch('/orderdetail/get?id=' + id, { ...genConfig() })
+                .then(res => {
+                    if (res.ok) {
+                        res.json().then(data => {
+                            const dom = document.querySelector('#editModal form')
+
+                            Object.keys(data).forEach(i => {
+                                if (!["ordersId", "productId"].includes(i)) {
+                                    const input = dom.querySelector(`input[name=${i}]`)
+                                    if (input != null)
+                                        input.value = data[i]
+                                }
+                            })
+
+                            $('#edit-orders option').remove()
+                            if (data.orders != null) {
+                                $('#edit-orders').select2({
+                                    placeholder: "Chọn đơn hàng",
+                                    allowClear: true,
+                                    ajax: {
+                                        url: '/orders/get',
+                                        type: 'GET',
+                                        headers: {
+                                            "Authorization": "Bearer " + getJwtToken()
+                                        },
+                                        processResults: function (data) {
+                                            return {
+                                                results: data.map(i => ({
+                                                    id: i.id,
+                                                    text: i.id
+                                                }))
+                                            };
+                                        }
+                                    }
+                                })
+
+                                const ordersSelector = $('#edit-orders')
+                                var option = new Option(data.orders.id, data.orders.id, true, true)
+                                ordersSelector.append(option).trigger('change')
+                                ordersSelector.trigger({
+                                    type: 'select2:select',
+                                    params: {
+                                        data: { id: data.orders.id, text: data.orders.id }
+                                    }
+                                })
+                            }
+
+                            $('#edit-product option').remove()
+                            if (data.product != null) {
+                                $('#edit-product').select2({
+                                    placeholder: "Chọn sản phẩm",
+                                    allowClear: true,
+                                    ajax: {
+                                        url: '/product/get',
+                                        type: 'GET',
+                                        headers: {
+                                            "Authorization": "Bearer " + getJwtToken()
+                                        },
+                                        processResults: function (data) {
+                                            return {
+                                                results: data.map(i => ({
+                                                    id: i.id,
+                                                    text: i.name
+                                                }))
+                                            };
+                                        }
+                                    }
+                                })
+
+                                const productSelector = $('#edit-product')
+                                var option = new Option(data.product.name, data.product.id, true, true)
+                                productSelector.append(option).trigger('change')
+                                productSelector.trigger({
+                                    type: 'select2:select',
+                                    params: {
+                                        data: { id: data.product.id, text: data.product.name }
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+        }
+    </script>
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-success">
+                    <h5 class="modal-title" id="editModalLabel" style="color: white;">Sửa chi tiết đơn hàng
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" style="color: white;">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group row">
+                            <label for="val-table-number" class="form-label col-sm-3">ID <span
+                                    class="text-danger">*</span></label>
+                            <input class="form-control col-sm-8 label" name="id" readonly />
+                        </div>
+
+                        <div class="form-group row items-push">
+                            <label for="val-select2-multiple-role" class="form-label col-sm-3">Mã đơn hàng <span
+                                    class="text-danger">*</span></label>
+                            <div class="form-control col-sm-8 p-0 border-0">
+                                <select class="form-control js-select2" id="edit-orders" name="ordersId"
+                                    style="width: 100%;" data-placeholder="Chọn người dùng" multiple>
+                                </select>
+                            </div>
+                        </div>
+    
+                        <div class="form-group row items-push">
+                            <label for="val-select2-multiple-role" class="form-label col-sm-3">Tên sản phẩm <span
+                                    class="text-danger">*</span></label>
+                            <div class="form-control col-sm-8 p-0 border-0">
+                                <select class="form-control js-select2" id="edit-product" name="productId"
+                                    style="width: 100%;" data-placeholder="Chọn người dùng" multiple>
+                                </select>
+                            </div>
+                        </div>
+    
+                        <div class="form-group row">
+                            <label for="val-table-number" class="form-label col-sm-3">Số lượng <span
+                                    class="text-danger">*</span></label>
+                            <input type="number" name="quantity" class="form-control col-sm-8" id="val-table-number"
+                                placeholder="Nhập số lượng sản phẩm..." required>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                            <button type="button" class="btn btn-success" onclick="capNhat()">Xác nhận</button>
+                        </div>
+
+                        <script>
+                            function capNhat() {
+                                const id = document.getElementById('editModal').dataset.id
+                                const form = document.querySelector('#editModal form')
+                                const body = new FormData(form)
+                                fetch('/orderdetail/update?id=' + id, {
+                                    headers: {...genConfig().headers},
+                                    method: 'PUT',
+                                    body: JSON.stringify(Object.fromEntries(body.entries()))
+                                }).then(res => {
+                                    if (res.ok) {
+                                        $('#editModal').modal('hide')
+                                        $('table').DataTable().ajax.reload()
+                                    }
+                                })
+                            }
+                        </script>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

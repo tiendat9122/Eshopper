@@ -4,9 +4,9 @@
         <div class="content content-full">
             <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
                 <h1 class="flex-sm-fill h3 my-2">
-                    Quản lý sản phẩm <small
-                        class="d-block d-sm-inline-block mt-2 mt-sm-0 font-size-base font-w400 text-muted">Danh
-                        sách tác giả hệ thống Eshopper</small>
+                    Quản lý tác giả <small
+                        class="d-block d-sm-inline-block mt-2 mt-sm-0 font-size-base font-w400 text-muted">
+                        Danh sách tác giả hệ thống Eshopper</small>
                 </h1>
                 <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
                     <ol class="breadcrumb breadcrumb-alt">
@@ -47,7 +47,7 @@
                     </div>
                     <div class="block-content py-2 bg-body-light">
                         <p class="font-w600 font-size-sm text-danger mb-0">
-                            Nhân viên quản lý
+                            Tác giả
                         </p>
                     </div>
                 </a>
@@ -59,7 +59,7 @@
                     </div>
                     <div class="block-content py-2 bg-body-light">
                         <p class="font-w600 font-size-sm text-muted mb-0">
-                            Người dùng
+                            Độc giả
                         </p>
                     </div>
                 </a>
@@ -74,7 +74,7 @@
                     <thead>
                         <tr>
                             <th class="text-center" style="width: 80px;">ID</th>
-                            <th>Name</th>
+                            <th>Tên tác giả</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -93,8 +93,12 @@
     $(() => {
         $("table").dataTable({ destroy: true })
         $('table').dataTable({
+            language: {
+                searchPlaceholder: "Tìm kiếm...",
+                info: "Trang _PAGE_ trên _PAGES_"
+            },
             ajax: {
-                url: '/product/get',
+                url: '/author/get',
                 type: 'GET',
                 headers: {
                     "Authorization": "Bearer " + getJwtToken()
@@ -117,71 +121,5 @@
             ],
             "bDestroy": true
         })
-
-
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = '/content/admin/assets/js/plugins/select2/css/select2.min.css';
-        document.head.appendChild(link);
-
-        const scriptFiles = [
-            '/content/admin/assets/js/plugins/select2/js/select2.full.min.js',
-        ];
-
-        scriptFiles.forEach(file => {
-            const script = document.createElement('script');
-            script.onload = () => {
-                jQuery(function () {
-                    One.helpers('select2');
-
-                    $('#create-author, #edit-author').select2({
-                        placeholder: "Chọn tác giả",
-                        allowClear: true,
-                        ajax: {
-                            url: '/author/get',
-                            type: 'GET',
-                            headers: {
-                                "Authorization": "Bearer " + getJwtToken()
-                            },
-                            processResults: function (data) {
-                                return {
-                                    results: data.map(i => ({
-                                        id: i.id,
-                                        text: i.name
-                                    }))
-                                };
-                            }
-                        }
-                    });
-
-                    $('#create-categories, #edit-categories').select2({
-                        placeholder: "Chọn thể loại",
-                        allowClear: true,
-                        ajax: {
-                            url: '/category/get',
-                            type: 'GET',
-                            headers: {
-                                "Authorization": "Bearer " + getJwtToken()
-                            },
-                            processResults: function (data) {
-                                return {
-                                    results: data.map(i => ({
-                                        id: i.id,
-                                        text: i.name
-                                    }))
-                                };
-                            }
-                        }
-                    });
-
-                });
-
-            }
-            script.src = file;
-
-            document.body.appendChild(script);
-        });
-
-
     })
 </script>

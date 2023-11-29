@@ -1,0 +1,188 @@
+<div th:fragment="modal_edit">
+    <script>
+        function napThongTinCapNhat(id) {
+            document.querySelector('#editModal form').reset()
+            fetch('/feedback/get?id=' + id, { ...genConfig() })
+                .then(res => {
+                    if (res.ok) {
+                        res.json().then(data => {
+                            const dom = document.querySelector('#editModal form')
+
+                            Object.keys(data).forEach(i => {
+                                if (!["productId", "userId", "active"].includes(i)) {
+                                    const input = dom.querySelector(`input[name=${i}]`)
+                                    if (input != null)
+                                        input.value = data[i]
+                                }
+                            })
+
+                            const activeDom = dom.querySelector('input[name=active]')
+                            if (activeDom != null) {
+                                activeDom.checked = data.active
+                            }
+
+                            $('#edit-product option').remove()
+                            if (data.product != null) {
+                                $('#edit-product').select2({
+                                    placeholder: "Chọn sản phẩm",
+                                    allowClear: true,
+                                    ajax: {
+                                        url: '/product/get',
+                                        type: 'GET',
+                                        headers: {
+                                            "Authorization": "Bearer " + getJwtToken()
+                                        },
+                                        processResults: function (data) {
+                                            return {
+                                                results: data.map(i => ({
+                                                    id: i.id,
+                                                    text: i.name
+                                                }))
+                                            };
+                                        }
+                                    }
+                                })
+
+                                const productSelector = $('#edit-product')
+                                var option = new Option(data.product.name, data.product.id, true, true)
+                                productSelector.append(option).trigger('change')
+                                productSelector.trigger({
+                                    type: 'select2:select',
+                                    params: {
+                                        data: { id: data.product.id, text: data.product.name }
+                                    }
+                                })
+                            }
+
+                            $('#edit-user option').remove()
+                            if (data.user != null) {
+                                $('#edit-user').select2({
+                                    placeholder: "Chọn người dùng",
+                                    allowClear: true,
+                                    ajax: {
+                                        url: '/user/get',
+                                        type: 'GET',
+                                        headers: {
+                                            "Authorization": "Bearer " + getJwtToken()
+                                        },
+                                        processResults: function (data) {
+                                            return {
+                                                results: data.map(i => ({
+                                                    id: i.id,
+                                                    text: i.email
+                                                }))
+                                            };
+                                        }
+                                    }
+                                })
+
+                                const userSelector = $('#edit-user')
+                                var option = new Option(data.user.email, data.user.id, true, true)
+                                userSelector.append(option).trigger('change')
+                                userSelector.trigger({
+                                    type: 'select2:select',
+                                    params: {
+                                        data: { id: data.user.id, text: data.user.email }
+                                    }
+                                })
+                            }
+
+                            
+
+                        })
+                    }
+                })
+        }
+    </script>
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-success">
+                    <h5 class="modal-title" id="editModalLabel" style="color: white;">Sửa phản hồi
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" style="color: white;">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group row">
+                            <label for="val-table-number" class="form-label col-sm-3">ID <span
+                                    class="text-danger">*</span></label>
+                            <input class="form-control col-sm-8 label" name="id" readonly />
+                        </div>
+
+                        <div class="form-group row items-push">
+                            <label for="val-select2-multiple-role" class="form-label col-sm-3">Sản phẩm <span
+                                class="text-danger">*</span></label>
+                                <div class="form-control col-sm-8 p-0 border-0">
+                                    <select class="form-control js-select2" id="edit-product" name="productId"
+                                    style="width: 100%;" multiple>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row items-push">
+                            <label for="val-select2-multiple-role" class="form-label col-sm-3">Người dùng <span
+                                class="text-danger">*</span></label>
+                                <div class="form-control col-sm-8 p-0 border-0">
+                                    <select class="form-control js-select2" id="edit-user" name="userId"
+                                    style="width: 100%;" multiple>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="val-number-of-people" class="form-label col-sm-3">Đánh giá <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" name="comment" required class="form-control col-sm-8"
+                                id="val-number-of-people" placeholder="Nhập đánh giá sản phẩm...">
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="val-number-of-people" class="form-label col-sm-3">Ngày gửi <span
+                                    class="text-danger">*</span></label>
+                            <input type="datetime-local" name="commentDate" required class="form-control col-sm-8"
+                                id="val-number-of-people" placeholder="Nhập ngày gửi đánh giá...">
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="edit-active" class="form-label col-sm-3">Kích hoạt <span
+                                    class="text-danger">*</span></label>
+                            <div class="custom-control custom-switch custom-control-lg custom-control-inline mb-2">
+                                <input type="checkbox" class="custom-control-input" id="edit-active" name="active">
+                                <label class="custom-control-label" for="edit-active"> </label>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                            <button type="button" class="btn btn-success" onclick="capNhat()">Xác nhận</button>
+                        </div>
+
+                        <script>
+                            function capNhat() {
+                                const id = document.getElementById('editModal').dataset.id
+                                const form = document.querySelector('#editModal form')
+                                const body = new FormData(form)
+                                body.set('active', document.getElementById('edit-active').checked)
+                                fetch('/feedback/update?id=' + id, {
+                                    headers: {...genConfig().headers},
+                                    method: 'PUT',
+                                    body: JSON.stringify(Object.fromEntries(body.entries()))
+                                }).then(res => {
+                                    if (res.ok) {
+                                        $('#editModal').modal('hide')
+                                        $('table').DataTable().ajax.reload()
+                                    }
+                                })
+                            }
+                        </script>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

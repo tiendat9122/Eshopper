@@ -1,13 +1,18 @@
 <div th:fragment="modal_edit">
     <script>
         function napThongTinCapNhat(id) {
-            const idLabel = document.querySelector('#editModal div.label')
-            idLabel.innerText = id
             fetch('/role/get?id=' + id, {
                 ...genConfig()
             }).then(res => {
                 if (res.ok) {
                     res.json().then(data => {
+                        const dom = document.querySelector("#editModal form");
+                        Object.keys(data).forEach(i => {
+                            const input = dom.querySelector(`input[name=${i}]`);
+                            if(input != null) {
+                                input.value = data[i];
+                            }
+                        })
                         document.querySelector('#editModal input[name=name]').value = data.name
                     })
                 }
@@ -19,33 +24,33 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-success">
-                    <h5 class="modal-title" id="editModalLabel" style="color: white;">Chỉnh sửa bản ghi
+                    <h5 class="modal-title" id="editModalLabel" style="color: white;">Sửa quyền
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true" style="color: white;">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST">
+                    <form>
                         <div class="form-group row">
                             <label for="val-table-number" class="form-label col-sm-3">ID <span
                                     class="text-danger">*</span></label>
-                            <div class="form-control col-sm-8 label">
-                            </div>
+                            <input name="id" readonly class="form-control col-sm-8 label">
+                            </input>
                         </div>
 
                         <div class="form-group row">
                             <label for="val-number-of-people" class="form-label col-sm-3">Tên quyền<span
                                     class="text-danger">*</span></label>
                             <input type="text" name="name" required class="form-control col-sm-8"
-                                id="val-number-of-people" placeholder="Nhập ...">
+                                id="val-number-of-people" placeholder="Nhập tên quyền...">
                         </div>
 
                         <div class="form-group row">
                             <label for="edit-displayName" class="form-label col-sm-3">Tên hiển thị<span
                                     class="text-danger">*</span></label>
                             <input type="text" name="displayName" required class="form-control col-sm-8"
-                                id="edit-displayName" placeholder="Nhập ...">
+                                id="edit-displayName" placeholder="Nhập tên hiển thị...">
                         </div>
 
                         <div class="modal-footer">

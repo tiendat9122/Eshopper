@@ -1,14 +1,20 @@
 <div th:fragment="modal_edit">
     <script>
         function napThongTinCapNhat(id) {
-            const idLabel = document.querySelector('#editModal div.label')
-            idLabel.innerText = id
             fetch('/category/get?id=' + id, {
                 ...genConfig()
             }).then(res => {
                 if (res.ok) {
                     res.json().then(data => {
                         document.querySelector('#editModal input[name=name]').value = data.name
+                        const dom = document.querySelector("#editModal form");
+
+                        Object.keys(data).forEach(i => {
+                            const input = dom.querySelector(`input[name=${i}]`)
+                            if(input != null) {
+                                input.value = data[i];
+                            }
+                        })
                     })
                 }
             })
@@ -19,19 +25,18 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-success">
-                    <h5 class="modal-title" id="editModalLabel" style="color: white;">Chỉnh sửa bản ghi
+                    <h5 class="modal-title" id="editModalLabel" style="color: white;">Sửa thể loại
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true" style="color: white;">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST">
+                    <form>
                         <div class="form-group row">
                             <label for="val-table-number" class="form-label col-sm-3">ID <span
                                     class="text-danger">*</span></label>
-                            <div class="form-control col-sm-8 label">
-                            </div>
+                            <input class="form-control col-sm-8 label" name="id" readonly />
                         </div>
 
                         <div class="form-group row">

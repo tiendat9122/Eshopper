@@ -36,11 +36,16 @@ public class Product {
     private Author author;
 
     @OneToMany(mappedBy = "product")
-    @JsonIgnoreProperties("product")
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<OrderDetail> orderDetails;
+
+    @OneToMany(mappedBy = "product")
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<Feedback> feedbacks;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name = "product_categories",

@@ -49,12 +49,22 @@ public class User implements UserDetails {
     private boolean active;
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnoreProperties("user")
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<Orders> orders;
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<Feedback> feedbacks;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<Contact> contacts;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",

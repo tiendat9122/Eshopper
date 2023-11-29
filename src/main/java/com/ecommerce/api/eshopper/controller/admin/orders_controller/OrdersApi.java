@@ -26,7 +26,7 @@ public class OrdersApi {
     private final IUserService userService;
 
     @GetMapping("/get")
-    public ResponseEntity<?> getCategory(@RequestParam(name = "id", required = false) Long id) {
+    public ResponseEntity<?> getOrders(@RequestParam(name = "id", required = false) Long id) {
         try {
             if (id != null) {
                 Orders orders = ordersService.findOrdersById(id)
@@ -42,8 +42,25 @@ public class OrdersApi {
 
     }
 
+    @PutMapping("/state")
+    public ResponseEntity<?> stateOrders(@RequestBody OrdersDto ordersDto) {
+
+        try {
+            Long ordersId = ordersDto.getId();
+            Orders orders = ordersService.findOrdersById(ordersId).orElseThrow(() -> new EntityNotFoundException("Cannot find orders with id = " + ordersId));
+            orders.setState(ordersDto.isState());
+            
+            Orders ordersStated = ordersService.saveOrders(orders);
+            return new ResponseEntity<>(ordersStated, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        
+    }
+
     @PostMapping("/insert")
     public ResponseEntity<?> insertOrders(@RequestBody OrdersDto ordersDto) {
+
         try {
             Orders orders = new Orders();
             orders.setOrderDate(ordersDto.getOrderDate());
@@ -61,6 +78,7 @@ public class OrdersApi {
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+
     }
 
     @PutMapping("/update")

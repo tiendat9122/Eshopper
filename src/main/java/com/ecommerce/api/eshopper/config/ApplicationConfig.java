@@ -56,7 +56,6 @@ public class ApplicationConfig {
 //            Set<Role> set = new HashSet<>();
 //            set.addAll(role.stream().map(c->c.getName()).map(Role::new).toList());
 //            user.setRole(set);
-            String s = "";
             return user;
         };
     }

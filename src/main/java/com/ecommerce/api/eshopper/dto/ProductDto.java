@@ -22,7 +22,9 @@ public class ProductDto {
 
     private Long inventory;
 
-    private MultipartFile picture;
+    private MultipartFile picture_file;
+
+    private String picture;
 
     private boolean active;
 

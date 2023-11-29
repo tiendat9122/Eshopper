@@ -131,6 +131,10 @@
         });
         $("table").dataTable({ destroy: true })
         $('table').dataTable({
+            language: {
+                searchPlaceholder: "Tìm kiếm...",
+                info: "Trang _PAGE_ trên _PAGES_"
+            },
             ajax: {
                 url: '/category/get',
                 type: 'GET',

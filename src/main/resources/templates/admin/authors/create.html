@@ -3,75 +3,43 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-info">
-                <h5 class="modal-title" id="addModalLabel" style="color: white;">Thêm</h5>
+                <h5 class="modal-title" id="addModalLabel" style="color: white;">Thêm tác giả</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true" style="color: white;">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="tao-moi" method="POST" enctype="multipart/form-data">
+                <form id="tao-moi">
                     <div class="form-group row">
-                        <label for="val-table-number" class="form-label col-sm-3">Tên sản phẩm <span
+                        <label for="val-table-number" class="form-label col-sm-3">Tên tác giả <span
                                 class="text-danger">*</span></label>
                         <input type="text" name="name" class="form-control col-sm-8" id="val-table-number"
-                            placeholder="Nhập tên quyền" required>
+                            placeholder="Nhập tên tác giả..." required>
                     </div>
 
                     <div class="form-group row">
-                        <label for="val-table-number" class="form-label col-sm-3">Giá <span
+                        <label for="val-table-number" class="form-label col-sm-3">Tiểu sử <span
                                 class="text-danger">*</span></label>
-                        <input type="text" name="retail" class="form-control col-sm-8" id="val-table-number"
-                            placeholder="Nhập giá" required>
-                    </div>
-
-                    <div class="form-group row items-push">
-                        <label for="val-select2-multiple-role" class="form-label col-sm-3">Thể loại<span
-                                class="text-danger">*</span></label>
-                        <div class="form-control col-sm-8 p-0 border-0">
-                            <select class="form-control js-select2" id="create-categories" name="categoryIds"
-                                style="width: 100%;" data-placeholder="Chọn quyền" multiple>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group row items-push">
-                        <label for="val-select2-multiple-role" class="form-label col-sm-3">Tác giả<span
-                                class="text-danger">*</span></label>
-                        <div class="form-control col-sm-8 p-0 border-0">
-                            <select class="form-control js-select2" id="create-author" name="authorId"
-                                style="width: 100%;" data-placeholder="Chọn quyền" multiple>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="create-active" class="form-label col-sm-3">Kích hoạt<span
-                                class="text-danger">*</span></label>
-                        <div class="custom-control custom-switch custom-control-lg custom-control-inline mb-2">
-                            <input type="checkbox" class="custom-control-input" id="create-active" name="active">
-                            <label class="custom-control-label" for="create-active"> </label>
-                        </div>
+                        <input type="text" name="story" class="form-control col-sm-8" id="val-table-number"
+                            placeholder="Nhập tiểu sử..." required>
                     </div>
 
                     <script>
                         function taoMoi() {
-                            const options = genConfig()
-                            delete options.headers['Content-Type']
-                            const form = document.getElementById('tao-moi')
-                            body = new FormData(form)
-                            body.set('active', document.getElementById('create-active').checked)
-                            fetch('/product/insert', {
+                            const form = document.getElementById('tao-moi');
+                            const data = Object.fromEntries(new FormData(form).entries());
+                            fetch('/author/insert', {
                                 method: 'POST',
-                                body,
-                                ...options,
-
+                                body: JSON.stringify(data),
+                                headers: { ...genConfig().headers }
                             })
-                                .then(res => {
-                                    if (res.ok) {
-                                        $('#addModal').modal('hide')
-                                        $("table").DataTable().ajax.reload()
-                                    }
-                                })
+                            .then(res => {
+                                if (res.ok) {
+                                    $('#addModal').modal('hide')
+                                    $("table").DataTable().ajax.reload()
+                                    form.reset();
+                                }
+                            })
                         }
                     </script>
 
