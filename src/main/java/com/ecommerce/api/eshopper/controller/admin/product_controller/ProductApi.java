@@ -118,6 +118,7 @@ public class ProductApi {
             product.setName(productDto.getName());
             product.setRetail(productDto.getRetail());
             product.setInventory(productDto.getInventory());
+            product.setActive(productDto.isActive());
 
             // add author for product
             Long authorId = productDto.getAuthorId();
@@ -129,15 +130,15 @@ public class ProductApi {
             }
 
             // add picture for product
-            if (productDto.getPicture() == null || productDto.getPicture().isEmpty()) {
+            if (productDto.getPicture_file() == null || productDto.getPicture_file().isEmpty()) {
                 product.setPicture(null);
             } else {
                 Path path = Paths.get(FILE_DIRECTORY, "products");
 
                 try {
-                    InputStream inputStream = productDto.getPicture().getInputStream();
+                    InputStream inputStream = productDto.getPicture_file().getInputStream();
                     long timeStamp = new Date().getTime();
-                    String fileName = productDto.getPicture().getOriginalFilename();
+                    String fileName = productDto.getPicture_file().getOriginalFilename();
                     int lastDotIndex = fileName.lastIndexOf('.');
                     String extension;
                     if (lastDotIndex > 0) {
@@ -145,7 +146,7 @@ public class ProductApi {
                     } else {
                         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
                     }
-                    String fileSave = productDto.getName() + "_" + productDto.getPicture().getName() + timeStamp
+                    String fileSave = productDto.getName() + "_" + productDto.getPicture_file().getName() + timeStamp
                             + extension;
 
                     Files.copy(inputStream, path.resolve(fileSave),
@@ -188,6 +189,7 @@ public class ProductApi {
                 product.setName(productDto.getName());
                 product.setRetail(productDto.getRetail());
                 product.setInventory(productDto.getInventory());
+                product.setActive(productDto.isActive());
 
                 // update author for product
                 Long authorId = productDto.getAuthorId();

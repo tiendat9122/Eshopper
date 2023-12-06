@@ -9,7 +9,6 @@ import com.ecommerce.api.eshopper.service.orders_service.IOrdersService;
 import com.ecommerce.api.eshopper.service.role_service.IRoleService;
 import com.ecommerce.api.eshopper.service.user_service.IUserService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.criteria.Order;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

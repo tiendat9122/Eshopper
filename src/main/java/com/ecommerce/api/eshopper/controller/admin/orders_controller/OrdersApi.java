@@ -66,6 +66,11 @@ public class OrdersApi {
             orders.setOrderDate(ordersDto.getOrderDate());
             orders.setNote(ordersDto.getNote());
             orders.setState(ordersDto.isState());
+            orders.setTransport(ordersDto.getTransport());
+            orders.setTotalPrice(ordersDto.getTotalPrice());
+            
+            double totalBill = orders.getTotalPrice() + orders.getTransport();
+            orders.setTotalBill(totalBill);
 
             Long userId = ordersDto.getUserId();
             User user = userService.findUserById(userId).orElseThrow();
@@ -89,6 +94,11 @@ public class OrdersApi {
             orders.setOrderDate(ordersDto.getOrderDate());
             orders.setState(ordersDto.isState());
             orders.setNote(ordersDto.getNote());
+            orders.setTransport(ordersDto.getTransport());
+            orders.setTotalPrice(ordersDto.getTotalPrice());
+
+            double totalBill = orders.getTotalPrice() + orders.getTransport();
+            orders.setTotalBill(totalBill);
 
             Long userId = ordersDto.getUserId();
             User user = userService.findUserById(userId).orElseThrow();

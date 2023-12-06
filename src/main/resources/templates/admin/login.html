@@ -145,6 +145,13 @@
       return JSON.parse(jsonPayload);
     }
 
+    form.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault(); // Ngăn chặn hành động mặc định của phím Enter (ví dụ: submit form)
+        loginButton.click(); // Kích hoạt sự kiện click trên nút loginButton
+      }
+    });
+
     loginButton.addEventListener("click", () => {
       const formData = new FormData(form);
       const data = Object.fromEntries(formData.entries());
@@ -176,6 +183,7 @@
         }
       });
     });
+
   </script>
 
 </body>

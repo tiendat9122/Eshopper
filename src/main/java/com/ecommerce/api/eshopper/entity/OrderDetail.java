@@ -22,7 +22,7 @@ public class OrderDetail {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", nullable = true)
-    @JsonIgnoreProperties({"inventory", "author", "categories", "picture"})
+    @JsonIgnoreProperties({"inventory", "author", "categories"})
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Product product;

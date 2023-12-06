@@ -1,70 +1,105 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 
-    <head>
-        <meta charset="utf-8">
-        <title>EShopper - Bootstrap Shop Template</title>
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <meta content="Free HTML Templates" name="keywords">
-        <meta content="Free HTML Templates" name="description">
+<head>
+    <meta charset="utf-8">
+    <title>EShopper - Bootstrap Shop Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
 
-        <!-- Favicon -->
-        <link href="/content/user/assets/img/favicon.ico" rel="icon">
+    <!-- Favicon -->
+    <link href="/content/user/assets/img/favicon.ico" rel="icon">
 
-        <!-- Google Web Fonts -->
-        <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link
-            href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
-            rel="stylesheet">
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
 
-        <!-- Font Awesome -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
-        <!-- Libraries Stylesheet -->
-        <link href="/content/user/assets/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <!-- Libraries Stylesheet -->
+    <link href="/content/user/assets/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
 
-        <!-- Customized Bootstrap Stylesheet -->
-        <link href="/content/user/assets/css/style.css" rel="stylesheet">
-        <script src="/content/user/assets/js/mainlib_user.js"></script>
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    </head>
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/content/user/assets/css/style.css" rel="stylesheet">
+    <script src="/content/user/assets/js/mainlib_user.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
-    <body>
+    <link rel="stylesheet" href="//cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <script src="//cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 
-        <!-- Topbar Start -->
-        <div th:replace="user/layouts/header.html :: header"></div>
-        <!-- Topbar End -->
+    <style>
+        .button-add-detail-container {
+            position: relative;
+            display: inline-block;
+        }
 
+        .icon-add-orderdetail-container {
+            position: absolute;
+        }
 
-        <!-- Navbar Start -->
-        <div th:replace="user/layouts/nav.html :: nav"></div>
-        <!-- Navbar End -->
+        .icon-add-orderdetail {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            transform: translateY(100%);
+            animation: slideIn 2s forwards, fadeOut 5s 5s forwards;
+            z-index: 1;
+        }
 
-        <!-- Main Content -->
-        <main th:replace="~{__${eshopperContentFragment}__ :: eshopperContent}"></main>
-        <!-- END Main Content -->
+        @keyframes slideIn {
+            to {
+                transform: translateY(0);
+            }
+        }
 
-        <!-- Footer Start -->
-        <div th:replace="user/layouts/footer.html :: footer"></div>
-        <!-- Footer End -->
-
-
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
-
-
-        <!-- JavaScript Libraries -->
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+            }
+        }
         
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-        <script src="/content/user/assets/lib/easing/easing.min.js"></script>
-        <script src="/content/user/assets/lib/owlcarousel/owl.carousel.min.js"></script>
+    </style>
+</head>
 
-        <!-- Contact Javascript File -->
-        <script src="/content/user/assets/mail/jqBootstrapValidation.min.js"></script>
-        <script src="/content/user/assets/mail/contact.js"></script>
+<body>
 
-        <!-- Template Javascript -->
-        <script src="/content/user/assets/js/main.js"></script>
-    </body>
+    <!-- Topbar Start -->
+    <div th:replace="user/layouts/header.html :: header"></div>
+    <!-- Topbar End -->
+
+
+    <!-- Navbar Start -->
+    <div th:replace="user/layouts/nav.html :: nav"></div>
+    <!-- Navbar End -->
+
+    <!-- Main Content -->
+    <main th:replace="~{__${eshopperContentFragment}__ :: eshopperContent}"></main>
+    <!-- END Main Content -->
+
+    <!-- Footer Start -->
+    <div th:replace="user/layouts/footer.html :: footer"></div>
+    <!-- Footer End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="/content/user/assets/lib/easing/easing.min.js"></script>
+    <script src="/content/user/assets/lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="/content/user/assets/mail/jqBootstrapValidation.min.js"></script>
+    <script src="/content/user/assets/mail/contact.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="/content/user/assets/js/main.js"></script>
+</body>
 
 </html>

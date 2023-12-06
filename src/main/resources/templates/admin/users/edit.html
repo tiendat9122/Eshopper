@@ -2,56 +2,69 @@
     <script>
         function napThongTinCapNhat(id) {
             document.querySelector('#editModal form').reset()
-            fetch("/role/get", { ...genConfig() })
-                .then((res) => {
+            fetch('/user/get?id=' + id, { ...genConfig() })
+                .then(res => {
                     if (res.ok) {
-                        const select = document.getElementById("edit-role-select");
-                        select.innerHTML = ""
-                        res.json().then((data) => {
-                            data.forEach((item) => {
-                                const option = document.createElement("option");
-                                option.innerText = item.name;
-                                option.value = item.id;
-                                select.appendChild(option);
-                            });
-                        });
-                    }
-                })
-                .then(() => {
-                    fetch("/user/get?id=" + id, {
-                        ...genConfig(),
-                    }).then((res) => {
-                        if (res.ok) {
-                            res.json().then((data) => {
-                                const switchDOM = document.getElementById('edit-active')
-                                switchDOM.checked = data.active
-                                const options = Array.from(document.querySelectorAll('#edit-role-select option'));
-                                data.role.forEach(i => {
-                                    options.find(y => y.value == i.id).selected = true;
-                                })
-                                // document.getElementById('edit-avatar-url').value = data.avatar
+                        res.json().then(data => {
+                            const dom = document.querySelector('#editModal form')
 
-                                const img = document.getElementById('edit-avatar-img')
-                                if (data.avatar != null)
-                                    img.src = "/user/download/" + data.avatar
-                                else
-                                    img.src = "/content/admin/assets/media/avatars/avatar0.jpg"
+                            Object.keys(data).forEach(i => {
+                                if (!["roleIds", "active"].includes(i)) {
+                                    const input = dom.querySelector(`input[name=${i}]`)
+                                    if (input != null)
+                                        input.value = data[i]
+                                }
+                            })
 
-                                $('#edit-role-select').select2();
-                                Object.keys(data).forEach((key) => {
-                                    if (!["role"].includes(key)) {
-                                        const dom = document.querySelector(
-                                            `#editModal input[name=${key}]`
-                                        );
-                                        if (dom != null) {
-                                            dom.value = data[key];
+                            const activeDom = dom.querySelector('input[name=active]')
+                            if (activeDom != null) {
+                                activeDom.checked = data.active
+                            }
+
+                            const img = document.getElementById('edit-avatar-img')
+                            if (data.avatar != null)
+                                img.src = "/user/download/" + data.avatar
+                            else {
+                                img.src = "/content/admin/img_default/default_avatar.jpg"
+                            }
+
+                            $('#edit-role-select option').remove()
+                            if (data.role != null) {
+                                $('#edit-role-select').select2({
+                                    placeholder: "Chọn quyền",
+                                    allowClear: true,
+                                    ajax: {
+                                        url: '/role/get',
+                                        type: 'GET',
+                                        headers: {
+                                            "Authorization": "Bearer " + getJwtToken()
+                                        },
+                                        processResults: function (data) {
+                                            return {
+                                                results: data.map(i => ({
+                                                    id: i.id,
+                                                    text: i.name
+                                                }))
+                                            };
                                         }
                                     }
-                                });
-                            });
-                        }
-                    });
-                });
+                                })
+                                const selecter = $('#edit-role-select')
+                                data.role.forEach(i => {
+                                    var option = new Option(i.name, i.id, true, true)
+                                    selecter.append(option)
+                                })
+                                selecter.trigger('change')
+                                selecter.trigger({
+                                    type: 'select2:select',
+                                    params: {
+                                        data: data.role.map(i => ({ id: i.id, text: i.name }))
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
         }
     </script>
     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
@@ -141,12 +154,6 @@
                             </div>
                         </div>
 
-                        <!-- <div class="form-group row">
-                            <label for="val-name" class="form-label col-sm-3">Tên ảnh <span
-                                    class="text-danger">*</span></label>
-                            <input type="text"  class="form-control col-sm-8" id="edit-avatar-url" readonly />
-                        </div> -->
-
                         <div class="form-group row">
                             <label for="edit-active" class="form-label col-sm-3">Kích hoạt<span
                                     class="text-danger">*</span></label>
@@ -165,25 +172,6 @@
                             </button>
                         </div>
 
-                        <!--                        <script>-->
-                        <!--                            function capNhat() {-->
-                        <!--                                const id = document.getElementById('editModal').dataset.id-->
-                        <!--                                const form = document.querySelector('#editModal form')-->
-                        <!--                                data = new FormData(form)-->
-                        <!--                                body = JSON.stringify(Object.fromEntries(data.entries()))-->
-                        <!--                                fetch('/user/update?id=' + id, {-->
-                        <!--                                    ...genConfig(),-->
-                        <!--                                    method: 'PUT',-->
-                        <!--                                    body-->
-                        <!--                                }).then(res => {-->
-                        <!--                                    if (res.ok) {-->
-                        <!--                                        $('#editModal').modal('hide')-->
-                        <!--                                        $('table').DataTable().ajax.reload()-->
-                        <!--                                    }-->
-                        <!--                                })-->
-                        <!--                            }-->
-                        <!--                        </script>-->
-
                         <script>
                             const uploadInput = document.querySelector('#editModal input[name=avatar_file]')
                             uploadInput.addEventListener("change", (e) => {
@@ -198,7 +186,7 @@
 
                             function xoaAvatar() {
                                 document.querySelector('#editModal input[name=avatar]').value = ""
-                                document.querySelector('#edit-avatar-img').src = "/content/admin/assets/media/avatars/avatar0.jpg"
+                                document.querySelector('#edit-avatar-img').src = "/content/admin/img_default/default_avatar.jpg"
                             }
 
                             function capNhat() {
@@ -230,27 +218,6 @@
                             }
                         </script>
 
-                        <!--                        <script>-->
-                        <!--                        function taoMoi() {-->
-                        <!--                            const form = document.getElementById('tao-moi')-->
-                        <!--                            data = new FormData(form)-->
-                        <!--                            body = data-->
-                        <!--                            let headers = {...genConfig().headers}-->
-                        <!--                            delete headers['Content-Type']-->
-                        <!--                            fetch('/user/insert', {-->
-                        <!--                                method: 'POST',-->
-                        <!--                                body,-->
-                        <!--                                headers,-->
-
-                        <!--                            })-->
-                        <!--                                .then(res => {-->
-                        <!--                                    if (res.ok) {-->
-                        <!--                                        $('#addModal').modal('hide')-->
-                        <!--                                        $("table").DataTable().ajax.reload()-->
-                        <!--                                    }-->
-                        <!--                                })-->
-                        <!--                        }-->
-                        <!--                    </script>-->
                     </form>
                 </div>
             </div>

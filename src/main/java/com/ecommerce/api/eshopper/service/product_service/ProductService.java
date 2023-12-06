@@ -29,6 +29,11 @@ public class ProductService implements IProductService {
     public List<Product> findAllProduct() {
         return productRepository.findAll();
     }
+    
+    @Override
+    public List<Product> findAllProductIsActive() {
+        return productRepository.findByActiveTrue();
+    }
 
     public List<Product> findAllById(Iterable<Long> ids) {
         return productRepository.findAllById(ids);
@@ -57,6 +62,11 @@ public class ProductService implements IProductService {
     @Override
     public List<Product> findProductByKeyWord(String name) {
         return productRepository.findByKeyword(name);
+    }
+    
+    @Override
+    public List<Product> findProductRandom() {
+        return productRepository.findRandomProducts();
     }
 
     // Save and update

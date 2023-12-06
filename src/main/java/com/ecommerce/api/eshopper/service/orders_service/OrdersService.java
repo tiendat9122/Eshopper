@@ -1,6 +1,7 @@
 package com.ecommerce.api.eshopper.service.orders_service;
 
 import com.ecommerce.api.eshopper.entity.Orders;
+import com.ecommerce.api.eshopper.entity.User;
 import com.ecommerce.api.eshopper.repository.OrdersRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class OrdersService implements IOrdersService {
 
     private final OrdersRepository ordersRepository;
 
+    // Get and find
     @Override
     public List<Orders> getAllOrders() {
         return ordersRepository.findAll();
@@ -29,10 +31,17 @@ public class OrdersService implements IOrdersService {
     }
 
     @Override
+    public List<Orders> findOrdersByUserAndStateFalse(User user) {
+        return ordersRepository.findByUserAndStateFalse(user);
+    }
+
+    // Save and update
+    @Override
     public Orders saveOrders(Orders orders) {
         return ordersRepository.save(orders);
     }
 
+    // Delete
     @Override
     public void deleteOrders(Orders orders) {
         ordersRepository.delete(orders);

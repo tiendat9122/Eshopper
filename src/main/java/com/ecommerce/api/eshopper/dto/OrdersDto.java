@@ -22,6 +22,12 @@ public class OrdersDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime orderDate;
 
+    private double totalPrice;
+
+    private double transport;
+
+    private double totalBill;
+
     private boolean state;
 
     private String note;

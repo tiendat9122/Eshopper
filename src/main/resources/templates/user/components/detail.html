@@ -1,34 +1,124 @@
-<!-- Shop Detail Start -->
-<div th:fragment="eshopperContent" class="container-fluid py-5">
-
+<div th:fragment="eshopperContent">
   <script>
+    const user = getUserInfo();
+    console.log(user);
+
     function getIdProduct() {
       // Lấy url từ trình duyệt
       var url = window.location.href;
-      
+
       //Tách id từ url sử dụng biểu thức chính quy
       var id = url.match(/[?&]id=([^&]+)/);
-      
+
       //Kiểm tra id có tồn tại không và lấy giá trị
-      if(id && id[1]) {
+      if (id && id[1]) {
         var productId = id[1];
         console.log(productId);
         return productId;
       } else {
         return null;
       }
-    } 
+    }
 
     function napChiTiet() {
       var id = getIdProduct();
       fetch('/user/product/get?id=' + id, {
         ...genConfig()
       }).then(res => {
-        if(res.ok) {
-          res.json().then(data => {
+        if (res.ok) {
+          res.json().then(product => {
+            //Gán ảnh cho slide
             var pictureElements = document.querySelectorAll('#productDetail img[name=picture]');
             pictureElements.forEach(element => {
-              element.src = "/user/product/download/" + data.picture;
+              element.src = "/user/product/download/" + product.picture;
+            })
+
+            document.querySelector(`#product_info h3[name=name]`).innerText = product.name
+
+            const formattedRetailValue = product.retail.toLocaleString('vi-VN', {
+              style: 'currency',
+              currency: 'VND',
+            });
+            document.querySelector(`#product_info h3[name=retail`).innerText = formattedRetailValue
+
+            if (product.author != null) {
+              document.querySelector(`#product_info label[name=author]`).innerText = product.author.name
+              fetch('/author/get?id=' + product.author.id, { ...genConfig() })
+                .then(res => {
+                  if (res.ok) {
+                    res.json().then(author => {
+                      document.querySelector(`#tab-pane-2 h4[name=name]`).innerText = author.name
+                      document.querySelector(`#tab-pane-2 p[name=story]`).innerText = author.story
+                    })
+                  }
+                })
+            }
+
+            fetch("/user/feedback/get?productId=" + product.id, {
+              ...genConfig()
+            }).then(res => {
+              if (res.ok) {
+                res.json().then(dataFeedback => {
+                  var countFeedback = 0;
+                  dataFeedback.forEach((item) => {
+                    const feedback = document.createElement("div");
+                    feedback.classList.add(
+                      ..."media mb-4".split(" ")
+                    );
+                    feedback.innerHTML = `
+                    <img src="/user/download/${item.user.avatar}" alt="Avatar"
+                    class="img-fluid mr-3 mt-1" style="width: 45px" />
+                  <div class="media-body">
+                    <h6>
+                      ${item.user.email}<small> - <i>${item.commentDate}</i></small>
+                    </h6>
+                    <div class="text-primary mb-2">
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star-half-alt"></i>
+                      <i class="far fa-star"></i>
+                    </div>
+                    <p>
+                      ${item.comment}
+                    </p>
+                  </div>
+                    `;
+
+                    const feedbacks = document.getElementById("feedbacks");
+                    const lastChild = feedbacks.lastElementChild;
+
+                    if (lastChild) {
+                      feedbacks.insertBefore(feedback, lastChild.nextSibling);
+                    } else {
+                      feedbacks.appendChild(feedback);
+                    }
+
+                    countFeedback++;
+
+                  })
+
+                  const totalRate = document.getElementById("total-rate");
+                  totalRate.innerText = "(" + countFeedback + " đánh giá)"
+
+                  const totalReview = document.getElementById("total-review");
+                  totalReview.innerText = "Đánh giá (" + countFeedback + ")";
+
+                  // Load comment form
+
+                  const loadCommentForm = document.getElementById('commentForm');
+                  const loadUserIdCommentForm = document.querySelector('#commentForm input[name=userId]');
+                  const loadProductIdCommentForm = document.querySelector('#commentForm input[name=productId]');
+                  const loadEmailCommentForm = document.querySelector('#commentForm input[name=email]');
+                  const loadFullNameCommentForm = document.querySelector('#commentForm input[name=full_name]');
+
+                  loadUserIdCommentForm.value = user.id
+                  loadProductIdCommentForm.value = product.id
+                  loadEmailCommentForm.value = user.email
+                  loadFullNameCommentForm.value = user.full_name
+
+                })
+              }
             })
           })
         }
@@ -36,367 +126,476 @@
     }
 
     napChiTiet();
-    
+
   </script>
 
-  <div id="productDetail" class="row px-xl-5">
-    <div class="col-lg-5 pb-5">
-      <div id="product-carousel" class="carousel slide" data-ride="carousel">
-        <div class="carousel-inner border">
-          <div class="carousel-item active">
-            <img name="picture" class="w-100 h-100" src="/content/user/assets/img/product-99.jpg" alt="Image" />
+  <!-- Shop Detail Start -->
+  <div class="container-fluid py-5">
+    <div id="productDetail" class="row px-xl-5">
+      <div class="col-lg-5 pb-5">
+        <div id="product-carousel" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner border">
+            <div class="carousel-item active">
+              <img name="picture" class="w-100 h-100" src="/content/user/img_user_default/default_user_product.png"
+                alt="Image" />
+            </div>
+            <div class="carousel-item">
+              <img name="picture" class="w-100 h-100" src="/content/user/img_user_default/default_user_product.png"
+                alt="Image" />
+            </div>
+            <div class="carousel-item">
+              <img name="picture" class="w-100 h-100" src="/content/user/img_user_default/default_user_product.png"
+                alt="Image" />
+            </div>
+            <div class="carousel-item">
+              <img name="picture" class="w-100 h-100" src="/content/user/img_user_default/default_user_product.png"
+                alt="Image" />
+            </div>
           </div>
-          <div class="carousel-item">
-            <img name="picture" class="w-100 h-100" src="/content/user/assets/img/product-99.jpg" alt="Image" />
-          </div>
-          <div class="carousel-item">
-            <img name="picture" class="w-100 h-100" src="/content/user/assets/img/product-99.jpg" alt="Image" />
-          </div>
-          <div class="carousel-item">
-            <img name="picture" class="w-100 h-100" src="/content/user/assets/img/product-99.jpg" alt="Image" />
-          </div>
+          <a class="carousel-control-prev" href="#product-carousel" data-slide="prev">
+            <i class="fa fa-2x fa-angle-left text-dark"></i>
+          </a>
+          <a class="carousel-control-next" href="#product-carousel" data-slide="next">
+            <i class="fa fa-2x fa-angle-right text-dark"></i>
+          </a>
         </div>
-        <a class="carousel-control-prev" href="#product-carousel" data-slide="prev">
-          <i class="fa fa-2x fa-angle-left text-dark"></i>
-        </a>
-        <a class="carousel-control-next" href="#product-carousel" data-slide="next">
-          <i class="fa fa-2x fa-angle-right text-dark"></i>
-        </a>
       </div>
-    </div>
 
-    <div class="col-lg-7 pb-5">
-      <h3 name="name" class="font-weight-semi-bold">Cảm xúc</h3>
-      <div class="d-flex mb-3">
-        <div class="text-primary mr-2">
-          <small class="fas fa-star"></small>
-          <small class="fas fa-star"></small>
-          <small class="fas fa-star"></small>
-          <small class="fas fa-star-half-alt"></small>
-          <small class="far fa-star"></small>
-        </div>
-        <small class="pt-1">(50 Reviews)</small>
-      </div>
-      <h3 name="retail" class="font-weight-semi-bold mb-4">$150.00</h3>
-      <p class="mb-4">
-        Volup erat ipsum diam elitr rebum et dolor. Est nonumy elitr erat diam
-        stet sit clita ea. Sanc invidunt ipsum et, labore clita lorem magna
-        lorem ut. Erat lorem duo dolor no sea nonumy. Accus labore stet, est
-        lorem sit diam sea et justo, amet at lorem et eirmod ipsum diam et rebum
-        kasd rebum.
-      </p>
-      <div class="d-flex mb-3">
-        <p class="text-dark font-weight-medium mb-0 mr-3">Nhà xuất bản:</p>
-        <div class="custom-control custom-control-inline">
-          <label class="" for="size-1">NXB Lao động</label>
-        </div>
-      </div>
-      <div class="d-flex mb-3">
-        <p class="text-dark font-weight-medium mb-0 mr-3">Tác giả:</p>
-        <div class="custom-control custom-control-inline">
-          <label name="author" class="" for="size-1">Nguyễn Ngọc Thuần</label>
-        </div>
-      </div>
-      <div class="d-flex mb-3">
-        <p class="text-dark font-weight-medium mb-0 mr-3">Hình thức bìa:</p>
-        <div class="custom-control custom-control-inline">
-          <label class="" for="size-1">Bìa mềm</label>
-        </div>
-      </div>
-      <div class="d-flex align-items-center mb-4 pt-2">
-        <div class="input-group quantity mr-3" style="width: 130px">
-          <div class="input-group-btn">
-            <button class="btn btn-primary btn-minus">
-              <i class="fa fa-minus"></i>
-            </button>
+      <div class="col-lg-7 pb-5" id="product_info">
+        <h3 name="name" class="font-weight-semi-bold">Cảm xúc</h3>
+        <div class="d-flex mb-3">
+          <div class="text-primary mr-2">
+            <small class="fas fa-star"></small>
+            <small class="fas fa-star"></small>
+            <small class="fas fa-star"></small>
+            <small class="fas fa-star-half-alt"></small>
+            <small class="far fa-star"></small>
           </div>
-          <input type="text" class="form-control bg-secondary text-center" value="1" />
-          <div class="input-group-btn">
-            <button class="btn btn-primary btn-plus">
-              <i class="fa fa-plus"></i>
-            </button>
+          <small id="total-rate" class="pt-1">(50 đánh giá)</small>
+        </div>
+        <h3 name="retail" class="font-weight-semi-bold mb-4">Chưa cập nhật</h3>
+        <p class="mb-4">
+          Volup erat ipsum diam elitr rebum et dolor. Est nonumy elitr erat diam
+          stet sit clita ea. Sanc invidunt ipsum et, labore clita lorem magna
+          lorem ut. Erat lorem duo dolor no sea nonumy. Accus labore stet, est
+          lorem sit diam sea et justo, amet at lorem et eirmod ipsum diam et rebum
+          kasd rebum.
+        </p>
+        <div class="d-flex mb-3">
+          <p class="text-dark font-weight-medium mb-0 mr-3">Nhà xuất bản:</p>
+          <div class="custom-control custom-control-inline">
+            <label class="" for="size-1">NXB Lao động</label>
           </div>
         </div>
-        <button class="btn btn-primary px-3">
-          <i class="fa fa-shopping-cart mr-1"></i> Thêm vào giỏ
-        </button>
-      </div>
-      <div class="d-flex pt-2">
-        <p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>
-        <div class="d-inline-flex">
-          <a class="text-dark px-2" href="">
-            <i class="fab fa-facebook-f"></i>
-          </a>
-          <a class="text-dark px-2" href="">
-            <i class="fab fa-twitter"></i>
-          </a>
-          <a class="text-dark px-2" href="">
-            <i class="fab fa-linkedin-in"></i>
-          </a>
-          <a class="text-dark px-2" href="">
-            <i class="fab fa-pinterest"></i>
-          </a>
+        <div class="d-flex mb-3">
+          <p class="text-dark font-weight-medium mb-0 mr-3">Tác giả:</p>
+          <div class="custom-control custom-control-inline">
+            <label name="author" class="" for="size-1">Chưa cập nhật</label>
+          </div>
+        </div>
+        <div class="d-flex mb-3">
+          <p class="text-dark font-weight-medium mb-0 mr-3">Hình thức bìa:</p>
+          <div class="custom-control custom-control-inline">
+            <label class="" for="size-1">Bìa mềm</label>
+          </div>
+        </div>
+        <div class="d-flex align-items-center mb-4 pt-2">
+          <div class="input-group quantity mr-3" style="width: 130px">
+            <div class="input-group-btn">
+              <button type="button" onclick="giamSoluong()" class="btn btn-primary btn-minus">
+                <i class="fa fa-minus"></i>
+              </button>
+              <script>
+                function giamSoluong() {
+                  setTimeout(function () {
+                    console.log(document.getElementById("soLuongDat").value);
+                  }, 100);
+                }
+              </script>
+            </div>
+            <input id="soLuongDat" type="text" class="form-control bg-secondary text-center" value="1" />
+            <div class="input-group-btn">
+              <button type="button" onclick="themSoluong()" class="btn btn-primary btn-plus">
+                <i class="fa fa-plus"></i>
+              </button>
+              <script>
+                function themSoluong() {
+                  setTimeout(function () {
+                    console.log(document.getElementById("soLuongDat").value);
+                  }, 100);
+                }
+              </script>
+            </div>
+          </div>
+          <button type="button" onclick="themVaoGio()" class="btn btn-primary px-3">
+            <i class="fa fa-shopping-cart mr-1"></i> Thêm vào giỏ
+          </button>
+          <script>
+            function themVaoGio() {
+              var productId = getIdProduct();
+              var quantity = document.getElementById('soLuongDat').value;
+              fetch('/user/product/addcart?userId=' + user.id + '&productId=' + productId + '&quantity=' + quantity, {
+                ...genConfig(),
+                method: 'PUT'
+              }).then(res => {
+                if(res.ok) {
+                  console.log("OK");
+                }
+              })
+            }
+          </script>
+        </div>
+        <div class="d-flex pt-2">
+          <p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>
+          <div class="d-inline-flex">
+            <a class="text-dark px-2" href="">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a class="text-dark px-2" href="">
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a class="text-dark px-2" href="">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a class="text-dark px-2" href="">
+              <i class="fab fa-pinterest"></i>
+            </a>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="row px-xl-5">
-    <div class="col">
-      <div class="nav nav-tabs justify-content-center border-secondary mb-4">
-        <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Tóm tắt</a>
-        <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2">Tác giả</a>
-        <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Đánh giá (0)</a>
-      </div>
-      <div class="tab-content">
-        <div class="tab-pane fade show active" id="tab-pane-1">
-          <h4 class="mb-3">Product Description</h4>
-          <p>
-            Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea.
-            Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam
-            ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed
-            sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam.
-            Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum
-            accusam sadipscing, eos dolores sit no ut diam consetetur duo justo
-            est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor
-            accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt
-            tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea
-            invidunt.
-          </p>
-          <p>
-            Dolore magna est eirmod sanctus dolor, amet diam et eirmod et ipsum.
-            Amet dolore tempor consetetur sed lorem dolor sit lorem tempor.
-            Gubergren amet amet labore sadipscing clita clita diam clita. Sea
-            amet et sed ipsum lorem elitr et, amet et labore voluptua sit rebum.
-            Ea erat sed et diam takimata sed justo. Magna takimata justo et amet
-            magna et.
-          </p>
+    <div class="row px-xl-5">
+      <div class="col">
+        <div class="nav nav-tabs justify-content-center border-secondary mb-4">
+          <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Tóm tắt</a>
+          <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2">Tác giả</a>
+          <a id="total-review" class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Đánh giá (0)</a>
         </div>
-        <div class="tab-pane fade" id="tab-pane-2">
-          <h4 class="mb-3">Additional Information</h4>
-          <p>
-            Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea.
-            Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam
-            ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed
-            sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam.
-            Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum
-            accusam sadipscing, eos dolores sit no ut diam consetetur duo justo
-            est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor
-            accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt
-            tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea
-            invidunt.
-          </p>
-          <div class="row">
-            <div class="col-md-6">
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item px-0">
-                  Sit erat duo lorem duo ea consetetur, et eirmod takimata.
-                </li>
-                <li class="list-group-item px-0">
-                  Amet kasd gubergren sit sanctus et lorem eos sadipscing at.
-                </li>
-                <li class="list-group-item px-0">
-                  Duo amet accusam eirmod nonumy stet et et stet eirmod.
-                </li>
-                <li class="list-group-item px-0">
-                  Takimata ea clita labore amet ipsum erat justo voluptua.
-                  Nonumy.
-                </li>
-              </ul>
-            </div>
-            <div class="col-md-6">
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item px-0">
-                  Sit erat duo lorem duo ea consetetur, et eirmod takimata.
-                </li>
-                <li class="list-group-item px-0">
-                  Amet kasd gubergren sit sanctus et lorem eos sadipscing at.
-                </li>
-                <li class="list-group-item px-0">
-                  Duo amet accusam eirmod nonumy stet et et stet eirmod.
-                </li>
-                <li class="list-group-item px-0">
-                  Takimata ea clita labore amet ipsum erat justo voluptua.
-                  Nonumy.
-                </li>
-              </ul>
+        <div class="tab-content">
+          <div class="tab-pane fade show active" id="tab-pane-1">
+            <h4 class="mb-3">Product Description</h4>
+            <p>
+              Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea.
+              Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam
+              ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed
+              sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam.
+              Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum
+              accusam sadipscing, eos dolores sit no ut diam consetetur duo justo
+              est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor
+              accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt
+              tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea
+              invidunt.
+            </p>
+            <p>
+              Dolore magna est eirmod sanctus dolor, amet diam et eirmod et ipsum.
+              Amet dolore tempor consetetur sed lorem dolor sit lorem tempor.
+              Gubergren amet amet labore sadipscing clita clita diam clita. Sea
+              amet et sed ipsum lorem elitr et, amet et labore voluptua sit rebum.
+              Ea erat sed et diam takimata sed justo. Magna takimata justo et amet
+              magna et.
+            </p>
+          </div>
+          <div class="tab-pane fade" id="tab-pane-2">
+            <h4 name="name" class="mb-3">Additional Information</h4>
+            <p name="story">
+              Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea.
+              Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam
+              ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed
+              sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam.
+              Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum
+              accusam sadipscing, eos dolores sit no ut diam consetetur duo justo
+              est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor
+              accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt
+              tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea
+              invidunt.
+            </p>
+            <div class="row">
+              <div class="col-md-6">
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item px-0">
+                    Sit erat duo lorem duo ea consetetur, et eirmod takimata.
+                  </li>
+                  <li class="list-group-item px-0">
+                    Amet kasd gubergren sit sanctus et lorem eos sadipscing at.
+                  </li>
+                  <li class="list-group-item px-0">
+                    Duo amet accusam eirmod nonumy stet et et stet eirmod.
+                  </li>
+                  <li class="list-group-item px-0">
+                    Takimata ea clita labore amet ipsum erat justo voluptua.
+                    Nonumy.
+                  </li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item px-0">
+                    Sit erat duo lorem duo ea consetetur, et eirmod takimata.
+                  </li>
+                  <li class="list-group-item px-0">
+                    Amet kasd gubergren sit sanctus et lorem eos sadipscing at.
+                  </li>
+                  <li class="list-group-item px-0">
+                    Duo amet accusam eirmod nonumy stet et et stet eirmod.
+                  </li>
+                  <li class="list-group-item px-0">
+                    Takimata ea clita labore amet ipsum erat justo voluptua.
+                    Nonumy.
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="tab-pane fade" id="tab-pane-3">
-          <div class="row">
-            <div class="col-md-6">
-              <h4 class="mb-4">1 review for "Colorful Stylish Shirt"</h4>
-              <div class="media mb-4">
-                <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px" />
-                <div class="media-body">
-                  <h6>
-                    John Doe<small> - <i>01 Jan 2045</i></small>
-                  </h6>
-                  <div class="text-primary mb-2">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
+          <div class="tab-pane fade" id="tab-pane-3">
+            <div class="row">
+              <div id="feedbacks" class="col-md-6">
+                <!-- <h4 id="total-feedback" class="mb-4">Bình luận</h4> -->
+
+              </div>
+
+              <div class="col-md-6">
+                <h4 class="mb-4">Để lại đánh giá</h4>
+                <small>Cảm ơn bạn đã quan tâm đến sản phẩm của chúng tôi *</small>
+                <div class="d-flex my-3">
+                  <p class="mb-0 mr-2">Đánh giá * :</p>
+                  <div class="text-primary">
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
                     <i class="far fa-star"></i>
                   </div>
-                  <p>
-                    Diam amet duo labore stet elitr ea clita ipsum, tempor
-                    labore accusam ipsum et no at. Kasd diam tempor rebum magna
-                    dolores sed sed eirmod ipsum.
-                  </p>
                 </div>
+                <form id="commentForm">
+                  <input type="hidden" name="userId" readonly class="form-control" />
+                  <input type="hidden" name="productId" readonly class="form-control" />
+                  <div class="form-group">
+                    <label for="name">Tên của bạn *</label>
+                    <input type="text" name="full_name" readonly class="form-control" id="name" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="email">Email của bạn *</label>
+                    <input type="email" name="email" readonly class="form-control" id="email" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="message">Bình luận *</label>
+                    <textarea id="message" name="comment" cols="30" rows="5" class="form-control"></textarea>
+                  </div>
+
+                  <div class="form-group mb-0">
+                    <!-- <input type="submit" value="Leave Your Review" class="btn btn-primary px-3" /> -->
+                    <button type="button" onclick="binhLuan()" class="btn btn-primary px-3">Đăng</button>
+                  </div>
+                </form>
+
+                <script>
+                  function capNhatBinhLuan() {
+                    document.getElementById('feedbacks').innerHTML = ''
+                    var id = getIdProduct();
+                    fetch('/user/product/get?id=' + id, {
+                      ...genConfig()
+                    }).then(res => {
+                      if (res.ok) {
+                        res.json().then(product => {
+                          fetch("/user/feedback/get?productId=" + product.id, {
+                            ...genConfig()
+                          }).then(res => {
+                            if (res.ok) {
+                              res.json().then(dataFeedback => {
+                                var countFeedback = 0;
+                                dataFeedback.forEach((item) => {
+                                  const feedback = document.createElement("div");
+                                  feedback.classList.add(
+                                    ..."media mb-4".split(" ")
+                                  );
+                                  feedback.innerHTML = `
+                    <img src="/userauth/download/${item.user.avatar}" alt="Avatar"
+                    class="img-fluid mr-3 mt-1" style="width: 45px" />
+                  <div class="media-body">
+                    <h6>
+                      ${item.user.email}<small> - <i>${item.commentDate}</i></small>
+                    </h6>
+                    <div class="text-primary mb-2">
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star"></i>
+                      <i class="fas fa-star-half-alt"></i>
+                      <i class="far fa-star"></i>
+                    </div>
+                    <p>
+                      ${item.comment}
+                    </p>
+                  </div>
+                    `;
+
+                                  const feedbacks = document.getElementById("feedbacks");
+                                  const lastChild = feedbacks.lastElementChild;
+
+                                  if (lastChild) {
+                                    feedbacks.insertBefore(feedback, lastChild.nextSibling);
+                                  } else {
+                                    feedbacks.appendChild(feedback);
+                                  }
+
+                                  countFeedback++;
+
+                                })
+
+                                const totalRate = document.getElementById("total-rate");
+                                totalRate.innerText = "(" + countFeedback + " đánh giá)"
+
+                                const totalReview = document.getElementById("total-review");
+                                totalReview.innerText = "Đánh giá (" + countFeedback + ")";
+                              })
+                            }
+                          })
+                        })
+                      }
+                    })
+                  }
+
+                  function binhLuan() {
+                    const options = genConfig()
+                    const form = document.getElementById('commentForm')
+                    const data = JSON.stringify(Object.fromEntries(new FormData(form).entries()));
+                    fetch('/user/feedback/insert', {
+                      method: 'POST',
+                      body: data,
+                      headers: { ...genConfig().headers },
+
+                    })
+                      .then(res => {
+                        if (res.ok) {
+                          document.querySelector('#commentForm textarea[name="comment"]').value = ''
+                          capNhatBinhLuan()
+                        }
+                      })
+                  }
+                </script>
+
               </div>
-            </div>
-            <div class="col-md-6">
-              <h4 class="mb-4">Leave a review</h4>
-              <small>Your email address will not be published. Required fields are
-                marked *</small>
-              <div class="d-flex my-3">
-                <p class="mb-0 mr-2">Your Rating * :</p>
-                <div class="text-primary">
-                  <i class="far fa-star"></i>
-                  <i class="far fa-star"></i>
-                  <i class="far fa-star"></i>
-                  <i class="far fa-star"></i>
-                  <i class="far fa-star"></i>
-                </div>
-              </div>
-              <form>
-                <div class="form-group">
-                  <label for="message">Your Review *</label>
-                  <textarea id="message" cols="30" rows="5" class="form-control"></textarea>
-                </div>
-                <div class="form-group">
-                  <label for="name">Your Name *</label>
-                  <input type="text" class="form-control" id="name" />
-                </div>
-                <div class="form-group">
-                  <label for="email">Your Email *</label>
-                  <input type="email" class="form-control" id="email" />
-                </div>
-                <div class="form-group mb-0">
-                  <input type="submit" value="Leave Your Review" class="btn btn-primary px-3" />
-                </div>
-              </form>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-<!-- Shop Detail End -->
+  <!-- Shop Detail End -->
 
-<!-- Products Start -->
-<div class="container-fluid py-5">
-  <div class="text-center mb-4">
-    <h2 class="section-title px-5">
-      <span class="px-2">You May Also Like</span>
-    </h2>
-  </div>
-  <div class="row px-xl-5">
-    <div class="col">
-      <div class="owl-carousel related-carousel">
-        <div class="card product-item border-0">
-          <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-            <img class="img-fluid w-100" src="/content/user/assets/img/product-1.jpg" alt="" />
-          </div>
-          <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-            <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-            <div class="d-flex justify-content-center">
-              <h6>$123.00</h6>
-              <h6 class="text-muted ml-2"><del>$123.00</del></h6>
+  <!-- Products Start -->
+  <!-- <div class="container-fluid py-5">
+    <div class="text-center mb-4">
+      <h2 class="section-title px-5">
+        <span class="px-2">Đề xuất</span>
+      </h2>
+    </div>
+    <div class="row px-xl-5">
+      <div class="col">
+        <div id="products" class="owl-carousel related-carousel">
+          <div class="card product-item border-0">
+            <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+              <img class="img-fluid w-100" src="/content/user/img_user_default/default_user_product.png" alt="" />
+            </div>
+            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+              <h6 class="text-truncate mb-3">Tên sản phẩm</h6>
+              <div class="d-flex justify-content-center">
+                <h6>88.888 đ</h6>
+                <h6 class="text-muted ml-2"><del>88.888 đ</del></h6>
+              </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between bg-light border">
+              <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+              <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào
+                giỏ</a>
             </div>
           </div>
-          <div class="card-footer d-flex justify-content-between bg-light border">
-            <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-            <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To
-              Cart</a>
-          </div>
-        </div>
-        <div class="card product-item border-0">
-          <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-            <img class="img-fluid w-100" src="/content/user/assets/img/product-2.jpg" alt="" />
-          </div>
-          <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-            <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-            <div class="d-flex justify-content-center">
-              <h6>$123.00</h6>
-              <h6 class="text-muted ml-2"><del>$123.00</del></h6>
+          <div class="card product-item border-0">
+            <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+              <img class="img-fluid w-100" src="/content/user/img_user_default/default_user_product.png" alt="" />
+            </div>
+            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+              <h6 class="text-truncate mb-3">Tên sản phẩm</h6>
+              <div class="d-flex justify-content-center">
+                <h6>88.888 đ</h6>
+                <h6 class="text-muted ml-2"><del>88.888 đ</del></h6>
+              </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between bg-light border">
+              <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+              <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào
+                giỏ</a>
             </div>
           </div>
-          <div class="card-footer d-flex justify-content-between bg-light border">
-            <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-            <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To
-              Cart</a>
-          </div>
-        </div>
-        <div class="card product-item border-0">
-          <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-            <img class="img-fluid w-100" src="img/product-3.jpg" alt="" />
-          </div>
-          <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-            <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-            <div class="d-flex justify-content-center">
-              <h6>$123.00</h6>
-              <h6 class="text-muted ml-2"><del>$123.00</del></h6>
+          <div class="card product-item border-0">
+            <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+              <img class="img-fluid w-100" src="/content/user/img_user_default/default_user_product.png" alt="" />
+            </div>
+            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+              <h6 class="text-truncate mb-3">Tên sản phẩm</h6>
+              <div class="d-flex justify-content-center">
+                <h6>88.888 đ</h6>
+                <h6 class="text-muted ml-2"><del>88.888 đ</del></h6>
+              </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between bg-light border">
+              <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+              <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào
+                giỏ</a>
             </div>
           </div>
-          <div class="card-footer d-flex justify-content-between bg-light border">
-            <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-            <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To
-              Cart</a>
-          </div>
-        </div>
-        <div class="card product-item border-0">
-          <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-            <img class="img-fluid w-100" src="img/product-4.jpg" alt="" />
-          </div>
-          <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-            <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-            <div class="d-flex justify-content-center">
-              <h6>$123.00</h6>
-              <h6 class="text-muted ml-2"><del>$123.00</del></h6>
+          <div class="card product-item border-0">
+            <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+              <img class="img-fluid w-100" src="/content/user/img_user_default/default_user_product.png" alt="" />
+            </div>
+            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+              <h6 class="text-truncate mb-3">Tên sản phẩm</h6>
+              <div class="d-flex justify-content-center">
+                <h6>88.888 đ</h6>
+                <h6 class="text-muted ml-2"><del>88.888 đ</del></h6>
+              </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between bg-light border">
+              <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+              <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào
+                giỏ</a>
             </div>
           </div>
-          <div class="card-footer d-flex justify-content-between bg-light border">
-            <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-            <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To
-              Cart</a>
-          </div>
-        </div>
-        <div class="card product-item border-0">
-          <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-            <img class="img-fluid w-100" src="img/product-5.jpg" alt="" />
-          </div>
-          <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-            <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-            <div class="d-flex justify-content-center">
-              <h6>$123.00</h6>
-              <h6 class="text-muted ml-2"><del>$123.00</del></h6>
+          <div class="card product-item border-0">
+            <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+              <img class="img-fluid w-100" src="/content/user/img_user_default/default_user_product.png" alt="" />
             </div>
-          </div>
-          <div class="card-footer d-flex justify-content-between bg-light border">
-            <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-            <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To
-              Cart</a>
+            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+              <h6 class="text-truncate mb-3">Tên sản phẩm</h6>
+              <div class="d-flex justify-content-center">
+                <h6>88.888 đ</h6>
+                <h6 class="text-muted ml-2"><del>88.888 đ</del></h6>
+              </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between bg-light border">
+              <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+              <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào
+                giỏ</a>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
+  <!-- Products End -->
+
+  <!-- JavaScript Libraries -->
+  <!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+      <script src="lib/easing/easing.min.js"></script>
+      <script src="lib/owlcarousel/owl.carousel.min.js"></script> -->
+
+  <!-- Contact Javascript File -->
+  <!-- <script src="mail/jqBootstrapValidation.min.js"></script>
+      <script src="mail/contact.js"></script> -->
+
+  <!-- Template Javascript -->
+  <!-- <script src="js/main.js"></script> -->
+
 </div>
-<!-- Products End -->
-
-<!-- JavaScript Libraries -->
-<!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script> -->
-
-<!-- Contact Javascript File -->
-<!-- <script src="mail/jqBootstrapValidation.min.js"></script>
-    <script src="mail/contact.js"></script> -->
-
-<!-- Template Javascript -->
-<!-- <script src="js/main.js"></script> -->

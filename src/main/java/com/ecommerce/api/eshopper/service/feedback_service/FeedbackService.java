@@ -26,6 +26,11 @@ public class FeedbackService implements IFeedbackService {
     }
 
     @Override
+    public List<Feedback> getFeedbackProduct(Long productId) {
+        return feedbackRepository.findByProduct_Id(productId);
+    }
+
+    @Override
     public Optional<Feedback> findFeedbackById(Long id) {
         return feedbackRepository.findById(id);
     }

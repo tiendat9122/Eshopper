@@ -1,10 +1,7 @@
 <div th:fragment="eshopperContent">
   <!-- Page Header Start -->
   <div class="container-fluid bg-secondary mb-5">
-    <div
-      class="d-flex flex-column align-items-center justify-content-center"
-      style="min-height: 300px"
-    >
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
       <h1 class="font-weight-semi-bold text-uppercase mb-3">Giỏ hàng</h1>
       <div class="d-inline-flex">
         <p class="m-0"><a href="">Eshopper</a></p>
@@ -19,18 +16,18 @@
   <div class="container-fluid pt-5">
     <div class="row px-xl-5">
       <div class="col-lg-8 table-responsive mb-5">
-        <table class="table table-bordered text-center mb-0">
+        <table id="table-cart" class="table table-bordered text-center mb-0">
           <thead class="bg-secondary text-dark">
             <tr>
-              <th>Sản phẩm</th>
-              <th>Giá bán</th>
-              <th>Số lượng</th>
-              <th>Tổng giá</th>
-              <th>Xóa</th>
+              <th class="text-center">Sản phẩm</th>
+              <th class="text-center">Giá bán</th>
+              <th class="text-center">Số lượng</th>
+              <th class="text-center">Tổng giá</th>
+              <th class="text-center">Xóa</th>
             </tr>
           </thead>
           <tbody class="align-middle">
-            <tr>
+            <!-- <tr>
               <td class="align-middle">
                 <img src="img/product-1.jpg" alt="" style="width: 50px" />
                 Colorful Stylish Shirt
@@ -43,11 +40,7 @@
                       <i class="fa fa-minus"></i>
                     </button>
                   </div>
-                  <input
-                    type="text"
-                    class="form-control form-control-sm bg-secondary text-center"
-                    value="1"
-                  />
+                  <input type="text" class="form-control form-control-sm bg-secondary text-center" value="1" />
                   <div class="input-group-btn">
                     <button class="btn btn-sm btn-primary btn-plus">
                       <i class="fa fa-plus"></i>
@@ -61,169 +54,37 @@
                   <i class="fa fa-times"></i>
                 </button>
               </td>
-            </tr>
-            <tr>
-              <td class="align-middle">
-                <img src="img/product-2.jpg" alt="" style="width: 50px" />
-                Colorful Stylish Shirt
-              </td>
-              <td class="align-middle">$150</td>
-              <td class="align-middle">
-                <div class="input-group quantity mx-auto" style="width: 100px">
-                  <div class="input-group-btn">
-                    <button class="btn btn-sm btn-primary btn-minus">
-                      <i class="fa fa-minus"></i>
-                    </button>
-                  </div>
-                  <input
-                    type="text"
-                    class="form-control form-control-sm bg-secondary text-center"
-                    value="1"
-                  />
-                  <div class="input-group-btn">
-                    <button class="btn btn-sm btn-primary btn-plus">
-                      <i class="fa fa-plus"></i>
-                    </button>
-                  </div>
-                </div>
-              </td>
-              <td class="align-middle">$150</td>
-              <td class="align-middle">
-                <button class="btn btn-sm btn-primary">
-                  <i class="fa fa-times"></i>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td class="align-middle">
-                <img src="img/product-3.jpg" alt="" style="width: 50px" />
-                Colorful Stylish Shirt
-              </td>
-              <td class="align-middle">$150</td>
-              <td class="align-middle">
-                <div class="input-group quantity mx-auto" style="width: 100px">
-                  <div class="input-group-btn">
-                    <button class="btn btn-sm btn-primary btn-minus">
-                      <i class="fa fa-minus"></i>
-                    </button>
-                  </div>
-                  <input
-                    type="text"
-                    class="form-control form-control-sm bg-secondary text-center"
-                    value="1"
-                  />
-                  <div class="input-group-btn">
-                    <button class="btn btn-sm btn-primary btn-plus">
-                      <i class="fa fa-plus"></i>
-                    </button>
-                  </div>
-                </div>
-              </td>
-              <td class="align-middle">$150</td>
-              <td class="align-middle">
-                <button class="btn btn-sm btn-primary">
-                  <i class="fa fa-times"></i>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td class="align-middle">
-                <img src="img/product-4.jpg" alt="" style="width: 50px" />
-                Colorful Stylish Shirt
-              </td>
-              <td class="align-middle">$150</td>
-              <td class="align-middle">
-                <div class="input-group quantity mx-auto" style="width: 100px">
-                  <div class="input-group-btn">
-                    <button class="btn btn-sm btn-primary btn-minus">
-                      <i class="fa fa-minus"></i>
-                    </button>
-                  </div>
-                  <input
-                    type="text"
-                    class="form-control form-control-sm bg-secondary text-center"
-                    value="1"
-                  />
-                  <div class="input-group-btn">
-                    <button class="btn btn-sm btn-primary btn-plus">
-                      <i class="fa fa-plus"></i>
-                    </button>
-                  </div>
-                </div>
-              </td>
-              <td class="align-middle">$150</td>
-              <td class="align-middle">
-                <button class="btn btn-sm btn-primary">
-                  <i class="fa fa-times"></i>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td class="align-middle">
-                <img src="img/product-5.jpg" alt="" style="width: 50px" />
-                Colorful Stylish Shirt
-              </td>
-              <td class="align-middle">$150</td>
-              <td class="align-middle">
-                <div class="input-group quantity mx-auto" style="width: 100px">
-                  <div class="input-group-btn">
-                    <button class="btn btn-sm btn-primary btn-minus">
-                      <i class="fa fa-minus"></i>
-                    </button>
-                  </div>
-                  <input
-                    type="text"
-                    class="form-control form-control-sm bg-secondary text-center"
-                    value="1"
-                  />
-                  <div class="input-group-btn">
-                    <button class="btn btn-sm btn-primary btn-plus">
-                      <i class="fa fa-plus"></i>
-                    </button>
-                  </div>
-                </div>
-              </td>
-              <td class="align-middle">$150</td>
-              <td class="align-middle">
-                <button class="btn btn-sm btn-primary">
-                  <i class="fa fa-times"></i>
-                </button>
-              </td>
-            </tr>
+            </tr> -->
           </tbody>
         </table>
       </div>
       <div class="col-lg-4">
         <form class="mb-5" action="">
           <div class="input-group">
-            <input
-              type="text"
-              class="form-control p-4"
-              placeholder="Mã giảm giá..."
-            />
+            <input type="text" class="form-control p-4" placeholder="Mã giảm giá..." />
             <div class="input-group-append">
               <button class="btn btn-primary">Áp dụng</button>
             </div>
           </div>
         </form>
-        <div class="card border-secondary mb-5">
+        <div id="totalCart" class="card border-secondary mb-5">
           <div class="card-header bg-secondary border-0">
-            <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
+            <h4 class="font-weight-semi-bold m-0">Tổng hợp</h4>
           </div>
           <div class="card-body">
             <div class="d-flex justify-content-between mb-3 pt-1">
               <h6 class="font-weight-medium">Tổng giá</h6>
-              <h6 class="font-weight-medium">$150</h6>
+              <h6 name="totalPriceCart" class="font-weight-medium">Chưa cập nhật</h6>
             </div>
             <div class="d-flex justify-content-between">
               <h6 class="font-weight-medium">Phí vận chuyển</h6>
-              <h6 class="font-weight-medium">$10</h6>
+              <h6 name="transportCart" class="font-weight-medium">Chưa cập nhật</h6>
             </div>
           </div>
           <div class="card-footer border-secondary bg-transparent">
             <div class="d-flex justify-content-between mt-2">
               <h5 class="font-weight-bold">Tổng cộng</h5>
-              <h5 class="font-weight-bold">$160</h5>
+              <h5 name="totalBillCart" class="font-weight-bold">Chưa cập nhật</h5>
             </div>
             <button class="btn btn-block btn-primary my-3 py-3">
               Thanh toán
@@ -234,4 +95,302 @@
     </div>
   </div>
   <!-- Cart End -->
+
+
+  <script>
+    const user = getUserInfo();
+
+    console.log("Hello")
+    console.log(user.id)
+
+    $(() => {
+      $("#table-cart").DataTable({ destroy: true })
+      var dataTable = $("#table-cart").DataTable({
+        language: {
+          search: "",
+          searchPlaceholder: "Tìm trong giỏ hàng...",
+          info: "Trang _PAGE_ trên _PAGES_",
+          lengthMenu: "Hiển thị _MENU_ sản phẩm",
+          paginate: {
+            first: "<<",
+            previous: "<",
+            next: ">",
+            last: ">>"
+          },
+          infoFiltered: "(được lọc từ _MAX_ tổng số dòng)",
+          zeroRecords: "Giỏ hàng trống",
+          infoEmpty: "Hiển thị từ 0 đến 0 của 0 dòng"
+        },
+        ajax: {
+          url: '/user/orders/get?userId=' + user.id,
+          type: 'GET',
+          headers: {
+            "Authorization": "Bearer " + getJwtToken()
+          },
+          dataSrc: ''
+        },
+        columnDefs: [
+          { targets: [1, 2, 3, 4], orderable: false },
+          {
+            targets: 0, data: 'product', className: "align-middle text-left", defaultContent: "", render: (d, t, r, m) => `
+              <img src="/user/product/download/${d.picture}" alt="" style="width: 50px" />
+              ${d.name}
+            `
+          },
+          {
+            targets: 1, data: 'product.retail', className: "align-middle", render: function (data, type, row, meta) {
+              if (type === 'display' || type === 'filter') {
+                return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(data);
+              }
+              return data;
+            }
+          },
+          {
+            targets: 2, data: 'id', className: "align-middle", defaultContent: "", render: (d, t, r, m) => `
+            <div class="input-group quantity mx-auto" style="width: 100px">
+              <div class="input-group-btn">
+                <button type="button" onclick="giamSoluong(${r.id}, ${r.product.id})" class="btn btn-sm btn-primary btn-minus">
+                  <i class="fa fa-minus"></i>
+                </button>
+              </div>
+              <input type="text" readonly class="form-control form-control-sm bg-secondary text-center" value="${r.quantity}" />
+              <div class="input-group-btn">
+                <button type="button" onclick="themSoluong(${r.id}, ${r.product.id})" class="btn btn-sm btn-primary btn-plus">
+                  <i class="fa fa-plus"></i>
+                </button>
+              </div>
+            </div>
+            `
+          },
+          {
+            targets: 3, data: 'price', className: "align-middle", render: function (data, type, row, meta) {
+              if (type === 'display' || type === 'filter') {
+                return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(data);
+              }
+              return data;
+            }
+          },
+          {
+            targets: 4, data: 'id', className: "align-middle", defaultContent: "", render: (d, t, r, m) => `
+              <button type="button" onclick="xoaChiTietDonHangTrongGio(${d})" id="delete-orderdetail-btn" class="btn btn-sm btn-primary">
+                <i class="fa fa-times"></i>
+              </button>
+            `
+          },
+        ],
+        "bDestroy": true
+      });
+    })
+
+    function themSoluong(orderDetailId, productId) {
+      fetch('/user/orders/addquantity?orderDetailId=' + orderDetailId + '&productId=' + productId, {
+        ...genConfig(),
+        method: 'PUT'
+      }).then(res => {
+        if (res.ok) {
+          $('#table-cart').DataTable().ajax.reload(null, false);
+          fetch('/user/orders/cart?userId=' + user.id, { ...genConfig() })
+            .then(res => {
+              if (res.ok) {
+                res.json().then(orders => {
+                  const totalCart = document.getElementById('totalCart');
+                  totalCart.innerHTML = '';
+                  const totalCartInformation = document.createElement('div');
+                  const formattedTotalPriceValue = orders.totalPrice.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                  });
+
+                  const formattedTotalBillValue = orders.totalBill.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                  });
+
+                  const formattedTransportValue = orders.transport.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                  });
+                  totalCartInformation.innerHTML = `
+                  <div class="card-header bg-secondary border-0">
+                    <h4 class="font-weight-semi-bold m-0">Tổng hợp</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3 pt-1">
+                      <h6 class="font-weight-medium">Tổng giá</h6>
+                      <h6 name="totalPriceCart" class="font-weight-medium">${formattedTotalPriceValue}</h6>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                      <h6 class="font-weight-medium">Phí vận chuyển</h6>
+                      <h6 name="transportCart" class="font-weight-medium">${formattedTransportValue}</h6>
+                    </div>
+                  </div>
+                  <div class="card-footer border-secondary bg-transparent">
+                    <div class="d-flex justify-content-between mt-2">
+                      <h5 class="font-weight-bold">Tổng cộng</h5>
+                      <h5 name="totalBillCart" class="font-weight-bold">${formattedTotalBillValue}</h5>
+                    </div>
+                    <button class="btn btn-block btn-primary my-3 py-3">
+                      Thanh toán
+                    </button>
+                  </div>
+                  `;
+                  totalCart.appendChild(totalCartInformation);
+                });
+              }
+            });
+        }
+      })
+    }
+
+    function giamSoluong(orderDetailId, productId) {
+      fetch('/user/orders/subtractquantity?orderDetailId=' + orderDetailId + '&productId=' + productId, {
+        ...genConfig(),
+        method: 'PUT'
+      }).then(res => {
+        if (res.ok) {
+          $('#table-cart').DataTable().ajax.reload(null, false);
+          fetch('/user/orders/cart?userId=' + user.id, { ...genConfig() })
+            .then(res => {
+              if (res.ok) {
+                res.json().then(orders => {
+                  const totalCart = document.getElementById('totalCart');
+                  totalCart.innerHTML = '';
+                  const totalCartInformation = document.createElement('div');
+                  const formattedTotalPriceValue = orders.totalPrice.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                  });
+
+                  const formattedTotalBillValue = orders.totalBill.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                  });
+
+                  const formattedTransportValue = orders.transport.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                  });
+                  totalCartInformation.innerHTML = `
+                  <div class="card-header bg-secondary border-0">
+                    <h4 class="font-weight-semi-bold m-0">Tổng hợp</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3 pt-1">
+                      <h6 class="font-weight-medium">Tổng giá</h6>
+                      <h6 name="totalPriceCart" class="font-weight-medium">${formattedTotalPriceValue}</h6>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                      <h6 class="font-weight-medium">Phí vận chuyển</h6>
+                      <h6 name="transportCart" class="font-weight-medium">${formattedTransportValue}</h6>
+                    </div>
+                  </div>
+                  <div class="card-footer border-secondary bg-transparent">
+                    <div class="d-flex justify-content-between mt-2">
+                      <h5 class="font-weight-bold">Tổng cộng</h5>
+                      <h5 name="totalBillCart" class="font-weight-bold">${formattedTotalBillValue}</h5>
+                    </div>
+                    <button class="btn btn-block btn-primary my-3 py-3">
+                      Thanh toán
+                    </button>
+                  </div>
+                  `;
+                  totalCart.appendChild(totalCartInformation);
+                });
+              }
+            });
+        }
+      })
+    }
+
+    function xoaChiTietDonHangTrongGio(id) {
+      fetch('/user/orders/delete?id=' + id, {
+        ...genConfig(),
+        method: 'DELETE'
+      })
+        .then(res => {
+          if (res.ok) {
+            $('#table-cart').DataTable().ajax.reload(null, false);
+            fetch('/user/orders/cart?userId=' + user.id, { ...genConfig() })
+              .then(res => {
+                if (res.ok) {
+                  res.json().then(orders => {
+                    const totalCart = document.getElementById('totalCart');
+                    totalCart.innerHTML = '';
+                    const totalCartInformation = document.createElement('div');
+                    const formattedTotalPriceValue = orders.totalPrice.toLocaleString('vi-VN', {
+                      style: 'currency',
+                      currency: 'VND',
+                    });
+
+                    const formattedTotalBillValue = orders.totalBill.toLocaleString('vi-VN', {
+                      style: 'currency',
+                      currency: 'VND',
+                    });
+
+                    const formattedTransportValue = orders.transport.toLocaleString('vi-VN', {
+                      style: 'currency',
+                      currency: 'VND',
+                    });
+                    totalCartInformation.innerHTML = `
+                  <div class="card-header bg-secondary border-0">
+                    <h4 class="font-weight-semi-bold m-0">Tổng hợp</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3 pt-1">
+                      <h6 class="font-weight-medium">Tổng giá</h6>
+                      <h6 name="totalPriceCart" class="font-weight-medium">${formattedTotalPriceValue}</h6>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                      <h6 class="font-weight-medium">Phí vận chuyển</h6>
+                      <h6 name="transportCart" class="font-weight-medium">${formattedTransportValue}</h6>
+                    </div>
+                  </div>
+                  <div class="card-footer border-secondary bg-transparent">
+                    <div class="d-flex justify-content-between mt-2">
+                      <h5 class="font-weight-bold">Tổng cộng</h5>
+                      <h5 name="totalBillCart" class="font-weight-bold">${formattedTotalBillValue}</h5>
+                    </div>
+                    <button class="btn btn-block btn-primary my-3 py-3">
+                      Thanh toán
+                    </button>
+                  </div>
+                  `;
+                    totalCart.appendChild(totalCartInformation);
+                  });
+                }
+              });
+          }
+        })
+    }
+
+    // Tong hoa don
+    fetch('/user/orders/cart?userId=' + user.id, {
+      ...genConfig(),
+      method: 'GET'
+    }).then(res => {
+      if (res.ok) {
+        res.json().then(orders => {
+          const formattedTotalPriceValue = orders.totalPrice.toLocaleString('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+          });
+
+          const formattedTotalBillValue = orders.totalBill.toLocaleString('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+          });
+
+          const formattedTransportValue = orders.transport.toLocaleString('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+          });
+
+          document.querySelector('#totalCart h6[name=totalPriceCart]').innerText = formattedTotalPriceValue;
+          document.querySelector('#totalCart h6[name=transportCart]').innerText = formattedTransportValue;
+          document.querySelector('#totalCart h5[name=totalBillCart]').innerText = formattedTotalBillValue;
+        })
+      }
+    })
+  </script>
+
 </div>

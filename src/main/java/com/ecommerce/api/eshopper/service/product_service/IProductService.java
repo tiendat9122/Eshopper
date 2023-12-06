@@ -10,6 +10,8 @@ public interface IProductService {
     // Get and find
     List<Product> findAllProduct();
 
+    List<Product> findAllProductIsActive();
+
     Optional<Product> findProductById(Long id);
 
     Optional<Product> findProductByName(String name);
@@ -19,6 +21,8 @@ public interface IProductService {
     List<Product> findProductByAuthor(String name);
 
     List<Product> findProductByKeyWord(String name);
+
+    List<Product> findProductRandom();
 
     // Save and update
     List<Product> saveAllProduct(List<Product> products);

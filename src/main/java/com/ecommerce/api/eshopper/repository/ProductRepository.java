@@ -19,9 +19,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByAuthorName(String name);
 
+    List<Product> findByActiveTrue();
+
     @Query("SELECT p FROM Product p " +
            "JOIN p.author a " +
-           "WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(a.name) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+           "WHERE p.active = true " +
+           "AND (LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(a.name) LIKE LOWER(CONCAT('%', :keyword, '%')))")
     List<Product> findByKeyword(@Param("keyword") String keyword);
+
+    @Query("SELECT p FROM Product p ORDER BY RAND() LIMIT 5")
+    List<Product> findRandomProducts();
     
 }

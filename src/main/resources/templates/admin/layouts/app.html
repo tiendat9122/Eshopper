@@ -121,19 +121,8 @@
                 $('#deleteModal').modal('show');
             }
 
-            const user = getUserInfo()
-            document.querySelectorAll('.need-fullname').forEach(e => {
-                e.innerText = user.full_name
-            })
-            document.querySelectorAll('.need-rolename').forEach(e => {
-                e.innerText = user.role.map(i => i.displayName).join(" / ")
-            })
-            document.querySelectorAll('.need-avatar').forEach(e => {
-                if (user.avatar == null)
-                    e.src = "/content/admin/assets/media/avatars/avatar0.jpg"
-                else
-                    e.src = "/user/download/" + user.avatar
-            })
+            capNhatThongTinNguoiDungHienTai()
+
         </script>
     </body>
 

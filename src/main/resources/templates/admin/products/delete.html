@@ -22,8 +22,6 @@
                     function xoa() {
                         const form = document.querySelector('#deleteModal form')
                         const id = form.dataset.id
-                        const data = new FormData(form)
-                        const body = JSON.stringify(Object.fromEntries(data.entries()))
 
                         fetch('/product/delete?id=' + id, {
                             ...genConfig(),

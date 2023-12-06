@@ -44,7 +44,7 @@ public class Feedback {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = true)
     @JsonIgnoreProperties({"enabled", "credentialsNonExpired", "accountNonExpired", "authorities", "accountNonLocked", "username",
-            "orders", "user_name", "birth_day", "avatar", "password", "role", "active", "full_name", "address", "phone_number"})
+            "orders", "user_name", "birth_day", "password", "role", "active", "address", "phone_number"})
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private User user;

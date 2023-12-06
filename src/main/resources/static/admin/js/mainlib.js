@@ -77,7 +77,7 @@ function capNhatThongTinNguoiDungHienTai() {
     e.innerText = user.role.map(i => i.displayName).join(" / ")
   })
   document.querySelectorAll('.need-avatar').forEach(e => {
-    if (!user.avatar.isBlank())
+    if (user.avatar != null)
       e.src = "/user/download/" + user.avatar
     else
       e.src = "/content/admin/assets/media/avatars/avatar0.jpg"

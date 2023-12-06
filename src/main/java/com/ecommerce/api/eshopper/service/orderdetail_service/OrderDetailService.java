@@ -1,6 +1,7 @@
 package com.ecommerce.api.eshopper.service.orderdetail_service;
 
 import com.ecommerce.api.eshopper.entity.OrderDetail;
+import com.ecommerce.api.eshopper.entity.Orders;
 import com.ecommerce.api.eshopper.repository.OrderDetailRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,12 @@ public class OrderDetailService implements IOrderDetailService {
         return orderDetailRepository.findById(id);
     }
 
+    @Override
+    public List<OrderDetail> getOrderDetailByOrders(Orders orders) {
+        return orderDetailRepository.findByOrders(orders);
+    }
+
+    // Save and update
     @Override
     public OrderDetail saveOrderDetail(OrderDetail orderDetail) {
         return orderDetailRepository.save(orderDetail);
