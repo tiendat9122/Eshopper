@@ -43,7 +43,7 @@ public class Orders {
     @ToString.Exclude
     private User user;
 
-    @OneToMany(mappedBy = "orders", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("orders")
     @JsonIgnore
     @EqualsAndHashCode.Exclude

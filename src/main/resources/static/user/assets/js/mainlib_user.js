@@ -47,7 +47,7 @@ function parseJwt (token) {
   //Xử lý đăng xuất. Xóa JWT được lưu trong Local Storage
   function dangXuatUser() {
       localStorage.clear()
-      location.href='/admin/login'                                       
+      location.href='/userauth/login'                                       
   }
   
   // function disableSubmit(e) {

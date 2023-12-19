@@ -20,6 +20,7 @@ public class FeedbackService implements IFeedbackService {
 
     private final FeedbackRepository feedbackRepository;
 
+    // Get and find
     @Override
     public List<Feedback> getAllFeedback() {
         return feedbackRepository.findAll();
@@ -35,11 +36,13 @@ public class FeedbackService implements IFeedbackService {
         return feedbackRepository.findById(id);
     }
 
+    // Save and update
     @Override
     public Feedback saveFeedback(Feedback feedback) {
         return feedbackRepository.save(feedback);
     }
 
+    // Delete
     @Override
     public void deleteFeedback(Feedback feedback) {
         feedbackRepository.delete(feedback);

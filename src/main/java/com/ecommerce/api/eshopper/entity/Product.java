@@ -41,7 +41,7 @@ public class Product {
     @ToString.Exclude
     private Set<OrderDetail> orderDetails;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

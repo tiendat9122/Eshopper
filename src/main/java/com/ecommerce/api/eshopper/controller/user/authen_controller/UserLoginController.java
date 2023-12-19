@@ -17,35 +17,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/userauth")
 public class UserLoginController {
-
-    @Value("${file.upload-dir}")
-    private String FILE_DIRECTORY;
     
     @GetMapping("/login")
     public String userLogin(Model model) {
         model.addAttribute("eshopperAuthenFragment", "user/component_authen/user_login.html");
         return "user/layout_authen/app";
-    }
-
-    @GetMapping("/download/{avatar}")
-    @ResponseBody
-    public ResponseEntity<ByteArrayResource> getAvatar(@PathVariable(name = "avatar") String avatar) {
-
-        if (!avatar.equals("") || avatar != null) {
-            try {
-                Path filename = Paths.get(FILE_DIRECTORY, "users", avatar);
-                byte[] buffer = Files.readAllBytes(filename);
-                ByteArrayResource byteArrayResource = new ByteArrayResource(buffer);
-                return ResponseEntity.ok()
-                        .contentLength(buffer.length)
-                        .contentType(MediaType.parseMediaType("image/png"))
-                        .body(byteArrayResource);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return ResponseEntity.badRequest().build();
-
     }
 
 }

@@ -21,7 +21,7 @@ public class Author {
 
     private String story;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

@@ -1,0 +1,171 @@
+<!-- Page Container -->
+<div id="page-container" th:fragment="adminAuthen">
+
+    <!-- Main Container -->
+    <main id="main-container">
+        <!-- Page Content -->
+        <div class="hero-static d-flex align-items-center">
+            <div class="w-100">
+                <!-- Reminder Section -->
+                <div class="bg-white">
+                    <div class="content content-full">
+                        <div class="row justify-content-center">
+                            <div class="col-md-8 col-lg-6 col-xl-4 py-4">
+                                <!-- Header -->
+                                <div class="text-center">
+                                    <p class="mb-2">
+                                        <i class="fa fa-2x fa-circle-notch text-primary"></i>
+                                    </p>
+                                    <h1 class="h4 mb-1">
+                                        Quên mật khẩu
+                                    </h1>
+                                    <h2 class="h6 font-w400 text-muted mb-3">
+                                        Vui lòng cung cấp email tài khoản của bạn và chúng tôi sẽ gửi cho bạn mật khẩu.
+                                    </h2>
+                                </div>
+                                <!-- END Header -->
+
+                                <!-- Reminder Form -->
+                                <!-- jQuery Validation (.js-validation-reminder class is initialized in js/pages/op_auth_reminder.min.js which was auto compiled from _es6/pages/op_auth_reminder.js) -->
+                                <!-- For more info and examples you can check out https://github.com/jzaefferer/jquery-validation -->
+                                <div id="mail-verification">
+                                    <form class="js-validation-reminder" id="form-send-mail-forgot">
+                                        <div class="form-group py-3">
+                                            <input type="email" class="form-control form-control-lg form-control-alt"
+                                                id="reminder-credential" name="email" placeholder="Nhập địa chỉ Email..">
+                                        </div>
+                                        <div class="form-group row justify-content-center">
+                                            <div class="col-md-6 col-xl-5">
+                                                <button id="send-email-forgot" type="button"
+                                                    class="btn btn-block btn-primary" onclick="guiEmail()">
+                                                    <i class="fa fa-fw fa-envelope mr-1"></i> Gửi Mail
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- END Reminder Form -->
+
+                                <div class="text-center">
+                                    <a class="font-size-sm font-w500" href="/admin/login">Đăng nhập</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END Reminder Section -->
+
+                <!-- Footer -->
+                <div class="font-size-sm text-center text-muted py-3">
+                    <strong>Eshopper</strong> &copy; <span data-toggle="year-copy"></span>
+                </div>
+                <!-- END Footer -->
+            </div>
+        </div>
+        <!-- END Page Content -->
+    </main>
+    <!-- END Main Container -->
+</div>
+<!-- END Page Container -->
+
+<script th:fragment="adminScript_after">
+
+    function guiEmail() {
+
+        formSendMailForgot = document.getElementById("form-send-mail-forgot");
+        const data = JSON.stringify(Object.fromEntries(new FormData(formSendMailForgot).entries()));
+
+        fetch('/auth/forgot', {
+            method: 'POST',
+            body: data,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(res => {
+            if (res.ok) {
+                res.json().then((data) => {
+                    wrapForm = document.getElementById("mail-verification");
+                    wrapForm.innerHTML = `<form class="js-validation-reminder" id="form-verify-code">
+                                            <div class="form-group py-3">
+                                                <input type="hidden" name="userId" value="${data.id}">
+                                                <input type="text" class="form-control form-control-lg form-control-alt"
+                                                    id="reminder-credential" name="code" placeholder="Nhập Mã xác minh..">
+                                            </div>
+                                            <div class="form-group row justify-content-center">
+                                                <div class="col-md-6 col-xl-5">
+                                                    <button type="button"
+                                                        class="btn btn-block btn-primary" onclick="xacNhanMa()">
+                                                        <i class="fa fa-fw fa-lock mr-1"></i> Xác minh
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>`;
+                })
+            } else {
+                alert("Địa chỉ email của bạn không hợp lệ");
+                document.querySelector("#form-send-mail-forgot input[name=email]").value = '';
+            }
+        })
+    }
+
+    function xacNhanMa() {
+
+        formSendCodeVerify = document.getElementById("form-verify-code");
+        const data = JSON.stringify(Object.fromEntries(new FormData(formSendCodeVerify).entries()));
+
+        fetch("/auth/verification", {
+            method: 'POST',
+            body: data,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(res => {
+            if(res.ok) {
+                res.json().then((data) => {
+                    console.log(data);
+                    wrapForm = document.getElementById("mail-verification");
+                    wrapForm.innerHTML = `<form id="form-new-password" class="js-validation-reminder">
+                                    <div class="form-group">
+                                        <input type="hidden" name="email" value="${data.email}">
+                                        <input type="password" class="form-control form-control-lg form-control-alt"
+                                            id="reminder-credential" name="password"
+                                            placeholder="Nhập mật khẩu mới..">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" class="form-control form-control-lg form-control-alt"
+                                            id="reminder-credential" name="newPasswordAgain"
+                                            placeholder="Nhập lại mật khẩu mới..">
+                                    </div>
+                                    <div class="form-group row justify-content-center">
+                                        <div class="col-md-6 col-xl-5">
+                                            <button type="button" class="btn btn-block btn-primary" onclick="layLaiMatKhau()">
+                                                Lấy lại mật khẩu
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>`;
+                })
+            }
+        })
+    }
+
+    function layLaiMatKhau() {
+
+        formNewPassword = document.getElementById("form-new-password");
+        const data = JSON.stringify(Object.fromEntries(new FormData(formNewPassword).entries()));
+
+        fetch("/auth/newpassword", {
+            method: 'PUT',
+            body: data,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(res => {
+            if(res.ok) {
+                window.location.href = "/admin/login";
+            }
+        })
+
+    }
+
+</script>

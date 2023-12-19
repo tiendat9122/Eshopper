@@ -39,6 +39,8 @@ public class UserDto {
 
     private String password;
 
+    private String newPassword;
+
     private boolean active;
 
     private List<Long> roleIds;

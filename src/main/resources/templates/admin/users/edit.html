@@ -145,12 +145,14 @@
                         <div class="form-group row">
                             <label for="val-name" class="form-label col-sm-3">Ảnh đại diện <span
                                     class="text-danger">*</span></label>
-                            <div>
-                                <img id="edit-avatar-img" width="250" />
-                                <input type="file" name="avatar_file" class="form-control col-sm-8" id="val-name"
-                                    required />
-                                <input type="hidden" name="avatar">
-                                <button type="button" onclick="xoaAvatar()">xoá avatar</button>
+                            <div class="d-flex">
+                                <img id="edit-avatar-img" width="100" class="rounded border"/>
+                                <div class="d-flex flex-column ml-3">
+                                    <input type="file" name="avatar_file" class="d-none" id="edit-avatar-upload" required />
+                                    <label for="edit-avatar-upload" class="btn btn-primary"><i class="fa fa-cloud-upload-alt"></i></label>
+                                    <input type="hidden" name="avatar">
+                                    <label class="btn btn-danger" onclick="xoaAvatar()"><i class="far fa-trash-alt"></i></label>
+                                </div>
                             </div>
                         </div>
 

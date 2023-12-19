@@ -1,0 +1,192 @@
+<main id="main-container" th:fragment="content">
+    <!-- Hero -->
+    <div class="bg-body-light">
+        <div class="content content-full">
+            <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+                <h1 class="flex-sm-fill h3 my-2">
+                    Quản lý xác minh <small
+                        class="d-block d-sm-inline-block mt-2 mt-sm-0 font-size-base font-w400 text-muted">
+                        Danh sách xác minh hệ thống Eshopper</small>
+                </h1>
+                <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
+                    <ol class="breadcrumb breadcrumb-alt">
+                        <li class="breadcrumb-item">Xác minh</li>
+                        <li class="breadcrumb-item" aria-current="page">
+                            <a class="link-fx" href="">Danh sách</a>
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END Hero -->
+
+    <!-- Page Content -->
+    <div class="content">
+        <!-- Quick Overview -->
+        <div class="row">
+            <div class="col-6 col-lg-4">
+                <a id="addButton" class="block block-rounded block-link-shadow text-center" href="#" data-toggle="modal"
+                    data-target="#addModal">
+                    <div class="block-content block-content-full">
+                        <div class="font-size-h2 text-success">
+                            <i class="fa fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="block-content py-2 bg-body-light">
+                        <p class="font-w600 font-size-sm text-success mb-0">
+                            Thêm mới
+                        </p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-lg-4">
+                <a class="block block-rounded block-link-shadow text-center" href="#">
+                    <div class="block-content block-content-full">
+                        <div class="font-size-h2 text-danger">224936</div>
+                    </div>
+                    <div class="block-content py-2 bg-body-light">
+                        <p class="font-w600 font-size-sm text-danger mb-0">
+                            Lượt xác minh
+                        </p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-lg-4">
+                <a class="block block-rounded block-link-shadow text-center" href="#">
+                    <div class="block-content block-content-full">
+                        <div class="font-size-h2 text-dark">14503</div>
+                    </div>
+                    <div class="block-content py-2 bg-body-light">
+                        <p class="font-w600 font-size-sm text-muted mb-0">
+                            Lượt yêu thích
+                        </p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <!-- END Quick Overview -->
+        <!-- Dynamic Table Full Pagination -->
+        <div class="block block-rounded">
+            <div class="block-content block-content-full">
+                <!-- DataTables init on table by adding .js-dataTable-full-pagination class, functionality is initialized in js/pages/be_tables_datatables.min.js which was auto compiled from _es6/pages/be_tables_datatables.js -->
+                <table id="table" class="table table-bordered table-striped table-vcenter js-dataTable-full-pagination">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="width: 80px;">ID</th>
+                            <th>Người dùng</th>
+                            <th>Mã xác minh</th>
+                            <th>Thời gian</th>
+                            <th>Trạng thái</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END Dynamic Table Full Pagination -->
+    </div>
+    <!-- END Page Content -->
+</main>
+
+<script th:fragment="script_after">
+    $(() => {
+        globalThis.capNhatStatus = function (id, status) {
+            fetch("/forgot/status", {
+                headers: { ...genConfig().headers },
+                method: 'PUT',
+                body: JSON.stringify({ id, status })
+            }).then(res => {
+                if (res.ok) { }
+                $("table").DataTable().ajax.reload()
+            })
+        }
+
+        $("table").DataTable({ destroy: true })
+        $('table').DataTable({
+            language: {
+                searchPlaceholder: "Tìm kiếm...",
+                info: "Trang _PAGE_ trên _PAGES_"
+            },
+            ajax: {
+                url: '/forgot/get',
+                type: 'GET',
+                headers: {
+                    "Authorization": "Bearer " + getJwtToken()
+                },
+                dataSrc: ''
+            },
+            columnDefs: [
+                { targets: 0, data: 'id', className: "text-center font-size-sm" },
+                { targets: 1, data: 'user.email', className: "font-w600 font-size-sm" },
+                { targets: 2, data: 'code', className: "font-w600 font-size-sm" },
+                { targets: 3, data: 'codeDate', className: "font-w600 font-size-sm" },
+                {
+                    targets: 4, data: 'status', className: 'font-w600 font-size-sm', defaultContent: '', render: (d, t, r, m) => {
+                        return `<div class="custom-control custom-switch custom-control-lg custom-control-inline mb-2">
+                    <input type="checkbox" class="custom-control-input" id="switch-${r.id}" name="example-sw-custom-inline-lg1" ${r.status ? "checked" : ""}>
+                    <label class="custom-control-label" for="switch-${r.id}" onclick="capNhatStatus(${r.id}, ${!r.status})"></label>
+                </div>`;
+                    }
+                },
+                {
+                    targets: 5, data: 'id', defaultContent: "", render: (d, t, r, m) => `
+                    <div class='btn-group'>
+                        <a class='btn btn-sm btn-alt-success' onclick='editModal(${d})'
+                            title='Edit'><i class='fa fa-fw fa-pencil-alt'></i></a>
+                        <a class='btn btn-sm btn-alt-danger' onclick='deleteModal(${d})'
+                            title='Delete'><i class='fa fa-fw fa-trash-alt'></i></a>
+                    </div>
+                `, className: "text-center d-sm-table-cell"
+                }
+            ],
+            "bDestroy": true
+        })
+
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = '/content/admin/assets/js/plugins/select2/css/select2.min.css';
+        document.head.appendChild(link);
+
+        const scriptFiles = [
+            '/content/admin/assets/js/plugins/select2/js/select2.full.min.js',
+        ];
+
+        scriptFiles.forEach(file => {
+            const script = document.createElement('script');
+            script.onload = () => {
+                jQuery(function () {
+                    One.helpers('select2');
+
+                    $('#create-user, #edit-user').select2({
+                        placeholder: "Chọn người dùng",
+                        allowClear: true,
+                        ajax: {
+                            url: '/user/get',
+                            type: 'GET',
+                            headers: {
+                                "Authorization": "Bearer " + getJwtToken()
+                            },
+                            processResults: function (data) {
+                                return {
+                                    results: data.map(i => ({
+                                        id: i.id,
+                                        text: i.email
+                                    }))
+                                };
+                            }
+                        }
+                    });
+                });
+            }
+            script.src = file;
+
+            document.body.appendChild(script);
+        });
+
+
+    })
+</script>

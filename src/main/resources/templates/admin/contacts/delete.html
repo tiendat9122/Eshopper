@@ -25,7 +25,7 @@
                         const data = new FormData(form)
                         const body = JSON.stringify(Object.fromEntries(data.entries()))
 
-                        fetch('/feedback/delete?id=' + id, {
+                        fetch('/contact/delete?id=' + id, {
                             ...genConfig(),
                             method: 'DELETE'
                         }).then(res => {

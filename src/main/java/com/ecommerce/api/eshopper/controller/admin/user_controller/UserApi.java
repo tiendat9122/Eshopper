@@ -213,6 +213,7 @@ public class UserApi {
                     }
                     user.setAvatar(null);
                 }
+                
                 // update roles for user
                 List<Long> roleIds = userDto.getRoleIds();
                 Set<Role> roles = new HashSet<>();
@@ -226,8 +227,8 @@ public class UserApi {
                 }
                 user.setRole(roles);
 
-                User userInserted = userService.saveUser(user);
-                return new ResponseEntity<>(userInserted, HttpStatus.OK);
+                User userUpdated = userService.saveUser(user);
+                return new ResponseEntity<>(userUpdated, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Required pass request param", HttpStatus.BAD_REQUEST);
             }

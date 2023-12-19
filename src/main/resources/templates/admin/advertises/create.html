@@ -1,0 +1,94 @@
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true"
+    th:fragment="modal_create">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title" id="addModalLabel" style="color: white;">Thêm quảng cáo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="color: white;">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="tao-moi">
+                    <div class="form-group row">
+                        <label for="val-table-number" class="form-label col-sm-3">Tên quảng cáo <span
+                                class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control col-sm-8" id="val-table-number"
+                            placeholder="Nhập tên quảng cáo..." required>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="val-table-number" class="form-label col-sm-3">Thương hiệu <span
+                                class="text-danger">*</span></label>
+                        <input type="text" name="brand" class="form-control col-sm-8" id="val-table-number"
+                            placeholder="Nhập thương hiệu..." required>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="val-name" class="form-label col-sm-3">Logo <span
+                                class="text-danger">*</span></label>
+                        <div class="d-flex">
+                            <img id="add-picture-img" width="100"
+                                src="/content/admin/img_default/default_advertising.jpg" class="rounded border"/>
+                            <div class="ml-3 d-flex align-items-end">
+                                <input type="file" name="picture_file" class="d-none" id="file-picture-create"
+                                    required />
+                                <label for="file-picture-create" class="btn btn-primary"><i
+                                        class="fa fa-cloud-upload-alt"></i></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="create-active" class="form-label col-sm-3">Kích hoạt <span
+                                class="text-danger">*</span></label>
+                        <div class="custom-control custom-switch custom-control-lg custom-control-inline mb-2">
+                            <input type="checkbox" class="custom-control-input" id="create-active" name="active">
+                            <label class="custom-control-label" for="create-active"> </label>
+                        </div>
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-primary" onclick="taoMoi()">Xác nhận</button>
+                    </div>
+
+                    <script>
+                        const uploadCreate = document.querySelector('#addModal input[name=picture_file]')
+                        uploadCreate.addEventListener("change", (e) => {
+                            const file = e.target.files[0]
+                            const fileReader = new FileReader()
+                            fileReader.onload = () => {
+                                const img = document.getElementById('add-picture-img')
+                                img.src = fileReader.result
+                            }
+                            fileReader.readAsDataURL(file)
+                        })
+
+                        function taoMoi() {
+                            const form = document.getElementById('tao-moi')
+                            data = new FormData(form)
+                            data.set('active', document.getElementById('create-active').checked)
+                            body = data
+                            let headers = { ...genConfig().headers }
+                            delete headers['Content-Type']
+                            fetch('/advertise/insert', {
+                                method: 'POST',
+                                body,
+                                headers,
+                            })
+                                .then(res => {
+                                    if (res.ok) {
+                                        $('#addModal').modal('hide')
+                                        $("table").DataTable().ajax.reload()
+                                    }
+                                })
+                        }
+                    </script>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

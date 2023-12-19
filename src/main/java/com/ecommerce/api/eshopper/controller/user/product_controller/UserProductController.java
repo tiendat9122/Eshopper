@@ -9,13 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/eshopper")
 public class UserProductController {
 
-    @GetMapping("/shop")
-    public String userShop(Model model) {
-        model.addAttribute("page", 0);
-        model.addAttribute("size", 0);
-        return "user/shop";
-    }
-
     @GetMapping("/store")
     public String userStore(Model model) {
         model.addAttribute("page", 0);

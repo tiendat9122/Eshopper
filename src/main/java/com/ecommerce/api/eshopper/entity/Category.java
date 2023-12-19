@@ -35,6 +35,8 @@ public class Category {
 
     private String name;
 
+    private String picture;
+
     @ManyToMany(mappedBy = "categories", cascade = { CascadeType.PERSIST, CascadeType.REFRESH,
             CascadeType.MERGE }, fetch = FetchType.EAGER)
     @JsonIgnore

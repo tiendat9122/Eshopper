@@ -20,8 +20,6 @@ public class ForgetDto {
     
     private String email;
 
-    // private String phone_number;
-
     private String new_password;
 
 }

@@ -1,0 +1,286 @@
+<main id="main-container" th:fragment="content">
+    <!-- Hero -->
+    <div class="bg-image" style="background-image: url('/content/admin/assets/media/photos/photo8@2x.jpg');">
+        <div class="bg-black-75">
+            <div class="content content-full text-center">
+                <div class="my-3">
+                    <img id="title-avatar" class="img-avatar img-avatar-thumb"
+                        src="/content/admin/assets/media/avatars/avatar13.jpg" alt="">
+                </div>
+                <h1 class="h2 text-white mb-0">Chỉnh sửa tài khoản</h1>
+                <h2 id="title-name" class="h4 font-w400 text-white-75">
+                    Họ và tên
+                </h2>
+                <a class="btn btn-light" href="/admin/profile/get">
+                    <i class="fa fa-fw fa-arrow-left text-danger"></i> Quay lại hồ sơ
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- END Hero -->
+
+    <!-- Page Content -->
+    <div class="content content-boxed">
+        <!-- User Profile -->
+        <div class="block block-rounded">
+            <div class="block-header">
+                <h3 class="block-title">Thông tin người dùng</h3>
+            </div>
+            <div class="block-content">
+                <form id="form-info">
+                    <div class="row push">
+                        <div class="col-lg-4">
+                            <p class="font-size-sm text-muted">
+                                Thông tin quan trọng của tài khoản của bạn. Tên người dùng của bạn sẽ được hiển thị công
+                                khai.
+                            </p>
+                        </div>
+                        <div class="col-lg-8 col-xl-5">
+                            <input type="hidden" name="id">
+                            <div class="form-group">
+                                <label for="one-profile-edit-username">Tên tài khoản</label>
+                                <input type="text" class="form-control" id="one-profile-edit-username" name="user_name"
+                                    placeholder="Nhập tên tài khoản..">
+                            </div>
+                            <div class="form-group">
+                                <label for="one-profile-edit-name">Họ và tên</label>
+                                <input type="text" class="form-control" id="one-profile-edit-name" name="full_name"
+                                    placeholder="Nhập họ và tên..">
+                            </div>
+                            <div class="form-group">
+                                <label for="one-profile-edit-name">Địa chỉ</label>
+                                <input type="text" class="form-control" id="one-profile-edit-name" name="address"
+                                    placeholder="Nhập địa chỉ..">
+                            </div>
+                            <div class="form-group">
+                                <label for="one-profile-edit-email">Địa chỉ Email</label>
+                                <input type="email" class="form-control" id="one-profile-edit-email" name="email"
+                                    placeholder="Nhập địa chỉ email..">
+                            </div>
+                            <div class="form-group">
+                                <label for="one-profile-edit-email">Ngày sinh</label>
+                                <input type="date" class="form-control" id="one-profile-edit-email" name="birth_day"
+                                    placeholder="Nhập ngày sinh..">
+                            </div>
+                            <div class="form-group">
+                                <label for="one-profile-edit-email">Số điện thoại</label>
+                                <input type="text" class="form-control" id="one-profile-edit-email" name="phone_number"
+                                    placeholder="Nhập số điện thoại..">
+                            </div>
+                            <div class="form-group">
+                                <label>Ảnh đại diện</label>
+                                <div class="push d-flex align-items-center">
+                                    <img id="edit-avatar-img" class="img-avatar" src="" alt="">
+                                    <div class="ml-3">
+                                        <input id="btn-file-upload" type="file" style="display: none;" name="avatar_file">
+                                        <input type="hidden" name="avatar">
+                                        <label for="btn-file-upload" class="btn btn-primary">Tải lên</label>
+                                        <label type="button" class="btn btn-danger" onclick="xoaAvatar()">Xóa</label>
+                                    </div>
+                                </div>
+                                <!-- <div class="custom-file">
+                                    <input type="file" class="custom-file-input" data-toggle="custom-file-input"
+                                        id="one-profile-edit-avatar" name="avatar_file">
+                                    <input type="hidden" name="avatar">
+                                    <label class="custom-file-label" for="one-profile-edit-avatar">Chọn ảnh đại diện
+                                        mới</label>
+                                </div> -->
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-alt-primary" onclick="capNhatThongTin()">
+                                    Cập nhật
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- END User Profile -->
+
+        <!-- Change Password -->
+        <div class="block block-rounded">
+            <div class="block-header">
+                <h3 class="block-title">Đổi mật khẩu</h3>
+            </div>
+            <div class="block-content">
+                <form id="form-password">
+                    <div class="row push">
+                        <div class="col-lg-4">
+                            <p class="font-size-sm text-muted">
+                                Thay đổi mật khẩu đăng nhập là cách dễ dàng để giữ an toàn cho tài khoản của bạn.
+                            </p>
+                            <p id="error-password-again" class="font-size-sm"></p>
+                        </div>
+                        <div class="col-lg-8 col-xl-5">
+                            <div class="form-group">
+                                <label for="one-profile-edit-password">Mật khẩu hiện tại</label>
+                                <input type="password" class="form-control" id="one-profile-edit-password"
+                                    name="password" placeholder="Nhập mật khẩu hiện tại..">
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-12">
+                                    <label for="one-profile-edit-password-new">Mật khẩu mới</label>
+                                    <input type="password" class="form-control" id="one-profile-edit-password-new"
+                                        name="newPassword" placeholder="Nhập mật khẩu mới..">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-12">
+                                    <label for="one-profile-edit-password-new-confirm">Nhập lại mật khẩu mới</label>
+                                    <input type="password" class="form-control"
+                                        id="one-profile-edit-password-new-confirm" name="newPasswordAgain"
+                                        placeholder="Nhập lại mật khẩu mới..">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-alt-primary" onclick="doiMatKhau()">
+                                    Cập nhật
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- END Change Password -->
+
+    </div>
+    <!-- END Page Content -->
+</main>
+
+<script th:fragment="script_after">
+
+    function thongBaoThayHoSoThanhCong() {
+        Swal.fire({
+            title: 'Thông báo',
+            text: 'Thay đổi thông tin người dùng thành công',
+            icon: 'success',
+            confirmButtonText: 'Xác nhận',
+        }).then(() => {
+            capNhatThongTinNguoiDungHienTai();
+            document.getElementById("title-avatar").src = "/user/download/" + data.avatar
+            location.reload(); // Reload trang sau khi người dùng nhấp OK
+        });
+    }
+
+    var user = getUserInfo();
+    console.log(user);
+    var id = user.id;
+    document.getElementById("title-name").innerText = user.full_name;
+    var imgTitle = document.getElementById("title-avatar");
+    console.log(imgTitle);
+    if (user.avatar != null) {
+        imgTitle.src = "/user/download/" + user.avatar
+    } else {
+        imgTitle.src = "/content/admin/assets/media/avatars/avatar13.jpg";
+    }
+    document.getElementById("form-info").reset();
+
+    fetch("/user/get?id=" + id, { ...genConfig() })
+        .then(res => {
+            if (res.ok) {
+                res.json().then(data => {
+                    const dom = document.getElementById("form-info");
+
+                    Object.keys(data).forEach(i => {
+                        const input = dom.querySelector(`input[name=${i}]`);
+                        if (input != null) {
+                            input.value = data[i];
+                            console.log(i + data[i])
+                        }
+                    })
+
+                    document.querySelector("#form-password input[name=password]").value = data.password;
+
+                    const img = document.getElementById('edit-avatar-img');
+                    if (data.avatar != null) {
+                        img.src = "/user/download/" + data.avatar
+                    } else {
+                        img.src = "/content/admin/assets/media/avatars/avatar13.jpg";
+                    }
+
+                })
+            }
+        })
+
+    const uploadAvatar = document.querySelector("#form-info input[name=avatar_file]");
+    uploadAvatar.addEventListener("change", (e) => {
+        const file = e.target.files[0]
+        const fileReader = new FileReader
+        fileReader.onload = () => {
+            const img = document.getElementById("edit-avatar-img")
+            img.src = fileReader.result
+        }
+        fileReader.readAsDataURL(file)
+    })
+
+    function xoaAvatar() {
+        document.querySelector('#form-info input[name=avatar]').value = "";
+        document.getElementById("edit-avatar-img").src = "/content/admin/assets/media/avatars/avatar13.jpg";
+    }
+
+    function capNhatThongTin() {
+        const form = document.getElementById("form-info");
+        data = new FormData(form);
+        body = data
+        let headers = { ...genConfig().headers };
+        delete headers["Content-Type"];
+        fetch("/profile/update?id=" + id, {
+            method: "PUT",
+            body,
+            headers
+        }).then((res) => {
+            if (res.ok) {
+                layThongTinNguoiDungHienTai().then(() => {
+                    thongBaoThayHoSoThanhCong();
+                })
+
+            }
+        })
+    }
+
+    function thongThayDoiThanhCong(data) {
+        Swal.fire({
+            title: 'Thông báo',
+            text: 'Đổi mật khẩu thành công',
+            icon: 'success',
+            confirmButtonText: 'Xác nhận',
+        }).then(() => {
+            document.querySelector("#form-password input[name=password]").value = data.password;
+            document.querySelector("#form-password input[name=newPassword]").value = "";
+            document.querySelector("#form-password input[name=newPasswordAgain]").value = "";
+        });
+    }
+
+    function doiMatKhau() {
+        var newPassword = document.querySelector("#form-password input[name=newPassword]").value;
+        var newPasswordAgain = document.querySelector("#form-password input[name=newPasswordAgain]").value;
+        errorChangePassword = document.getElementById("error-password-again");
+
+        if (newPassword === newPasswordAgain) {
+            const form = document.getElementById("form-password");
+            data = Object.fromEntries(new FormData(form).entries());
+
+            fetch('/profile/password?id=' + id, {
+                headers: { ...genConfig().headers },
+                method: 'PUT',
+                body: JSON.stringify(data)
+            }).then(res => {
+                if (res.ok) {
+                    res.json().then(data => {
+                        thongThayDoiThanhCong(data);
+                    })
+                } else if (res.status === 404) {
+                    errorChangePassword.classList.add("text-danger")
+                    errorChangePassword.innerText = "Mật khẩu cũ chưa chính xác"
+                }
+            })
+        } else {
+            errorChangePassword.classList.add("text-danger")
+            errorChangePassword.innerText = "Nhập lại mật khẩu chưa trùng khớp"
+        }
+    }
+
+
+</script>

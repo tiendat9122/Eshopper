@@ -1,0 +1,110 @@
+<div th:fragment="eshopperContent">
+
+    <script>
+      const user = getUserInfo();
+      console.log(user);
+    </script>
+  
+    <!-- Shop Detail Start -->
+    <div class="container-fluid py-5">
+      <div class="row px-xl-5">
+        <div class="col">
+          <div class="nav nav-tabs justify-content-center border-secondary mb-4">
+            <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-2">Thông tin cá nhân</a>
+            <a id="total-review" class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Đổi mật khẩu</a>
+          </div>
+          <div class="tab-content">
+            <div class="tab-pane fade show active" id="tab-pane-2">
+              <div class="row justify-content-center">
+                <div class="col-md-4">
+                  <img id="avatar-image" src="/content/admin/img_default/default_avatar.jpg" width="150" alt="Avatar" class="rounded-circle mx-auto d-block">
+                  <div style="text-align: center;" class="mt-3">
+                    <input id="profile-avatar-file" type="file" class="d-none">
+                    <label for="profile-avatar-file" class="btn btn-outline-primary"><i class="fa fa-upload"></i></label>
+                    <label class="btn btn-outline-info" onclick="xoaAvatar()"><i class="fa fa-trash"></i></label>
+                  </div>
+                </div>
+  
+                <div class="col-md-4">
+                  <h4 class="mb-4">Hồ sơ</h4>
+                  <small>Bạn có thể thay đổi thông tin cá nhân của mình *</small>
+                  <div class="d-flex my-3"></div>
+                  <form id="commentForm">
+                    <input type="hidden" name="userId" readonly class="form-control" />
+                    <input type="hidden" name="productId" readonly class="form-control" />
+                    <div class="form-group">
+                      <label for="name">Họ và tên *</label>
+                      <input type="text" name="full_name" class="form-control" id="name" />
+                    </div>
+  
+                    <div class="form-group">
+                      <label for="email">Tên đăng nhập *</label>
+                      <input type="text" name="user_name" readonly class="form-control" id="email" />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="email">Địa chỉ Email *</label>
+                      <input type="email" name="email" readonly class="form-control" id="email" />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="email">Ngày sinh *</label>
+                      <input type="date" name="birth_day" class="form-control" id="email" />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="email">Địa chỉ *</label>
+                      <input type="text" name="address" class="form-control" id="email" />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="email">Số điện thoại *</label>
+                      <input type="text" name="phone_number" class="form-control" id="email" />
+                    </div>
+  
+                    <div class="form-group mb-0">
+                      <!-- <input type="submit" value="Leave Your Review" class="btn btn-primary px-3" /> -->
+                      <button type="button" onclick="binhLuan()" class="btn btn-primary px-3">Xác nhận</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="tab-pane-3">
+              <div class="row justify-content-center">
+                <div class="col-md-4">
+                  <h4 class="mb-4">Thay đổi mật khẩu</h4>
+                  <small>Vui lòng nhập mật khẩu có độ an toàn cao *</small>
+                  <div class="d-flex my-3"></div>
+                  <form id="commentForm">
+                    <input type="hidden" name="userId" readonly class="form-control" />
+                    <input type="hidden" name="productId" readonly class="form-control" />
+                    <div class="form-group">
+                      <label for="name">Mật khẩu cũ *</label>
+                      <input type="password" name="full_name" class="form-control" id="name" />
+                    </div>
+  
+                    <div class="form-group">
+                      <label for="email">Mật khẩu mới *</label>
+                      <input type="password" name="email" class="form-control" id="email" />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="email">Nhập lại mật khẩu mới *</label>
+                      <input type="password" name="email" class="form-control" id="email" />
+                    </div>
+  
+                    <div class="form-group mb-0">
+                      <!-- <input type="submit" value="Leave Your Review" class="btn btn-primary px-3" /> -->
+                      <button type="button" onclick="binhLuan()" class="btn btn-primary px-3">Xác nhận</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Shop Detail End -->
+  </div>
