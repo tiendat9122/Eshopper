@@ -24,4 +24,10 @@ public class UserLoginController {
         return "user/layout_authen/app";
     }
 
+    @GetMapping("/forgot")
+    public String userForget(Model model) {
+        model.addAttribute("eshopperAuthenFragment", "user/component_authen/user_forgot.html");
+        return "user/layout_authen/app";
+    }
+
 }

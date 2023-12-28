@@ -1,6 +1,7 @@
 package com.ecommerce.api.eshopper.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,10 +20,12 @@ public class Author {
 
     private String name;
 
+    @Column(columnDefinition = "LONGTEXT")
     private String story;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
-    @JsonIgnore
+//    @JsonIgnore
+    @JsonIgnoreProperties({"inventory", "summary", "hot", "active", "categories", "author"})
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<Product> products;

@@ -26,6 +26,10 @@ public class ProductDto {
 
     private String picture;
 
+    private String summary;
+
+    private boolean hot;
+
     private boolean active;
 
     private Long authorId;

@@ -1,7 +1,5 @@
 <div th:fragment="eshopperContent">
   <script>
-    const user = getUserInfo();
-    console.log(user);
 
     function getIdProduct() {
       // Lấy url từ trình duyệt
@@ -13,7 +11,6 @@
       //Kiểm tra id có tồn tại không và lấy giá trị
       if (id && id[1]) {
         var productId = id[1];
-        console.log(productId);
         return productId;
       } else {
         return null;
@@ -23,7 +20,10 @@
     function napChiTiet() {
       var id = getIdProduct();
       fetch('/user/product/get?id=' + id, {
-        ...genConfig()
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       }).then(res => {
         if (res.ok) {
           res.json().then(product => {
@@ -41,21 +41,32 @@
             });
             document.querySelector(`#product_info h3[name=retail`).innerText = formattedRetailValue
 
+            document.querySelector(`#product_info p[name=summary]`).innerText = product.summary
+
             if (product.author != null) {
               document.querySelector(`#product_info label[name=author]`).innerText = product.author.name
-              fetch('/author/get?id=' + product.author.id, { ...genConfig() })
+              fetch('/author/get?id=' + product.author.id,
+                {
+                  method: 'GET',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                })
                 .then(res => {
                   if (res.ok) {
                     res.json().then(author => {
-                      document.querySelector(`#tab-pane-2 h4[name=name]`).innerText = author.name
-                      document.querySelector(`#tab-pane-2 p[name=story]`).innerText = author.story
+                      document.getElementById("author-info-name").innerText = author.name
+                      document.getElementById("author-info-story").innerText = author.story
                     })
                   }
                 })
             }
 
             fetch("/user/feedback/get?productId=" + product.id, {
-              ...genConfig()
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
             }).then(res => {
               if (res.ok) {
                 res.json().then(dataFeedback => {
@@ -66,24 +77,13 @@
                       ..."media mb-4".split(" ")
                     );
                     feedback.innerHTML = `
-                    <img src="/user/download/${item.user.avatar}" alt="Avatar"
-                    class="img-fluid mr-3 mt-1" style="width: 45px" />
-                  <div class="media-body">
-                    <h6>
-                      ${item.user.email}<small> - <i>${item.commentDate}</i></small>
-                    </h6>
-                    <div class="text-primary mb-2">
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star-half-alt"></i>
-                      <i class="far fa-star"></i>
-                    </div>
-                    <p>
-                      ${item.comment}
-                    </p>
-                  </div>
-                    `;
+                      <img src="/user/download/${item.user.avatar}" alt="Avatar" class="img-fluid mr-3 mt-1" style="width: 45px" />
+                      <div class="media-body">
+                        <h6>${item.user.email}<small> - <i>${item.commentDate}</i></small></h6>
+                        <div class="text-primary mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i></div>
+                        <p>${item.comment}</p>
+                      </div>
+                      `;
 
                     const feedbacks = document.getElementById("feedbacks");
                     const lastChild = feedbacks.lastElementChild;
@@ -105,17 +105,18 @@
                   totalReview.innerText = "Đánh giá (" + countFeedback + ")";
 
                   // Load comment form
+                  if (user != null) {
+                    const loadCommentForm = document.getElementById('commentForm');
+                    const loadUserIdCommentForm = document.querySelector('#commentForm input[name=userId]');
+                    const loadProductIdCommentForm = document.querySelector('#commentForm input[name=productId]');
+                    const loadEmailCommentForm = document.querySelector('#commentForm input[name=email]');
+                    const loadFullNameCommentForm = document.querySelector('#commentForm input[name=full_name]');
 
-                  const loadCommentForm = document.getElementById('commentForm');
-                  const loadUserIdCommentForm = document.querySelector('#commentForm input[name=userId]');
-                  const loadProductIdCommentForm = document.querySelector('#commentForm input[name=productId]');
-                  const loadEmailCommentForm = document.querySelector('#commentForm input[name=email]');
-                  const loadFullNameCommentForm = document.querySelector('#commentForm input[name=full_name]');
-
-                  loadUserIdCommentForm.value = user.id
-                  loadProductIdCommentForm.value = product.id
-                  loadEmailCommentForm.value = user.email
-                  loadFullNameCommentForm.value = user.full_name
+                    loadUserIdCommentForm.value = user.id
+                    loadProductIdCommentForm.value = product.id
+                    loadEmailCommentForm.value = user.email
+                    loadFullNameCommentForm.value = user.full_name
+                  }
 
                 })
               }
@@ -162,7 +163,7 @@
       </div>
 
       <div class="col-lg-7 pb-5" id="product_info">
-        <h3 name="name" class="font-weight-semi-bold">Cảm xúc</h3>
+        <h3 name="name" class="font-weight-semi-bold">Chưa cập nhật</h3>
         <div class="d-flex mb-3">
           <div class="text-primary mr-2">
             <small class="fas fa-star"></small>
@@ -171,16 +172,10 @@
             <small class="fas fa-star-half-alt"></small>
             <small class="far fa-star"></small>
           </div>
-          <small id="total-rate" class="pt-1">(50 đánh giá)</small>
+          <small id="total-rate" class="pt-1">(chưa cập nhật đánh giá)</small>
         </div>
         <h3 name="retail" class="font-weight-semi-bold mb-4">Chưa cập nhật</h3>
-        <p class="mb-4">
-          Volup erat ipsum diam elitr rebum et dolor. Est nonumy elitr erat diam
-          stet sit clita ea. Sanc invidunt ipsum et, labore clita lorem magna
-          lorem ut. Erat lorem duo dolor no sea nonumy. Accus labore stet, est
-          lorem sit diam sea et justo, amet at lorem et eirmod ipsum diam et rebum
-          kasd rebum.
-        </p>
+        <p name="summary" class="mb-4">Tóm tắt sản phẩm</p>
         <div class="d-flex mb-3">
           <p class="text-dark font-weight-medium mb-0 mr-3">Nhà xuất bản:</p>
           <div class="custom-control custom-control-inline">
@@ -189,6 +184,12 @@
         </div>
         <div class="d-flex mb-3">
           <p class="text-dark font-weight-medium mb-0 mr-3">Tác giả:</p>
+          <div class="custom-control custom-control-inline">
+            <label name="author" class="" for="size-1">Chưa cập nhật</label>
+          </div>
+        </div>
+        <div class="d-flex mb-3">
+          <p class="text-dark font-weight-medium mb-0 mr-3">Thể loại:</p>
           <div class="custom-control custom-control-inline">
             <label name="author" class="" for="size-1">Chưa cập nhật</label>
           </div>
@@ -227,26 +228,30 @@
               </script>
             </div>
           </div>
-          <button type="button" onclick="themVaoGio()" class="btn btn-primary px-3">
+          <button type="button" onclick="themVaoGioChiTiet()" class="btn btn-primary px-3">
             <i class="fa fa-shopping-cart mr-1"></i> Thêm vào giỏ
           </button>
           <script>
-            function themVaoGio() {
+            function themVaoGioChiTiet() {
               var productId = getIdProduct();
               var quantity = document.getElementById('soLuongDat').value;
-              fetch('/user/product/addcart?userId=' + user.id + '&productId=' + productId + '&quantity=' + quantity, {
-                ...genConfig(),
-                method: 'PUT'
-              }).then(res => {
-                if(res.ok) {
-                  console.log("OK");
-                }
-              })
+              if (user != null) {
+                fetch('/user/product/addcart?userId=' + user.id + '&productId=' + productId + '&quantity=' + quantity, {
+                  ...genConfig(),
+                  method: 'PUT'
+                }).then(res => {
+                  if (res.ok) {
+                    console.log("OK");
+                  }
+                })
+              } else {
+                chuaDangNhap();
+              }
             }
           </script>
         </div>
         <div class="d-flex pt-2">
-          <p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>
+          <p class="text-dark font-weight-medium mb-0 mr-2">Chia sẻ:</p>
           <div class="d-inline-flex">
             <a class="text-dark px-2" href="">
               <i class="fab fa-facebook-f"></i>
@@ -268,83 +273,13 @@
       <div class="col">
         <div class="nav nav-tabs justify-content-center border-secondary mb-4">
           <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Tóm tắt</a>
-          <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2">Tác giả</a>
           <a id="total-review" class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Đánh giá (0)</a>
         </div>
         <div class="tab-content">
           <div class="tab-pane fade show active" id="tab-pane-1">
-            <h4 class="mb-3">Product Description</h4>
-            <p>
-              Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea.
-              Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam
-              ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed
-              sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam.
-              Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum
-              accusam sadipscing, eos dolores sit no ut diam consetetur duo justo
-              est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor
-              accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt
-              tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea
-              invidunt.
-            </p>
-            <p>
-              Dolore magna est eirmod sanctus dolor, amet diam et eirmod et ipsum.
-              Amet dolore tempor consetetur sed lorem dolor sit lorem tempor.
-              Gubergren amet amet labore sadipscing clita clita diam clita. Sea
-              amet et sed ipsum lorem elitr et, amet et labore voluptua sit rebum.
-              Ea erat sed et diam takimata sed justo. Magna takimata justo et amet
-              magna et.
-            </p>
-          </div>
-          <div class="tab-pane fade" id="tab-pane-2">
-            <h4 name="name" class="mb-3">Additional Information</h4>
-            <p name="story">
-              Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea.
-              Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam
-              ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed
-              sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam.
-              Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum
-              accusam sadipscing, eos dolores sit no ut diam consetetur duo justo
-              est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor
-              accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt
-              tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea
-              invidunt.
-            </p>
-            <div class="row">
-              <div class="col-md-6">
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item px-0">
-                    Sit erat duo lorem duo ea consetetur, et eirmod takimata.
-                  </li>
-                  <li class="list-group-item px-0">
-                    Amet kasd gubergren sit sanctus et lorem eos sadipscing at.
-                  </li>
-                  <li class="list-group-item px-0">
-                    Duo amet accusam eirmod nonumy stet et et stet eirmod.
-                  </li>
-                  <li class="list-group-item px-0">
-                    Takimata ea clita labore amet ipsum erat justo voluptua.
-                    Nonumy.
-                  </li>
-                </ul>
-              </div>
-              <div class="col-md-6">
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item px-0">
-                    Sit erat duo lorem duo ea consetetur, et eirmod takimata.
-                  </li>
-                  <li class="list-group-item px-0">
-                    Amet kasd gubergren sit sanctus et lorem eos sadipscing at.
-                  </li>
-                  <li class="list-group-item px-0">
-                    Duo amet accusam eirmod nonumy stet et et stet eirmod.
-                  </li>
-                  <li class="list-group-item px-0">
-                    Takimata ea clita labore amet ipsum erat justo voluptua.
-                    Nonumy.
-                  </li>
-                </ul>
-              </div>
-            </div>
+            <h4 class="mb-3">Giới thiệu tác giả</h4>
+            <h5 id="author-info-name" class="mb-3">Tên tác giả</h5>
+            <p id="author-info-story">Lời giới thiệu tác giả</p>
           </div>
           <div class="tab-pane fade" id="tab-pane-3">
             <div class="row">
@@ -358,13 +293,8 @@
                 <small>Cảm ơn bạn đã quan tâm đến sản phẩm của chúng tôi *</small>
                 <div class="d-flex my-3">
                   <p class="mb-0 mr-2">Đánh giá * :</p>
-                  <div class="text-primary">
-                    <i class="far fa-star"></i>
-                    <i class="far fa-star"></i>
-                    <i class="far fa-star"></i>
-                    <i class="far fa-star"></i>
-                    <i class="far fa-star"></i>
-                  </div>
+                  <div class="text-primary"><i class="far fa-star"></i><i class="far fa-star"></i><i
+                      class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i></div>
                 </div>
                 <form id="commentForm">
                   <input type="hidden" name="userId" readonly class="form-control" />
@@ -392,7 +322,7 @@
 
                 <script>
                   function capNhatBinhLuan() {
-                    document.getElementById('feedbacks').innerHTML = ''
+                    document.getElementById('feedbacks').innerHTML = '';
                     var id = getIdProduct();
                     fetch('/user/product/get?id=' + id, {
                       ...genConfig()
@@ -407,28 +337,15 @@
                                 var countFeedback = 0;
                                 dataFeedback.forEach((item) => {
                                   const feedback = document.createElement("div");
-                                  feedback.classList.add(
-                                    ..."media mb-4".split(" ")
-                                  );
+                                  feedback.classList.add(..."media mb-4".split(" "));
                                   feedback.innerHTML = `
-                    <img src="/userauth/download/${item.user.avatar}" alt="Avatar"
-                    class="img-fluid mr-3 mt-1" style="width: 45px" />
-                  <div class="media-body">
-                    <h6>
-                      ${item.user.email}<small> - <i>${item.commentDate}</i></small>
-                    </h6>
-                    <div class="text-primary mb-2">
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star"></i>
-                      <i class="fas fa-star-half-alt"></i>
-                      <i class="far fa-star"></i>
-                    </div>
-                    <p>
-                      ${item.comment}
-                    </p>
-                  </div>
-                    `;
+                                    <img src="/userauth/download/${item.user.avatar}" alt="Avatar" class="img-fluid mr-3 mt-1" style="width: 45px" />
+                                    <div class="media-body">
+                                      <h6>${item.user.email}<small> - <i>${item.commentDate}</i></small></h6>
+                                      <div class="text-primary mb-2"><i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star-half-alt"></i> <i class="far fa-star"></i></div>
+                                      <p>${item.comment}</p>
+                                    </div>
+                                    `;
 
                                   const feedbacks = document.getElementById("feedbacks");
                                   const lastChild = feedbacks.lastElementChild;
@@ -457,21 +374,25 @@
                   }
 
                   function binhLuan() {
-                    const options = genConfig()
-                    const form = document.getElementById('commentForm')
-                    const data = JSON.stringify(Object.fromEntries(new FormData(form).entries()));
-                    fetch('/user/feedback/insert', {
-                      method: 'POST',
-                      body: data,
-                      headers: { ...genConfig().headers },
+                    if (user != null) {
+                      const options = genConfig()
+                      const form = document.getElementById('commentForm')
+                      const data = JSON.stringify(Object.fromEntries(new FormData(form).entries()));
+                      fetch('/user/feedback/insert', {
+                        method: 'POST',
+                        body: data,
+                        headers: { ...genConfig().headers },
 
-                    })
-                      .then(res => {
-                        if (res.ok) {
-                          document.querySelector('#commentForm textarea[name="comment"]').value = ''
-                          capNhatBinhLuan()
-                        }
                       })
+                        .then(res => {
+                          if (res.ok) {
+                            document.querySelector('#commentForm textarea[name="comment"]').value = ''
+                            capNhatBinhLuan()
+                          }
+                        })
+                    } else {
+                      chuaDangNhap();
+                    }
                   }
                 </script>
 

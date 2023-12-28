@@ -25,6 +25,9 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="/content/user/assets/css/style.css" rel="stylesheet">
     <script src="/content/user/assets/js/mainlib_user.js"></script>
+
+    <script src="/content/admin/js/sweetalert2@10.js"></script>
+
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
     <link rel="stylesheet" href="//cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
@@ -60,11 +63,14 @@
                 opacity: 0;
             }
         }
-        
     </style>
 </head>
 
 <body>
+
+    <script>
+        var user = getUserInfo();
+    </script>
 
     <!-- Topbar Start -->
     <div th:replace="user/layouts/header.html :: header"></div>
@@ -100,6 +106,13 @@
 
     <!-- Template Javascript -->
     <script src="/content/user/assets/js/main.js"></script>
+
+    <script>
+
+        capNhatThongTinNguoiDungHienTai()
+
+    </script>
+
 </body>
 
 </html>

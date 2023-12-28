@@ -1,110 +1,213 @@
 <div th:fragment="eshopperContent">
-
-    <script>
-      const user = getUserInfo();
-      console.log(user);
-    </script>
-  
-    <!-- Shop Detail Start -->
-    <div class="container-fluid py-5">
-      <div class="row px-xl-5">
-        <div class="col">
-          <div class="nav nav-tabs justify-content-center border-secondary mb-4">
-            <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-2">Thông tin cá nhân</a>
-            <a id="total-review" class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Đổi mật khẩu</a>
-          </div>
-          <div class="tab-content">
-            <div class="tab-pane fade show active" id="tab-pane-2">
-              <div class="row justify-content-center">
-                <div class="col-md-4">
-                  <img id="avatar-image" src="/content/admin/img_default/default_avatar.jpg" width="150" alt="Avatar" class="rounded-circle mx-auto d-block">
-                  <div style="text-align: center;" class="mt-3">
-                    <input id="profile-avatar-file" type="file" class="d-none">
-                    <label for="profile-avatar-file" class="btn btn-outline-primary"><i class="fa fa-upload"></i></label>
-                    <label class="btn btn-outline-info" onclick="xoaAvatar()"><i class="fa fa-trash"></i></label>
-                  </div>
-                </div>
-  
-                <div class="col-md-4">
-                  <h4 class="mb-4">Hồ sơ</h4>
-                  <small>Bạn có thể thay đổi thông tin cá nhân của mình *</small>
-                  <div class="d-flex my-3"></div>
-                  <form id="commentForm">
-                    <input type="hidden" name="userId" readonly class="form-control" />
-                    <input type="hidden" name="productId" readonly class="form-control" />
-                    <div class="form-group">
-                      <label for="name">Họ và tên *</label>
-                      <input type="text" name="full_name" class="form-control" id="name" />
-                    </div>
-  
-                    <div class="form-group">
-                      <label for="email">Tên đăng nhập *</label>
-                      <input type="text" name="user_name" readonly class="form-control" id="email" />
-                    </div>
-
-                    <div class="form-group">
-                      <label for="email">Địa chỉ Email *</label>
-                      <input type="email" name="email" readonly class="form-control" id="email" />
-                    </div>
-
-                    <div class="form-group">
-                      <label for="email">Ngày sinh *</label>
-                      <input type="date" name="birth_day" class="form-control" id="email" />
-                    </div>
-
-                    <div class="form-group">
-                      <label for="email">Địa chỉ *</label>
-                      <input type="text" name="address" class="form-control" id="email" />
-                    </div>
-
-                    <div class="form-group">
-                      <label for="email">Số điện thoại *</label>
-                      <input type="text" name="phone_number" class="form-control" id="email" />
-                    </div>
-  
-                    <div class="form-group mb-0">
-                      <!-- <input type="submit" value="Leave Your Review" class="btn btn-primary px-3" /> -->
-                      <button type="button" onclick="binhLuan()" class="btn btn-primary px-3">Xác nhận</button>
-                    </div>
-                  </form>
+  <!-- Shop Detail Start -->
+  <div class="container-fluid py-5">
+    <div class="row px-xl-5">
+      <div class="col">
+        <div class="nav nav-tabs justify-content-center border-secondary mb-4">
+          <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-2">Thông tin cá nhân</a>
+          <a id="total-review" class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Đổi mật khẩu</a>
+        </div>
+        <div class="tab-content">
+          <div class="tab-pane fade show active" id="tab-pane-2">
+            <form id="form-change-info" class="row justify-content-center">
+              <input type="hidden" name="id" readonly class="form-control" />
+              <div class="col-md-4">
+                <img id="avatar-image" src="" width="150" alt="Avatar" class="rounded-circle mx-auto d-block">
+                <div style="text-align: center;" class="mt-3">
+                  <input id="profile-avatar-file" name="avatar_file" type="file" class="d-none">
+                  <input type="hidden" name="avatar">
+                  <label for="profile-avatar-file" class="btn btn-outline-primary"><i class="fa fa-upload"></i></label>
+                  <label class="btn btn-outline-info" onclick="xoaAvatar()"><i class="fa fa-trash"></i></label>
                 </div>
               </div>
-            </div>
-            <div class="tab-pane fade" id="tab-pane-3">
-              <div class="row justify-content-center">
-                <div class="col-md-4">
-                  <h4 class="mb-4">Thay đổi mật khẩu</h4>
-                  <small>Vui lòng nhập mật khẩu có độ an toàn cao *</small>
-                  <div class="d-flex my-3"></div>
-                  <form id="commentForm">
-                    <input type="hidden" name="userId" readonly class="form-control" />
-                    <input type="hidden" name="productId" readonly class="form-control" />
-                    <div class="form-group">
-                      <label for="name">Mật khẩu cũ *</label>
-                      <input type="password" name="full_name" class="form-control" id="name" />
-                    </div>
-  
-                    <div class="form-group">
-                      <label for="email">Mật khẩu mới *</label>
-                      <input type="password" name="email" class="form-control" id="email" />
-                    </div>
 
-                    <div class="form-group">
-                      <label for="email">Nhập lại mật khẩu mới *</label>
-                      <input type="password" name="email" class="form-control" id="email" />
-                    </div>
-  
-                    <div class="form-group mb-0">
-                      <!-- <input type="submit" value="Leave Your Review" class="btn btn-primary px-3" /> -->
-                      <button type="button" onclick="binhLuan()" class="btn btn-primary px-3">Xác nhận</button>
-                    </div>
-                  </form>
+              <div class="col-md-4">
+                <h4 class="mb-4">Hồ sơ</h4>
+                <small>Bạn có thể thay đổi thông tin cá nhân của mình *</small>
+                <div class="d-flex my-3"></div>
+                <div id="">
+                  <div class="form-group">
+                    <label for="name">Họ và tên *</label>
+                    <input type="text" name="full_name" class="form-control" id="name" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="email">Tên đăng nhập *</label>
+                    <input type="text" name="user_name" readonly class="form-control" id="email" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="email">Địa chỉ Email *</label>
+                    <input type="email" name="email" readonly class="form-control" id="email" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="email">Ngày sinh *</label>
+                    <input type="date" name="birth_day" class="form-control" id="email" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="email">Địa chỉ *</label>
+                    <input type="text" name="address" class="form-control" id="email" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="email">Số điện thoại *</label>
+                    <input type="text" name="phone_number" class="form-control" id="email" />
+                  </div>
+
+                  <div class="form-group mb-0">
+                    <!-- <input type="submit" value="Leave Your Review" class="btn btn-primary px-3" /> -->
+                    <button type="button" onclick="doiHoSoNguoiDung()" class="btn btn-primary px-3">Xác nhận</button>
+                  </div>
                 </div>
+              </div>
+            </form>
+          </div>
+          <div class="tab-pane fade" id="tab-pane-3">
+            <div class="row justify-content-center">
+              <div class="col-md-4">
+                <h4 class="mb-4">Thay đổi mật khẩu</h4>
+                <small>Vui lòng nhập mật khẩu có độ an toàn cao *</small>
+                <p class="text-danger" id="error-password-change"></p>
+                <div class="d-flex my-3"></div>
+                <form id="form-change-password">
+                  <input type="hidden" name="userId" readonly class="form-control" />
+                  <input type="hidden" name="productId" readonly class="form-control" />
+                  <div class="form-group">
+                    <label for="name">Mật khẩu cũ *</label>
+                    <input type="password" name="password" class="form-control" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="email">Mật khẩu mới *</label>
+                    <input type="password" name="newPassword" class="form-control" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="email">Nhập lại mật khẩu mới *</label>
+                    <input type="password" name="newPasswordAgain" class="form-control" />
+                  </div>
+
+                  <div class="form-group mb-0">
+                    <!-- <input type="submit" value="Leave Your Review" class="btn btn-primary px-3" /> -->
+                    <button type="button" onclick="doiMatKhauNguoiDung()" class="btn btn-primary px-3">Xác nhận</button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- Shop Detail End -->
   </div>
+  <!-- Shop Detail End -->
+
+  <script>
+
+    // document.getElementById("form-change-info").reset();
+
+    Object.keys(user).forEach(i => {
+      if (!["password", "active", "role"].includes(i)) {
+        document.querySelector(`#form-change-info input[name=${i}]`).value = user[i];
+      }
+    })
+
+    const imgAvatar = document.getElementById("avatar-image");
+
+    if (user.avatar != null) {
+      imgAvatar.src = "/eshopper/download/" + user.avatar;
+    } else {
+      imgAvatar.src = "/content/admin/img_default/default_avatar.jpg";
+    }
+
+    const uploadAvatarInfo = document.querySelector("#form-change-info input[name=avatar_file]");
+    uploadAvatarInfo.addEventListener("change", (e) => {
+      const file = e.target.files[0]
+      const fileReader = new FileReader
+      fileReader.onload = () => {
+        imgAvatar.src = fileReader.result
+      }
+      fileReader.readAsDataURL(file)
+    })
+
+    function xoaAvatar() {
+      document.querySelector('#form-change-info input[name=avatar]').value = "";
+      document.getElementById("avatar-image").src = "/content/admin/img_default/default_avatar.jpg";
+    }
+
+    function thongBaoThayHoSoThanhCong() {
+      Swal.fire({
+        title: 'Thông báo',
+        text: 'Thay đổi thông tin người dùng thành công',
+        icon: 'success',
+        confirmButtonText: 'Xác nhận',
+      }).then(() => {
+        capNhatThongTinNguoiDungHienTai();
+        document.getElementById("title-avatar").src = "/eshopper/download/" + data.avatar
+        location.reload(); // Reload trang sau khi người dùng nhấp OK
+      });
+    }
+
+    function doiHoSoNguoiDung() {
+      const form = document.getElementById("form-change-info");
+      data = new FormData(form);
+      body = data
+      let headers = { ...genConfig().headers };
+      delete headers["Content-Type"];
+      fetch("/eshopper/profile?id=" + user.id, {
+        method: "PUT",
+        body,
+        headers
+      }).then((res) => {
+        if (res.ok) {
+          layThongTinNguoiDungHienTai().then(() => {
+            thongBaoThayHoSoThanhCong();
+          })
+        }
+      })
+    }
+
+    function thongBaoDoiMatKhauThanhCong() {
+      Swal.fire({
+        title: 'Thông báo',
+        text: 'Đổi mật khẩu thành công',
+        icon: 'success',
+        confirmButtonText: 'Xác nhận',
+      }).then(() => {
+        document.querySelector("#form-change-password input[name=password]").value = "";
+        document.querySelector("#form-change-password input[name=newPassword]").value = "";
+        document.querySelector("#form-change-password input[name=newPasswordAgain]").value = "";
+      });
+    }
+
+    function doiMatKhauNguoiDung() {
+      var newPassword = document.querySelector("#form-change-password input[name=newPassword]").value;
+      var newPasswordAgain = document.querySelector("#form-change-password input[name=newPasswordAgain]").value;
+      errorChangePassword = document.getElementById("error-password-change");
+      if (newPassword === newPasswordAgain) {
+        const form = document.getElementById("form-change-password");
+        data = Object.fromEntries(new FormData(form).entries());
+        fetch('/eshopper/password?id=' + user.id, {
+          headers: { ...genConfig().headers },
+          method: 'PUT',
+          body: JSON.stringify(data)
+        }).then(res => {
+          if (res.ok) {
+            res.json().then(data => {
+              thongBaoDoiMatKhauThanhCong(data);
+            })
+          } else if (res.status === 404) {
+            errorChangePassword.classList.add("text-danger")
+            errorChangePassword.innerText = "Mật khẩu cũ chưa chính xác"
+          }
+        })
+      } else {
+        errorChangePassword.classList.add("text-danger")
+        errorChangePassword.innerText = "Nhập lại mật khẩu chưa trùng khớp"
+      }
+    }
+
+  </script>
+
+</div>

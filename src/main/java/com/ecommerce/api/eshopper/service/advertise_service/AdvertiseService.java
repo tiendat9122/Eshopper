@@ -27,6 +27,11 @@ public class AdvertiseService implements IAdvertiseService {
         return advertiseRepository.findById(id);
     }
 
+    @Override
+    public List<Advertise> getAllAdvertiseActiveTrue() {
+        return advertiseRepository.findByActiveTrue();
+    }
+
     // Save and update
     public Advertise saveAdvertise(Advertise advertise) {
         return advertiseRepository.save(advertise);

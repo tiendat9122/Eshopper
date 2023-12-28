@@ -66,7 +66,6 @@ async function layThongTinNguoiDungHienTai() {
   if (res.ok) {
     const userInfo = await res.json();
     localStorage.setItem("user", JSON.stringify(userInfo));
-    // window.location.reload();
   }
 }
 

@@ -56,7 +56,13 @@ public class LoginApi {
 
             User user = userService.findUserByEmail(userDto.getEmail());
             if (user != null) {
-
+                //Set code active false for user
+                List<Forgot> forgots = forgotService.findForgotByUserAndStatusTrue(user);
+                if(!forgots.isEmpty()) {
+                    for(Forgot item : forgots) {
+                        item.setStatus(false);
+                    }
+                }
                 try {
                     MailInfo mailInfo = new MailInfo();
                     mailInfo.setTo(user.getEmail());

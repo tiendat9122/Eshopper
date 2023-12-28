@@ -1,9 +1,9 @@
 <div th:fragment="nav" class="container-fluid">
     <div class="row border-top px-xl-5">
         <div class="col-lg-3 d-none d-lg-block">
-            <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
-                data-toggle="collapse" href="#navbar-vertical"
-                style="height: 65px; margin-top: -1px; padding: 0 30px;">
+            <a id="nav-directory"
+                class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
+                data-toggle="collapse" href="#navbar-vertical" style="height: 65px; margin-top: -1px; padding: 0 30px;">
                 <h6 class="m-0">Danh mục</h6>
                 <i class="fa fa-angle-down text-dark"></i>
             </a>
@@ -13,21 +13,12 @@
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link" data-toggle="dropdown">Tác giả <i
                                 class="fa fa-angle-down float-right mt-1"></i></a>
-                        <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
-                            <a href="" class="dropdown-item">Men's Dresses</a>
-                            <a href="" class="dropdown-item">Women's Dresses</a>
-                            <a href="" class="dropdown-item">Baby's Dresses</a>
+                        <div id="nav-authors"
+                            class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
                         </div>
                     </div>
-                    <a href="" class="nav-item nav-link">Trinh thám</a>
-                    <a href="" class="nav-item nav-link">Kỹ năng sống</a>
-                    <a href="" class="nav-item nav-link">Tiểu thuyết</a>
-                    <a href="" class="nav-item nav-link">Tình cảm</a>
-                    <a href="" class="nav-item nav-link">Thiếu nhi</a>
-                    <a href="" class="nav-item nav-link">Tôn giáo</a>
-                    <a href="" class="nav-item nav-link">Tiếng Anh</a>
-                    <a href="" class="nav-item nav-link">Sách giáo khoa</a>
-                    <a href="" class="nav-item nav-link">Kinh doanh</a>
+                    <div id="nav-categories">
+                    </div>
                 </div>
             </nav>
         </div>
@@ -37,36 +28,119 @@
                     <h1 class="m-0 display-5 font-weight-semi-bold"><span
                             class="text-primary font-weight-bold border px-3 mr-1">E</span>Shopper</h1>
                 </a>
-                <button type="button" class="navbar-toggler" data-toggle="collapse"
-                    data-target="#navbarCollapse">
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto py-0">
                         <a href="/eshopper/home" class="nav-item nav-link">Trang chủ</a>
                         <a href="/eshopper/store" class="nav-item nav-link">Sản phẩm</a>
-                        <a href="/eshopper/profile" class="nav-item nav-link">Giới thiệu</a>
+                        <a href="" class="nav-item nav-link">Giới thiệu</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Mua hàng</a>
                             <div class="dropdown-menu rounded-0 m-0">
-                                <a href="/eshopper/cart" class="dropdown-item">Giỏ hàng</a>
-                                <a href="/eshopper/checkout" class="dropdown-item">Thanh toán</a>
+                                <a id="nav-menu-cart" href="/eshopper/cart" class="dropdown-item">Giỏ hàng</a>
+                                <a id="nav-menu-checkout" href="/eshopper/checkout" class="dropdown-item">Thanh toán</a>
                             </div>
                         </div>
-                        <a href="/eshopper/contact" class="nav-item nav-link">Liên hệ</a>
+                        <a id="nav-menu-contact" href="/eshopper/contact" class="nav-item nav-link">Liên hệ</a>
                     </div>
-                    <div class="navbar-nav ml-auto py-0">
+                    <div id="nav-menu-userinfo" class="navbar-nav ml-auto py-0">
                         <!-- <a href="" class="nav-item nav-link">Đăng nhập</a>
-                        <a href="" class="nav-item nav-link">Đăng ký</a> -->
+                        <a href="" class="nav-item nav-link">Đăng ký</a>
                         <a href="/eshopper/profile">
                             <div class="d-flex align-items-center">
-                                <img src="/content/admin/img_default/default_avatar.jpg" width="40" class="rounded-circle mx-auto d-block" alt="">
-                                <div class="ml-2">Tên người dùng</div>
+                                <img id="user-avatar-nav" src="/content/admin/img_default/default_avatar.jpg" width="40"
+                                    class="rounded-circle mx-auto d-block" alt="">
+                                <div id="user-fullname-nav" class="ml-2">Tên người dùng</div>
                             </div>
-                        </a>
+                        </a> -->
                     </div>
                 </div>
             </nav>
         </div>
     </div>
+
+    <script>
+
+        const navMenuCart = document.getElementById("nav-menu-cart");
+        const navMenuCheckout = document.getElementById("nav-menu-checkout");
+        const navMenuContact = document.getElementById("nav-menu-contact");
+        const navMenuUserInfo = document.getElementById("nav-menu-userinfo");
+
+        if (user != null) {
+            navMenuCart.href = "/eshopper/cart";
+            navMenuCheckout.href = "/eshopper/checkout";
+
+            navMenuUserInfo.innerHTML = `
+                <a href="/eshopper/profile">
+                    <div class="d-flex align-items-center">
+                        <img id="user-avatar-nav" src="/content/admin/img_default/default_avatar.jpg" width="40"
+                            class="rounded-circle mx-auto d-block" alt="">
+                        <div id="user-fullname-nav" class="ml-2">Tên người dùng</div>
+                    </div>
+                </a>
+                `;
+        } else {
+            navMenuCart.removeAttribute("href");
+            navMenuCart.onclick = chuaDangNhap;
+            navMenuCart.style.cursor = "pointer";
+
+            navMenuCheckout.removeAttribute("href");
+            navMenuCheckout.onclick = chuaDangNhap;
+            navMenuCheckout.style.cursor = "pointer";
+
+            navMenuContact.removeAttribute("href");
+            navMenuContact.onclick = chuaDangNhap;
+            navMenuContact.style.cursor = "pointer";
+
+            navMenuUserInfo.innerHTML = `
+                <a href="/userauth/login" class="nav-item nav-link">Đăng nhập</a>
+                <a href="/userauth/register" class="nav-item nav-link">Đăng ký</a>
+                `;
+        }
+
+        const navCategories = document.getElementById("nav-categories");
+        const navAuthors = document.getElementById("nav-authors");
+
+        fetch("/category/get", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(res => {
+            if (res.ok) {
+                res.json().then(categories => {
+                    categories.forEach(item => {
+                        const navCategoryItem = document.createElement("a");
+                        navCategoryItem.classList.add(..."nav-item nav-link".split(" "));
+                        navCategoryItem.href = `/eshopper/category?id=${item.id}`;
+                        navCategoryItem.innerText = `${item.name}`;
+                        navCategories.appendChild(navCategoryItem);
+                    })
+                })
+            }
+        })
+
+        fetch("/author/get", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(res => {
+            if (res.ok) {
+                res.json().then(authors => {
+                    authors.forEach(item => {
+                        const navAuthorItem = document.createElement("a");
+                        navAuthorItem.classList.add(..."dropdown-item".split(" "));
+                        navAuthorItem.href = `/eshopper/author?id=${item.id}`;
+                        navAuthorItem.innerText = `${item.name}`;
+                        navAuthors.appendChild(navAuthorItem);
+                    })
+                })
+            }
+        })
+
+    </script>
+
 </div>

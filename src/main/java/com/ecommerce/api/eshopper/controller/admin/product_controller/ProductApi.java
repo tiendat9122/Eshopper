@@ -118,6 +118,8 @@ public class ProductApi {
             product.setName(productDto.getName());
             product.setRetail(productDto.getRetail());
             product.setInventory(productDto.getInventory());
+            product.setSummary(productDto.getSummary());
+            product.setHot(productDto.isHot());
             product.setActive(productDto.isActive());
 
             // add author for product
@@ -189,6 +191,8 @@ public class ProductApi {
                 product.setName(productDto.getName());
                 product.setRetail(productDto.getRetail());
                 product.setInventory(productDto.getInventory());
+                product.setSummary(productDto.getSummary());
+                product.setHot(productDto.isHot());
                 product.setActive(productDto.isActive());
 
                 // update author for product

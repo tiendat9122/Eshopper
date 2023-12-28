@@ -1,0 +1,133 @@
+<div th:fragment="eshopperAuthen" class="contact-form bg-white">
+  <div id="success"></div>
+  <div class="p-5">
+    <h4 class="pb-4">Quên mật khẩu</h4>
+
+    <div id="mail-verification">
+      <form name="sentMessage" id="form-user-forgot" novalidate="novalidate">
+        <div class="control-group">
+          <input type="email" class="form-control" name="email" placeholder="Địa chỉ email" required="required"
+            data-validation-required-message="Bạn chưa nhập địa chỉ email" />
+          <p id="message-forgot-error" class="help-block text-danger"></p>
+        </div>
+        <div>
+          <button class="btn btn-primary py-2 px-4" type="button" id="user-forgetbutton">
+            Lấy mật khẩu
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="pt-3">
+      <p>Bạn đã có tài khoản Eshopper? <a href="/userauth/login">Đăng nhập</a></p>
+    </div>
+  </div>
+
+  <script>
+    const formForget = document.getElementById("form-user-forgot");
+    const errorForgetMsg = document.getElementById("user-forgetererror");
+    const forgetButton = document.getElementById("user-forgetbutton");
+
+    forgetButton.addEventListener("click", () => {
+      const formData = new FormData(formForget);
+      const data = Object.fromEntries(formData.entries());
+      fetch("/userauth/forgot", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }).then((res) => {
+        if (res.ok) {
+          res.json().then((data) => {
+            wrapForm = document.getElementById("mail-verification");
+            wrapForm.innerHTML = `
+              <form name="sentMessage" id="form-verify-code" novalidate="novalidate">
+                <div class="control-group">
+                  <input type="hidden" name="userId" value="${data.id}"/>
+                  <input type="text" class="form-control" name="code" placeholder="Mã xác minh" required="required"
+                    data-validation-required-message="Bạn chưa nhập mã xác minh" />
+                  <p id="message-forgot-error" class="help-block text-danger"></p>
+                </div>
+                <div>
+                  <button class="btn btn-primary py-2 px-4" type="button" onclick="xacNhanMa()">
+                    Xác minh
+                  </button>
+                </div>
+              </form>
+            `;
+          })
+        } else {
+          alert("Địa chỉ email của bạn không hợp lệ");
+        }
+      })
+    })
+
+    function xacNhanMa() {
+
+      formSendCodeVerify = document.getElementById("form-verify-code");
+      const data = JSON.stringify(Object.fromEntries(new FormData(formSendCodeVerify).entries()));
+
+      fetch("/userauth/verification", {
+        method: 'POST',
+        body: data,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then(res => {
+        if (res.ok) {
+          res.json().then((data) => {
+            console.log(data);
+            wrapForm = document.getElementById("mail-verification");
+            wrapForm.innerHTML = `
+            <form name="sentMessage" id="form-new-password" novalidate="novalidate">
+              <input type="hidden" name="email" value="${data.email}"/>
+              <div class="control-group">
+                <input type="password" class="form-control" name="password" placeholder="Mật khẩu mới.." required="required"
+                  data-validation-required-message="Bạn chưa nhập mật khẩu mới" />
+                <p class="help-block text-danger"></p>
+              </div>
+              <div class="control-group">
+                <input type="password" class="form-control" name="newPasswordAgain" placeholder="Nhập lại mật khẩu mới.." required="required"
+                  data-validation-required-message="Bạn chưa nhập lại mật khẩu mới" />
+                <p class="help-block text-danger"></p>
+              </div>
+              <div>
+                <button class="btn btn-primary py-2 px-4" type="button" onclick="layLaiMatKhau()" >Đổi mật khẩu</button>
+              </div>
+            </form>
+            `;
+          })
+        } else {
+          alert("Mã xác minh của bạn không đúng!");
+        }
+      })
+    }
+
+    function layLaiMatKhau() {
+      formNewPassword = document.getElementById("form-new-password");
+
+      const newPassword = document.querySelector("#form-new-password input[name=password]").value;
+      const newPasswordAgain = document.querySelector("#form-new-password input[name=newPasswordAgain]").value;
+      if(newPassword === newPasswordAgain) {
+        const data = JSON.stringify(Object.fromEntries(new FormData(formNewPassword).entries()));
+  
+        fetch("/userauth/newpassword", {
+          method: 'PUT',
+          body: data,
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }).then(res => {
+          if (res.ok) {
+            window.location.href = "/userauth/login";
+          }
+        })
+      } else {
+        alert("Nhập lại mật khẩu chưa khớp");
+      }
+
+    }
+
+  </script>
+</div>

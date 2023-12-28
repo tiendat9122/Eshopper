@@ -26,11 +26,16 @@ public class Product {
 
     private String picture;
 
+    @Column(columnDefinition = "LONGTEXT")
+    private String summary;
+
+    private boolean hot;
+
     private boolean active;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id", nullable = true)
-    @JsonIgnoreProperties("products")
+    @JsonIgnoreProperties({"products", "story"})
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Author author;

@@ -8,14 +8,20 @@ import com.ecommerce.api.eshopper.service.product_service.IProductService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +31,9 @@ public class CategoryApi {
     private final ICategoryService categoryService;
 
     private final IProductService productService;
+
+    @Value("${file.upload-dir}")
+    private String FILE_DIRECTORY;
 
     @GetMapping("/get")
     public ResponseEntity<?> getCategory(@RequestParam(name = "id", required = false) Long id) {
@@ -43,26 +52,65 @@ public class CategoryApi {
 
     }
 
+    @GetMapping("/download/{picture}")
+    @ResponseBody
+    public ResponseEntity<ByteArrayResource> getPicture(@PathVariable(name = "picture") String picture) {
+
+        if (!picture.equals("") || picture != null) {
+            try {
+                Path filename = Paths.get(FILE_DIRECTORY, "categories", picture);
+                byte[] buffer = Files.readAllBytes(filename);
+                ByteArrayResource byteArrayResource = new ByteArrayResource(buffer);
+                return ResponseEntity.ok()
+                        .contentLength(buffer.length)
+                        .contentType(MediaType.parseMediaType("image/png"))
+                        .body(byteArrayResource);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return ResponseEntity.badRequest().build();
+
+    }
+
     @PostMapping("/insert")
-    public ResponseEntity<?> insertCategory(@RequestBody CategoryDto categoryDto) {
+    public ResponseEntity<?> insertCategory(@ModelAttribute CategoryDto categoryDto) {
 
         try {
             Category category = new Category();
             category.setName(categoryDto.getName());
 
-            /*List<Long> productIds = categoryDto.getProductIds();
-            Set<Product> setProducts = new HashSet<>();
-            for(Long productId : productIds) {
-                Product product = productService.findProductById(productId).orElseThrow();
-                setProducts.add(product);
+            // add picture for category
+            if (categoryDto.getPicture_file() == null || categoryDto.getPicture_file().isEmpty()) {
+                category.setPicture(null);
+            } else {
+                Path path = Paths.get(FILE_DIRECTORY, "categories");
+
+                try {
+                    InputStream inputStream = categoryDto.getPicture_file().getInputStream();
+                    long timeStamp = new Date().getTime();
+                    String fileName = categoryDto.getPicture_file().getOriginalFilename();
+                    int lastDotIndex = fileName.lastIndexOf('.');
+                    String extension;
+                    if (lastDotIndex > 0) {
+                        extension = fileName.substring(lastDotIndex);
+                    } else {
+                        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                    }
+                    String fileSave = categoryDto.getName() + "_" + categoryDto.getPicture_file().getName() + timeStamp
+                            + extension;
+
+                    Files.copy(inputStream, path.resolve(fileSave),
+                            StandardCopyOption.REPLACE_EXISTING);
+
+                    category.setPicture(fileSave);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-            category.setProducts(setProducts);*/
 
             Category categoryInserted = categoryService.saveCategory(category);
-
-            /*var products = productService.findAllById(categoryDto.getProductIds());
-            products.forEach(product -> product.getCategories().add(categoryInserted));
-            productService.saveAllProduct(products);*/
 
             return new ResponseEntity<>(categoryInserted, HttpStatus.OK);
         } catch (EntityNotFoundException exception) {
@@ -73,49 +121,48 @@ public class CategoryApi {
 
     @PutMapping("/update")
     @Transactional
-    public ResponseEntity<?> updateCategory(@RequestParam(name = "id") Long id, @RequestBody CategoryDto categoryDto) {
+    public ResponseEntity<?> updateCategory(@RequestParam(name = "id") Long id, @ModelAttribute CategoryDto categoryDto) {
         try {
             if (id != null) {
                 Category category = categoryService.findCategoryById(id)
                         .orElseThrow(() -> new EntityNotFoundException("Cannot find category with id = " + id));
                 category.setName(categoryDto.getName());
 
-                /*var productsFromDB = category.getProducts();
+                // update picture for category
+                File fileOld = new File(FILE_DIRECTORY + "/categories/" + category.getPicture());
+                if (categoryDto.getPicture_file() != null && !categoryDto.getPicture_file().isEmpty()) {
+                    try {
+                        Path path = Paths.get(FILE_DIRECTORY, "categories");
+                        InputStream inputStream = categoryDto.getPicture_file().getInputStream();
+                        long timeStamp = new Date().getTime();
+                        String fileName = categoryDto.getPicture_file().getOriginalFilename();
+                        int lastDotIndex = fileName.lastIndexOf('.');
+                        String extension;
+                        if(lastDotIndex > 0) {
+                            extension = fileName.substring(lastDotIndex);
+                        } else {
+                            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                        }
 
-                List<Long> productIds = categoryDto.getProductIds();
+                        String fileSave = categoryDto.getName() + "_" + categoryDto.getPicture_file().getName() + timeStamp + extension;
 
-                List<Product> productsWillRemove = new ArrayList<>();
-                for(Product product : productsFromDB) {
-                    if(!productIds.contains(product.getId())) {
-                        productsWillRemove.add(product);
+                        if(fileOld.exists()) {
+                            fileOld.delete();
+                            Files.copy(inputStream, path.resolve(fileSave), StandardCopyOption.REPLACE_EXISTING);
+                            category.setPicture(fileSave);
+                        } else {
+                            Files.copy(inputStream, path.resolve(fileSave), StandardCopyOption.REPLACE_EXISTING);
+                            category.setPicture(fileSave);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+                } else if (categoryDto.getPicture().isBlank()) {
+                    if(fileOld.exists()) {
+                        fileOld.delete();
+                    }
+                    category.setPicture(null);
                 }
-
-                productsFromDB.removeAll(productsWillRemove);
-
-                for(Product product: productsWillRemove) {
-                    var categories = product.getCategories();
-                    categories.remove(category);
-                }
-
-                var productIdFromDB = new ArrayList<Long>();
-                for(var product: productsFromDB) {
-                    productIdFromDB.add(product.getId());
-                }
-
-                var productIdsWillAdd = new ArrayList<Long>();
-                for(var idFromDTO : productIds) {
-                    if (!productIdFromDB.contains(idFromDTO))
-                        productIdsWillAdd.add(idFromDTO);
-                }
-
-                var prodcutWillAdd = productService.findAllById(productIdsWillAdd);
-
-                productsFromDB.addAll(prodcutWillAdd);
-
-                for(var product: prodcutWillAdd) {
-                    product.getCategories().add(category);
-                }*/
 
                 Category categoryUpdated = categoryService.saveCategory(category);
 
@@ -134,8 +181,19 @@ public class CategoryApi {
 
         try {
             if (id != null) {
-                Category category = categoryService.findCategoryById(id)
-                        .orElseThrow(() -> new EntityNotFoundException("Cannot find category with id = " + id));
+                Category category = categoryService.findCategoryById(id).orElseThrow(() -> new EntityNotFoundException("Cannot find category with id = " + id));
+
+                // delete book's picture on server
+                try {
+                    String picture = category.getPicture();
+                    Path filePath = Paths.get(FILE_DIRECTORY, "categories", picture);
+                    if (Files.exists(filePath)) {
+                        Files.delete(filePath);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 categoryService.deleteCategory(category);
                 return new ResponseEntity<>("Deleted category successfully", HttpStatus.OK);
             } else {

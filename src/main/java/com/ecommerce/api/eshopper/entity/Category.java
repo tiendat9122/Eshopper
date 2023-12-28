@@ -39,7 +39,8 @@ public class Category {
 
     @ManyToMany(mappedBy = "categories", cascade = { CascadeType.PERSIST, CascadeType.REFRESH,
             CascadeType.MERGE }, fetch = FetchType.EAGER)
-    @JsonIgnore
+//    @JsonIgnore
+    @JsonIgnoreProperties({"inventory", "summary", "hot", "active", "categories"})
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<Product> products;

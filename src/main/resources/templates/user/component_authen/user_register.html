@@ -28,11 +28,11 @@
           data-validation-required-message="Bạn chưa nhập địa chỉ" />
         <p class="help-block text-danger"></p>
       </div>
-      <div class="control-group">
+      <!-- <div class="control-group">
         <input type="date" class="form-control" name="birth_day" placeholder="Ngày sinh" required="required"
           data-validation-required-message="Bạn chưa nhập ngày sinh" />
         <p class="help-block text-danger"></p>
-      </div>
+      </div> -->
       <div class="control-group">
         <input type="password" class="form-control" name="password" placeholder="Mật khẩu" required="required"
           data-validation-required-message="Bạn chưa nhập mật khẩu" />
@@ -58,7 +58,7 @@
       const formData = new FormData(formRegister);
       const data = Object.fromEntries(formData.entries());
       console.log("done bind register");
-      fetch("/auth/register", {
+      fetch("/userauth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

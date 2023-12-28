@@ -24,6 +24,8 @@ public interface IProductService {
 
     List<Product> findProductRandom();
 
+    List<Product> getAllProductHotActiveTrue();
+
     // Save and update
     List<Product> saveAllProduct(List<Product> products);
 

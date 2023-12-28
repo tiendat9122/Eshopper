@@ -67,6 +67,21 @@
                     </div>
 
                     <div class="form-group row">
+                        <label for="val-table-number" class="form-label col-sm-3">Tóm tắt <span
+                                class="text-danger">*</span></label>
+                        <textarea name="summary" class="form-control col-sm-8" id="" cols="30" rows="10"></textarea>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="create-hot" class="form-label col-sm-3">Xu hướng<span
+                                class="text-danger">*</span></label>
+                        <div class="custom-control custom-switch custom-control-lg custom-control-inline mb-2">
+                            <input type="checkbox" class="custom-control-input" id="create-hot" name="hot">
+                            <label class="custom-control-label" for="create-hot"> </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
                         <label for="create-active" class="form-label col-sm-3">Kích hoạt<span
                                 class="text-danger">*</span></label>
                         <div class="custom-control custom-switch custom-control-lg custom-control-inline mb-2">
@@ -96,6 +111,7 @@
                         function taoMoi() {
                             const form = document.getElementById('tao-moi')
                             data = new FormData(form)
+                            data.set('hot', document.getElementById('create-hot').checked)
                             data.set('active', document.getElementById('create-active').checked)
                             body = data
                             let headers = { ...genConfig().headers }

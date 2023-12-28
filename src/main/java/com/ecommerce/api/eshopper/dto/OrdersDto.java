@@ -30,6 +30,12 @@ public class OrdersDto {
 
     private boolean state;
 
+    private String address;
+
+    private String phone_number;
+
+    private String full_name;
+
     private String note;
 
     private Long userId;

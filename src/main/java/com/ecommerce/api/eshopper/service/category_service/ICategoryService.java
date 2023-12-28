@@ -13,6 +13,8 @@ public interface ICategoryService {
 
     Optional<Category> findCategoryById(Long id);
 
+    List<Category> find6Category();
+
     // Save and update
     Product saveProduct(Product product);
 

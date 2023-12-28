@@ -69,6 +69,11 @@ public class ProductService implements IProductService {
         return productRepository.findRandomProducts();
     }
 
+    @Override
+    public List<Product> getAllProductHotActiveTrue() {
+        return productRepository.findHotActiveProductsLimitedTo8();
+    }
+
     // Save and update
     @Override
     public List<Product> saveAllProduct(List<Product> products) {

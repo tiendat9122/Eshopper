@@ -6,7 +6,9 @@ import com.ecommerce.api.eshopper.service.user_service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,27 @@ public class UserProfileApi {
 
     @Value("${file.upload-dir}")
     private String FILE_DIRECTORY;
+
+    @GetMapping("/download/{avatar}")
+    @ResponseBody
+    public ResponseEntity<ByteArrayResource> getAvatar(@PathVariable(name = "avatar") String avatar) {
+
+        if (!avatar.equals("") || avatar != null) {
+            try {
+                Path filename = Paths.get(FILE_DIRECTORY, "users", avatar);
+                byte[] buffer = Files.readAllBytes(filename);
+                ByteArrayResource byteArrayResource = new ByteArrayResource(buffer);
+                return ResponseEntity.ok()
+                        .contentLength(buffer.length)
+                        .contentType(MediaType.parseMediaType("image/png"))
+                        .body(byteArrayResource);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return ResponseEntity.badRequest().build();
+
+    }
 
     @GetMapping("/user")
     public ResponseEntity<?> getUserProfile(@RequestParam(name = "id") Long id) {
@@ -120,7 +143,10 @@ public class UserProfileApi {
             if(id != null) {
                 User user = userService.findUserById(id).orElseThrow();
 
-                if(user.getPassword().equals(userDto.getPassword())) {
+                String password_old = user.getPassword();
+                String confirm_password_old = userDto.getPassword();
+
+                if(passwordEncoder.matches(confirm_password_old, password_old)) {
                     user.setPassword(passwordEncoder.encode(userDto.getNewPassword()));
                 } else {
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -136,5 +162,6 @@ public class UserProfileApi {
         }
 
     }
+
 
 }

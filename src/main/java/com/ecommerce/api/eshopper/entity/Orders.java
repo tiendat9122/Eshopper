@@ -35,6 +35,12 @@ public class Orders {
 
     private String note;
 
+    private String address;
+
+    private String phone_number;
+
+    private String full_name;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = true)
     @JsonIgnoreProperties({"enabled", "credentialsNonExpired", "accountNonExpired", "authorities", "accountNonLocked", "username",

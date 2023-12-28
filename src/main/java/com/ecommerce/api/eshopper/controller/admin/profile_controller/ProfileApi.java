@@ -116,8 +116,11 @@ public class ProfileApi {
         try {
             if(id != null) {
                 User user = userService.findUserById(id).orElseThrow();
+
+                String password_old = user.getPassword();
+                String confirm_password_old = userDto.getPassword();
                 
-                if(user.getPassword().equals(userDto.getPassword())) {
+                if(passwordEncoder.matches(confirm_password_old, password_old)) {
                     user.setPassword(passwordEncoder.encode(userDto.getNewPassword()));
                 } else {
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);

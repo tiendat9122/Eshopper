@@ -1,32 +1,11 @@
 <!-- Page Header Start -->
 <div th:fragment="eshopperContent">
+
     <div class="container-fluid mb-5">
         <div class="row justify-content-end px-xl-5">
             <div class="col-lg-9">
                 <div id="header-carousel" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active" style="height: 410px;">
-                            <img class="img-fluid" src="/content/user/assets/img/slide2.png" alt="Image">
-                            <div class="d-flex flex-column align-items-center justify-content-center"></div>
-                        </div>
-
-                        <div class="carousel-item" style="height: 410px;">
-                            <img class="img-fluid" src="/content/user/assets/img/slide1.jpg" alt="Image">
-                            <div class="d-flex flex-column align-items-center justify-content-center"></div>
-                        </div>
-                        
-                        <div class="carousel-item" style="height: 410px;">
-                            <img class="img-fluid" src="/content/user/assets/img/slide3.jpg" alt="Image">
-                            <div class="d-flex flex-column align-items-center justify-content-center"></div>
-                        </div>
-                        <div class="carousel-item" style="height: 410px;">
-                            <img class="img-fluid" src="/content/user/assets/img/slide4.jpg" alt="Image">
-                            <div class="d-flex flex-column align-items-center justify-content-center"></div>
-                        </div>
-                        <div class="carousel-item" style="height: 410px;">
-                            <img class="img-fluid" src="/content/user/assets/img/slide5.jpg" alt="Image">
-                            <div class="d-flex flex-column align-items-center justify-content-center"></div>
-                        </div>
+                    <div id="slide-carousel" class="carousel-inner">
                     </div>
                     <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
                         <div class="btn btn-dark" style="width: 45px; height: 45px;">
@@ -42,6 +21,36 @@
             </div>
         </div>
     </div>
+
+    <script>
+        const slideCarousel = document.getElementById("slide-carousel");
+
+        fetch("/user/home/carousel", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(res => {
+            if (res.ok) {
+                res.json().then(slide => {
+                    for (var i = 0; i < slide.length; i++) {
+                        const carouselItem = document.createElement("div");
+                        carouselItem.classList.add("carousel-item");
+
+                        carouselItem.style.height = "410px";
+
+                        carouselItem.innerHTML = `<img class="img-fluid" src="/user/home/slide/download/${slide[i].picture}" alt="Image">
+                                                    <div class="d-flex flex-column align-items-center justify-content-center"></div>`
+                        slideCarousel.appendChild(carouselItem);
+                        if (i == 0) {
+                            carouselItem.classList.add("active");
+                        }
+                    }
+                })
+            }
+        })
+    </script>
+
     <!-- Page Header End -->
 
 
@@ -79,63 +88,41 @@
 
     <!-- Categories Start -->
     <div class="container-fluid pt-5">
-        <div class="row px-xl-5 pb-3">
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">15 sản phẩm</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="/content/user/assets/img/category1.jpg" alt="">
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Men's dresses</h5>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">15 sản phẩm</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="/content/user/assets/img/category2.jpg" alt="">
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Women's dresses</h5>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">15 sản phẩm</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="/content/user/assets/img/category3.jpg" alt="">
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Baby's dresses</h5>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">15 sản phẩm</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="/content/user/assets/img/category4.jpg" alt="">
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Accerssories</h5>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">15 sản phẩm</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="/content/user/assets/img/category5.jpg" alt="">
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Bags</h5>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 pb-1">
-                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
-                    <p class="text-right">15 sản phẩm</p>
-                    <a href="" class="cat-img position-relative overflow-hidden mb-3">
-                        <img class="img-fluid" src="/content/user/assets/img/category6.jpg" alt="">
-                    </a>
-                    <h5 class="font-weight-semi-bold m-0">Shoes</h5>
-                </div>
-            </div>
+        <div id="categories-home" class="row px-xl-5 pb-3">
         </div>
     </div>
+
+    <script>
+        const categoriesHome = document.getElementById("categories-home");
+
+        fetch("/user/home/category", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(res => {
+            if (res.ok) {
+                res.json().then(categories => {
+
+                    categories.forEach((item) => {
+                        const categoryItem = document.createElement("div");
+                        categoryItem.classList.add(..."col-lg-4 col-md-6 pb-1".split(" "));
+                        categoryItem.innerHTML = `
+                            <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
+                                <p class="text-right">15 sản phẩm</p>
+                                <a href="/eshopper/category?id=${item.id}" class="cat-img position-relative overflow-hidden mb-3">
+                                    <img class="img-fluid" src="/category/download/${item.picture}" alt="">
+                                </a>
+                                <h5 class="font-weight-semi-bold m-0">${item.name}</h5>
+                            </div>
+                            `;
+                        categoriesHome.appendChild(categoryItem);
+                    })
+                })
+            }
+        })
+    </script>
+
     <!-- Categories End -->
 
 
@@ -172,161 +159,85 @@
         <div class="text-center mb-4">
             <h2 class="section-title px-5"><span class="px-2">Xu hướng</span></h2>
         </div>
-        <div class="row px-xl-5 pb-3">
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="card product-item border-0 mb-4">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="/content/user/assets/img/product-1.jpg" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>$123.00</h6>
-                            <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i
-                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="card product-item border-0 mb-4">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="/content/user/assets/img/product-2.jpg" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>$123.00</h6>
-                            <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i
-                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="card product-item border-0 mb-4">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="/content/user/assets/img/product-3.jpg" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>$123.00</h6>
-                            <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i
-                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="card product-item border-0 mb-4">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="/content/user/assets/img/product-4.jpg" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>$123.00</h6>
-                            <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i
-                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="card product-item border-0 mb-4">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="/content/user/assets/img/product-5.jpg" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>$123.00</h6>
-                            <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i
-                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="card product-item border-0 mb-4">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="/content/user/assets/img/product-6.jpg" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>$123.00</h6>
-                            <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i
-                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="card product-item border-0 mb-4">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="/content/user/assets/img/product-7.jpg" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>$123.00</h6>
-                            <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i
-                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="card product-item border-0 mb-4">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="/content/user/assets/img/product-8.jpg" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>$123.00</h6>
-                            <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i
-                                class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
-                    </div>
-                </div>
-            </div>
+        <div id="trending-home" class="row px-xl-5 pb-3">
         </div>
     </div>
+
+    <script>
+
+        function themVaoGio(productId) {
+            if(user != null) {
+                fetch("/user/orderdetail/get?productId=" + productId + "&userId=" + user.id, { ...genConfig() })
+                    .then((res) => {
+                        if (res.ok) {
+                            res.json().then((data) => {
+                                var iconContainer = document.getElementById("iconAddOrderDetail-" + productId);
+                                var icon = document.createElement("div");
+                                icon.classList.add("icon-add-orderdetail");
+                                icon.innerHTML = `<i class="fas fa-shopping-cart text-primary mr-1"></i>`;
+                                iconContainer.appendChild(icon);
+                            })
+                        }
+                    })
+            } else {
+                chuaDangNhap();
+            }
+
+        }
+
+        const trendingHome = document.getElementById("trending-home");
+
+        fetch("/user/home/trending", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(res => {
+            if (res.ok) {
+                res.json().then(products => {
+
+                    products.forEach((item) => {
+                        const productItem = document.createElement("div");
+                        productItem.classList.add(..."col-lg-3 col-md-6 col-sm-12 pb-1".split(" "));
+
+                        const formattedRetail = item.retail.toLocaleString('vi-VN', {
+                            style: 'currency',
+                            currency: 'VND',
+                        });
+
+                        productItem.innerHTML = `
+                            <div class="card product-item border-0 mb-4">
+                                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                                    <img class="img-fluid w-100" src="/user/product/download/${item.picture}" alt="">
+                                </div>
+                                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                    <h6 class="text-truncate mb-3">${item.name}</h6>
+                                    <div class="d-flex justify-content-center">
+                                        <h6>${formattedRetail}</h6>
+                                    </div>
+                                </div>
+                                <div class="card-footer d-flex justify-content-between bg-light border">
+                                    <a href="/eshopper/product/detail?id=${item.id}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                                        tiết</a>
+                                    
+                                    <div class="button-add-detail-container">
+                                        <div class="icon-add-orderdetail-container">
+                                            <div id="iconAddOrderDetail-${item.id}" class="icon-add-orderdetail"></div>
+                                        </div>
+                                        <a onclick="themVaoGio(${item.id})" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
+                                    </div>
+                                        
+                                </div>
+                            </div>
+                            `;
+                        trendingHome.appendChild(productItem);
+                    })
+                })
+            }
+        })
+
+    </script>
+
     <!-- Products End -->
 
 
@@ -372,7 +283,8 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
                         <a href="" class="btn btn-sm text-dark p-0"><i
                                 class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
                     </div>
@@ -391,7 +303,8 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
                         <a href="" class="btn btn-sm text-dark p-0"><i
                                 class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
                     </div>
@@ -410,7 +323,8 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
                         <a href="" class="btn btn-sm text-dark p-0"><i
                                 class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
                     </div>
@@ -429,7 +343,8 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
                         <a href="" class="btn btn-sm text-dark p-0"><i
                                 class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
                     </div>
@@ -448,7 +363,8 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
                         <a href="" class="btn btn-sm text-dark p-0"><i
                                 class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
                     </div>
@@ -467,7 +383,8 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
                         <a href="" class="btn btn-sm text-dark p-0"><i
                                 class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
                     </div>
@@ -486,7 +403,8 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
                         <a href="" class="btn btn-sm text-dark p-0"><i
                                 class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
                     </div>
@@ -505,7 +423,8 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi
+                            tiết</a>
                         <a href="" class="btn btn-sm text-dark p-0"><i
                                 class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
                     </div>
@@ -520,34 +439,43 @@
     <div class="container-fluid py-5">
         <div class="row px-xl-5">
             <div class="col">
-                <div class="owl-carousel vendor-carousel">
-                    <div class="vendor-item border p-4">
-                        <img src="/content/user/assets/img/vendor-1.jpg" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="/content/user/assets/img/vendor-2.jpg" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="/content/user/assets/img/vendor-3.jpg" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="/content/user/assets/img/vendor-4.jpg" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="/content/user/assets/img/vendor-5.jpg" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="/content/user/assets/img/vendor-6.jpg" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="/content/user/assets/img/vendor-7.jpg" alt="">
-                    </div>
-                    <div class="vendor-item border p-4">
-                        <img src="/content/user/assets/img/vendor-8.jpg" alt="">
-                    </div>
+                <div id="advertise-carousel" class="owl-carousel vendor-carousel">
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+
+        const advertiseCarousel = document.getElementById("advertise-carousel");
+
+        // fetch("/user/home/advertise", {
+        //     ...genConfig()
+        // }).then(res => {
+        //     if (res.ok) {
+        //         res.json().then(advertise => {
+
+        //             for (var i = 0; i < advertise.length; i++) {
+        //                 const advertiseCarouselItem = document.createElement("div");
+        //                 advertiseCarouselItem.classList.add(..."vendor-item border p-4".split(" "));
+        //                 advertiseCarouselItem.innerHTML = `<img src="/user/home/advertise/download/atomizedmedia_picture_file1703584484856.jpg" alt="">`;
+
+        //                 advertiseCarousel.appendChild(advertiseCarouselItem);
+        //             }
+
+        //         })
+        //     }
+        // })
+
+        // for (var i = 1; i < 9; i++) {
+        //     const advertiseCarouselItem = document.createElement("div");
+        //     advertiseCarouselItem.classList.add(..."vendor-item border p-4".split(" "));
+        //     advertiseCarouselItem.innerHTML = `<img src="/user/home/advertise/download/atomizedmedia_picture_file1703584484856.jpg" alt="">`;
+
+        //     advertiseCarousel.appendChild(advertiseCarouselItem);
+        // }
+
+    </script>
+
     <!-- Vendor End -->
 </div>

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/auth")
 public class UserForgetController {
     
-    @GetMapping("/forget")
+//    @GetMapping("/forget")
     public String userForget(Model model) {
         model.addAttribute("eshopperAuthenFragment", "user/component_authen/user_forget.html");
         return "user/layout_authen/app";

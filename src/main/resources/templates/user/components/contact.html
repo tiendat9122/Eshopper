@@ -1,10 +1,7 @@
 <div th:fragment="eshopperContent">
   <!-- Page Header Start -->
   <div class="container-fluid bg-secondary mb-5">
-    <div
-      class="d-flex flex-column align-items-center justify-content-center"
-      style="min-height: 300px"
-    >
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
       <h1 class="font-weight-semi-bold text-uppercase mb-3">Liên hệ</h1>
       <div class="d-inline-flex">
         <p class="m-0"><a href="">Eshopper</a></p>
@@ -27,56 +24,31 @@
         <div class="contact-form">
           <div id="success"></div>
           <form name="sentMessage" id="contactForm" novalidate="novalidate">
+            <p id="message-contact-input" class="text-danger"></p>
+            <input type="hidden" name="userId" value="">
             <div class="control-group">
-              <input
-                type="text"
-                class="form-control"
-                id="name"
-                placeholder="Họ và tên"
-                required="required"
-                data-validation-required-message="Vui lòng nhập họ và tên"
-              />
+              <input type="text" class="form-control" readonly id="fullname-contact" placeholder="Họ và tên"
+                required="required" data-validation-required-message="Vui lòng nhập họ và tên" />
               <p class="help-block text-danger"></p>
             </div>
             <div class="control-group">
-              <input
-                type="email"
-                class="form-control"
-                id="email"
-                placeholder="Địa chỉ email"
-                required="required"
-                data-validation-required-message="Vui lòng nhập địa chỉ email"
-              />
+              <input type="email" class="form-control" readonly id="email-contact" placeholder="Địa chỉ email"
+                required="required" data-validation-required-message="Vui lòng nhập địa chỉ email" />
               <p class="help-block text-danger"></p>
             </div>
             <div class="control-group">
-              <input
-                type="text"
-                class="form-control"
-                id="subject"
-                placeholder="Tiêu đề"
-                required="required"
-                data-validation-required-message="Vui lòng nhập tiêu đề"
-              />
+              <input type="text" class="form-control" id="subject" placeholder="Tiêu đề" required="required"
+                data-validation-required-message="Vui lòng nhập tiêu đề" name="title" />
               <p class="help-block text-danger"></p>
             </div>
             <div class="control-group">
-              <textarea
-                class="form-control"
-                rows="6"
-                id="message"
-                placeholder="Nội dung liên hệ"
-                required="required"
-                data-validation-required-message="Vui lòng điền nội dung liên hệ"
-              ></textarea>
+              <textarea class="form-control" rows="6" id="message" placeholder="Nội dung liên hệ" required="required"
+                data-validation-required-message="Vui lòng điền nội dung liên hệ" name="content"></textarea>
               <p class="help-block text-danger"></p>
             </div>
+            <p id="message-contact-success" class="text-success"></p>
             <div>
-              <button
-                class="btn btn-primary py-2 px-4"
-                type="submit"
-                id="sendMessageButton"
-              >
+              <button class="btn btn-primary py-2 px-4" type="button" id="send-contact-button" onclick="lienHe()">
                 Gửi liên hệ
               </button>
             </div>
@@ -86,7 +58,8 @@
       <div class="col-lg-5 mb-5">
         <h5 class="font-weight-semi-bold mb-3">Gửi đến bạn</h5>
         <p>
-          Chúng tôi không chỉ bán sách mà còn mang đến hành trình khám phá tri thức và tận hưởng sự đa dạng và phong phú của văn hóa. Hãy đến và mở cửa sách, mở trí tuệ.
+          Chúng tôi không chỉ bán sách mà còn mang đến hành trình khám phá tri thức và tận hưởng sự đa dạng và phong phú
+          của văn hóa. Hãy đến và mở cửa sách, mở trí tuệ.
         </p>
         <div class="d-flex flex-column mb-3">
           <h5 class="font-weight-semi-bold mb-3">Cơ sở 1</h5>
@@ -116,4 +89,53 @@
     </div>
   </div>
   <!-- Contact End -->
+
+  <script>
+    if (user != null) {
+      document.getElementById("fullname-contact").value = user.full_name;
+      document.getElementById("email-contact").value = user.email;
+      document.querySelector("#contactForm input[name=userId]").value = user.id;
+
+      var titleContact = document.querySelector("#contactForm input[name=title]");
+      var contentContact = document.querySelector("#contactForm textarea");
+    } else {
+      chuaDangNhap();
+    }
+
+    function thongBaoGuiLienHeThanhCong() {
+      Swal.fire({
+        title: 'Thành công',
+        text: 'Đã gửi liên hệ đến cửa hàng',
+        icon: 'success',
+        confirmButtonText: 'Hoàn tất',
+      }).then(() => {
+        titleContact.value = '';
+        contentContact.value = '';
+      });
+    }
+
+    function lienHe() {
+      if (titleContact.value != '' && titleContact.value != '') {
+        const options = genConfig();
+        const formContact = document.getElementById('contactForm')
+        const data = JSON.stringify(Object.fromEntries(new FormData(formContact).entries()));
+        fetch('/user/contact/send?id=' + user.id, {
+          method: 'POST',
+          body: data,
+          headers: { ...genConfig().headers },
+        })
+          .then(res => {
+            if (res.ok) {
+              res.json().then(data => {
+                thongBaoGuiLienHeThanhCong();
+              })
+            }
+          })
+      } else {
+        document.getElementById("message-contact-input").innerText = "Yêu cầu điền tiêu đề và nội dung liên hệ!"
+      }
+    }
+
+  </script>
+
 </div>

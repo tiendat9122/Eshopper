@@ -1,10 +1,7 @@
 <div th:fragment="eshopperContent">
   <!-- Page Header Start -->
   <div class="container-fluid bg-secondary mb-5">
-    <div
-      class="d-flex flex-column align-items-center justify-content-center"
-      style="min-height: 300px"
-    >
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
       <h1 class="font-weight-semi-bold text-uppercase mb-3">Thanh toán</h1>
       <div class="d-inline-flex">
         <p class="m-0"><a href="">Eshopper</a></p>
@@ -18,54 +15,71 @@
   <!-- Checkout Start -->
   <div class="container-fluid pt-5">
     <div class="row px-xl-5">
-      <div class="col-lg-8">
+      <form id="form-checkout" class="col-lg-8">
         <div class="mb-4">
           <h4 class="font-weight-semi-bold mb-4">Địa chỉ thanh toán</h4>
           <div class="row">
+            <input type="hidden" name="id">
+            <input type="hidden" name="totalBill">
             <div class="col-md-6 form-group">
-              <label>Họ và tên</label>
-              <input class="form-control" type="text" placeholder="" />
+              <label>Người nhận</label>
+              <input name="full_name" class="form-control" type="text" placeholder="Nhập tên người nhận.." />
             </div>
             <div class="col-md-6 form-group">
               <label>Ngày sinh</label>
-              <input class="form-control" type="date" placeholder="" />
+              <input name="birth_day" class="form-control" type="date" placeholder="Nhập ngày sinh.." />
             </div>
             <div class="col-md-6 form-group">
               <label>E-mail</label>
-              <input class="form-control" type="text" placeholder="" />
+              <input readonly name="email" class="form-control" type="text" placeholder="Nhập địa chỉ E-mail" />
             </div>
             <div class="col-md-6 form-group">
               <label>Số điện thoại</label>
-              <input class="form-control" type="text" placeholder="" />
+              <input name="phone_number" class="form-control" type="text" placeholder="Nhập số điện thoại.." />
             </div>
             <div class="col-md-6 form-group">
               <label>Địa chỉ</label>
-              <input class="form-control" type="text" placeholder="" />
+              <input name="address" class="form-control" type="text" placeholder="Nhập địa chỉ.." />
             </div>
             <div class="col-md-6 form-group">
-              <label>Country</label>
+              <label>Quốc gia</label>
               <select class="custom-select">
-                <option selected>United States</option>
-                <option>Afghanistan</option>
-                <option>Albania</option>
-                <option>Algeria</option>
+                <option selected>Việt Nam</option>
+                <option>Thái Lan</option>
+                <option>Tây Ban Nha</option>
+                <option>Trung Quốc</option>
               </select>
-            </div>
-            <div class="col-md-12 form-group">
-              <div class="custom-control custom-checkbox">
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="newaccount"
-                />
-                <label class="custom-control-label" for="newaccount"
-                  >Nhớ thông tin</label
-                >
-              </div>
             </div>
           </div>
         </div>
-      </div>
+
+        <div class="mb-5">
+          <div class="border-0">
+            <h4 class="font-weight-semi-bold m-0">Phương thức thanh toán</h4>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <div class="custom-control custom-radio">
+                <input type="radio" class="custom-control-input" name="payment" id="directcheck" />
+                <label class="custom-control-label" for="directcheck">Thanh toán trực tiếp</label>
+              </div>
+            </div>
+            <div class="">
+              <div class="custom-control custom-radio">
+                <input type="radio" class="custom-control-input" name="payment" id="banktransfer" />
+                <label class="custom-control-label" for="banktransfer">Thanh toán VNPay</label>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer border-secondary bg-transparent">
+            <p id="message-checkout-err" class="text-danger"></p>
+            <button id="checkoutButton" type="button" onclick="thanhToan()"
+              class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">
+              Thanh toán
+            </button>
+          </div>
+        </div>
+      </form>
       <div class="col-lg-4">
         <div class="card border-secondary mb-5">
           <div class="card-header bg-secondary border-0">
@@ -73,88 +87,236 @@
           </div>
           <div class="card-body">
             <h5 class="font-weight-medium mb-3">Sản phẩm</h5>
-            <div class="d-flex justify-content-between">
-              <p>Colorful Stylish Shirt 1</p>
-              <p>$150</p>
+            <div id="card-bill-information">
+              <!-- <div class="d-flex justify-content-between">
+                <p>Colorful Stylish Shirt 3</p>
+                <p>$150</p>
+              </div> -->
             </div>
-            <div class="d-flex justify-content-between">
-              <p>Colorful Stylish Shirt 2</p>
-              <p>$150</p>
-            </div>
-            <div class="d-flex justify-content-between">
-              <p>Colorful Stylish Shirt 3</p>
-              <p>$150</p>
-            </div>
-            <hr class="mt-0" />
+          </div>
+          <div id="card-bill-total" class="card-footer border-secondary bg-transparent">
             <div class="d-flex justify-content-between mb-3 pt-1">
               <h6 class="font-weight-medium">Tổng giá</h6>
-              <h6 class="font-weight-medium">$150</h6>
+              <h6 id="card-bill-price" class="font-weight-medium">Chưa cập nhật</h6>
             </div>
             <div class="d-flex justify-content-between">
               <h6 class="font-weight-medium">Phí vận chuyển</h6>
-              <h6 class="font-weight-medium">$10</h6>
+              <h6 id="card-bill-transport" class="font-weight-medium">Chưa cập nhật</h6>
             </div>
-          </div>
-          <div class="card-footer border-secondary bg-transparent">
+            <hr class="mt-0" />
             <div class="d-flex justify-content-between mt-2">
               <h5 class="font-weight-bold">Tổng cộng</h5>
-              <h5 class="font-weight-bold">$160</h5>
+              <h5 id="card-bill-sum" class="font-weight-bold">Chưa cập nhật</h5>
             </div>
-          </div>
-        </div>
-        <div class="card border-secondary mb-5">
-          <div class="card-header bg-secondary border-0">
-            <h4 class="font-weight-semi-bold m-0">Phương thức thanh toán</h4>
-          </div>
-          <div class="card-body">
-            <div class="form-group">
-              <div class="custom-control custom-radio">
-                <input
-                  type="radio"
-                  class="custom-control-input"
-                  name="payment"
-                  id="paypal"
-                />
-                <label class="custom-control-label" for="paypal">Paypal</label>
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="custom-control custom-radio">
-                <input
-                  type="radio"
-                  class="custom-control-input"
-                  name="payment"
-                  id="directcheck"
-                />
-                <label class="custom-control-label" for="directcheck"
-                  >Thanh toán trực tiếp</label
-                >
-              </div>
-            </div>
-            <div class="">
-              <div class="custom-control custom-radio">
-                <input
-                  type="radio"
-                  class="custom-control-input"
-                  name="payment"
-                  id="banktransfer"
-                />
-                <label class="custom-control-label" for="banktransfer"
-                  >Chuyển khoản</label
-                >
-              </div>
-            </div>
-          </div>
-          <div class="card-footer border-secondary bg-transparent">
-            <button
-              class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3"
-            >
-              Place Order
-            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
   <!-- Checkout End -->
+
+  <script>
+
+    const formCheckout = document.getElementById('form-checkout');
+
+    /*
+    Bắt đầu đổ thông tin đơn hàng ra giao diện 
+    */
+    if (user != null) {
+      /* 1. Đổ thông tin người dùng ra giao diện */
+      Object.keys(user).forEach(i => {
+        if (!["id", "active", "avatar", "password", "user_name", "role"].includes(i)) {
+          document.querySelector(`#form-checkout input[name=${i}]`).value = user[i];
+        }
+      })
+
+      /* 2. Gọi API đổ thông tin tất cả sản phẩm có trong đơn hàng ra giao diện */
+      const cardBillInfo = document.getElementById("card-bill-information");
+      fetch('/user/orders/get?userId=' + user.id, {
+        ...genConfig()
+      }).then(res => {
+        if (res.ok) {
+          res.json().then(data => {
+            data.forEach(item => {
+              const cardBillInfoItem = document.createElement("div");
+              cardBillInfoItem.classList.add(..."d-flex justify-content-between".split(" "));
+
+              const formattedPrice = item.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND', });
+
+              cardBillInfoItem.innerHTML = `<p>${item.product.name}</p><p>${formattedPrice}</p>`;
+
+              cardBillInfo.appendChild(cardBillInfoItem);
+            })
+          })
+        } else {
+          cardBillInfo.innerHTML = `<div class="d-flex justify-content-between"><p>Chưa có sản phẩm nào</p></div>`;
+        }
+      })
+
+      /* 3. Gọi API đổ thông tin tổng giá trị đơn hàng ra giao diện */
+      fetch('/user/orders/cart?userId=' + user.id, {
+        ...genConfig(),
+        method: 'GET'
+      }).then(res => {
+        if (res.ok) {
+          res.json().then(orders => {
+            document.querySelector(`#form-checkout input[name=id]`).value = orders.id;
+
+            //Đổi định dạng tiền tệ sang VNĐ
+            const formattedTotalPrice = orders.totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND', });
+            const formattedTransport = orders.transport.toLocaleString('vi-VN', { style: 'currency', currency: 'VND', });
+            const formattedTotalBill = orders.totalBill.toLocaleString('vi-VN', { style: 'currency', currency: 'VND', });
+
+            var cardBillPrice = document.getElementById("card-bill-price").innerText = formattedTotalPrice;
+            var cardBillTransport = document.getElementById("card-bill-transport").innerText = formattedTransport;
+            var cardBillTotal = document.getElementById("card-bill-sum").innerText = formattedTotalBill;
+            document.querySelector("#form-checkout input[name=totalBill]").value = orders.totalBill;
+
+            const datane = JSON.stringify(Object.fromEntries(new FormData(formCheckout).entries()));
+            console.log(datane);
+
+          })
+        }
+      })
+    } else {
+      chuaDangNhap();
+    }
+    /*
+     Kết thúc đổ thông tin đơn hàng ra giao diện 
+    */
+
+
+    /*
+    Bắt đầu kiểm tra phương thức thanh toán
+    */
+    var directCheck = document.getElementById('directcheck');
+    var bankTransfer = document.getElementById('banktransfer');
+
+    /* 1. Hàm kiểm tra nếu như không chọn phương thức thanh toán nào */
+    function thanhToan() {
+      if (!directCheck.checked && !bankTransfer.checked) {
+        alert('Vui lòng chọn phương thức thanh toán.');
+      }
+    }
+
+    /* 2. Kiểm tra chọn một trong hai phương thức thanh toán */
+    document.addEventListener('DOMContentLoaded', function () {
+      directCheck.addEventListener('change', function () {
+        document.getElementById("checkoutButton").onclick = thanhToanTrucTiep;
+      });
+
+      bankTransfer.addEventListener('change', function () {
+        document.getElementById("checkoutButton").onclick = thanhToanVNPay;
+      });
+    });
+    /*
+    Kết thúc kiểm tra phương thức thanh toán
+    */
+
+
+    /*
+    Bắt đầu thanh toán trực tiếp
+    */
+    /* 1. Hàm hiển thị thông báo đặt hàng thành công */
+    function thongBaoThanhToanThanhCong() {
+      Swal.fire({
+        title: 'Thông báo',
+        text: 'Đặt hàng thành công',
+        icon: 'success',
+        confirmButtonText: 'Hoàn tất',
+      }).then(() => {
+        window.location.reload();
+      });
+    }
+
+    /* 2. Hàm thực hiện đặt hàng và thanh toán trực tiếp */
+    function thanhToanTrucTiep() {
+      const data = JSON.stringify(Object.fromEntries(new FormData(formCheckout).entries()));
+      console.log(data);
+      // fetch('/user/checkout/pay', {
+      //   method: 'PUT',
+      //   body: data,
+      //   headers: { ...genConfig().headers },
+      // }).then(res => {
+      //   if (res.ok) {
+      //     thongBaoThanhToanThanhCong();
+      //   } else {
+      //     document.getElementById("message-checkout-err").innerText = "Đơn hàng của bạn chưa có sản phẩm nào!"
+      //   }
+      // })
+    }
+    /*
+    Kết thúc thanh toán trực tiếp
+    */
+
+
+    /*
+    Bắt đầu thanh toán bằng VNPay
+    */
+    function thanhToanVNPay() {
+
+      const totalBill = formCheckout.querySelector("input[name=totalBill]").value;
+      if (totalBill != "") {
+        const data = JSON.stringify(Object.fromEntries(new FormData(formCheckout).entries()));
+        fetch('/api/payment/create_payment', {
+          method: 'POST',
+          body: data,
+          headers: { ...genConfig().headers },
+        }).then(res => {
+          if (res.ok) {
+            res.json().then(paymentVnpay => {
+              window.location.href = paymentVnpay.url;
+            })
+          } else {
+            document.getElementById("message-checkout-err").innerText = "Đơn hàng của bạn chưa có sản phẩm nào!"
+          }
+        })
+      } else {
+        document.getElementById("message-checkout-err").innerText = "Đơn hàng của bạn chưa có sản phẩm nào!"
+      }
+    }
+
+    var currentUrl = window.location.href;
+    console.log(currentUrl);
+
+    if (currentUrl.includes('?')) {
+      // Tạo một đối tượng URLSearchParams từ URL
+      var urlParams = new URLSearchParams(currentUrl);
+
+      // Lấy giá trị của các tham số từ đối tượng URLSearchParams
+      var vnpAmount = urlParams.get('vnp_Amount');
+      var vnpBankCode = urlParams.get('vnp_BankCode');
+      var vnpBankTranNo = urlParams.get('vnp_BankTranNo');
+      var vnpCardType = urlParams.get('vnp_CardType');
+      var vnpOrderInfo = urlParams.get('vnp_OrderInfo');
+      var vnpPayDate = urlParams.get('vnp_PayDate');
+      var vnpResponseCode = urlParams.get('vnp_ResponseCode');
+      var vnpTmnCode = urlParams.get('vnp_TmnCode');
+      var vnpTransactionNo = urlParams.get('vnp_TransactionNo');
+      var vnpTransactionStatus = urlParams.get('vnp_TransactionStatus');
+      var vnpTxnRef = urlParams.get('vnp_TxnRef');
+      var vnpSecureHash = urlParams.get('vnp_SecureHash');
+
+      // Hiển thị giá trị của các tham số ra console hoặc thực hiện các thao tác khác
+      console.log('vnp_Amount:', vnpAmount);
+      console.log('vnp_BankCode:', vnpBankCode);
+      console.log('vnp_BankTranNo:', vnpBankTranNo);
+      console.log('vnp_CardType:', vnpCardType);
+      console.log('vnp_OrderInfo:', vnpOrderInfo);
+      console.log('vnp_PayDate:', vnpPayDate);
+      console.log('vnp_ResponseCode:', vnpResponseCode);
+      console.log('vnp_TmnCode:', vnpTmnCode);
+      console.log('vnp_TransactionNo:', vnpTransactionNo);
+      console.log('vnp_TransactionStatus:', vnpTransactionStatus);
+      console.log('vnp_TxnRef:', vnpTxnRef);
+      console.log('vnp_SecureHash:', vnpSecureHash);
+
+    } else {
+      console.log('URL không chứa tham số.');
+    }
+    /*
+    Kết thúc thanh toán bằng VNPay
+    */
+
+  </script>
 </div>

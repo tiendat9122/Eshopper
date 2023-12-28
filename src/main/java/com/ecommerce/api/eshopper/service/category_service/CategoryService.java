@@ -33,6 +33,10 @@ public class CategoryService implements ICategoryService {
         return categoryRepository.findById(id);
     }
 
+    @Override
+    public List<Category> find6Category() {
+        return categoryRepository.findTop6ByOrderByIdAsc();
+    }
 
     // Save and update
     @Override

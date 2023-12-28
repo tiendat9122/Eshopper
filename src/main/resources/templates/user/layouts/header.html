@@ -49,25 +49,31 @@
             </form>
         </div>
         <div id="nav-cart-logout" class="col-lg-3 col-6 text-right">
-            <a href=""  class="btn border">
-                <i class="fas fa-shopping-cart text-primary"></i>
-                <span class="badge">0</span>
-            </a>
         </div>
     </div>
 
     <script>
-        const userForNavCart = getUserInfo();
-        console.log(userForNavCart);
-        var newNavChild = document.createElement("a");
-        newNavChild.classList.add("btn", "border");
-        newNavChild.onclick = dangXuatUser;
-        newNavChild.innerHTML = `<i class="fas fa-sign-out-alt text-primary"></i>`;
 
-        if(userForNavCart!=null) {
-            var nav = document.getElementById("nav-cart-logout");
-            nav.appendChild(newNavChild);
+        var navCartLogout = document.getElementById("nav-cart-logout");
+
+        if (user != null) {
+            navCartLogout.innerHTML = `
+                <a id="nav-cart-button" href="/eshopper/cart" class="btn border">
+                    <i class="fas fa-shopping-cart text-primary"></i>
+                    <span class="badge">0</span>
+                </a>
+                <a class="btn border" onclick="dangXuatUser()">
+                    <i class="fas fa-sign-out-alt text-primary"></i>
+                </a>
+                `;
+        } else {
+            navCartLogout.innerHTML = `
+                <a id="nav-cart-button" onclick="chuaDangNhap()" class="btn border">
+                    <i class="fas fa-shopping-cart text-primary"></i>
+                </a>
+                `;
         }
+
     </script>
 
 </div>

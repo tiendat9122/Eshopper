@@ -13,6 +13,8 @@ public interface IAdvertiseService {
 
     Optional<Advertise> findAdvertiseById(Long id);
 
+    List<Advertise> getAllAdvertiseActiveTrue();
+
     // Save and update
     Advertise saveAdvertise(Advertise advertise);
 

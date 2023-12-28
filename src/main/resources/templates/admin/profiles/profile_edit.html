@@ -164,8 +164,6 @@
         });
     }
 
-    var user = getUserInfo();
-    console.log(user);
     var id = user.id;
     document.getElementById("title-name").innerText = user.full_name;
     var imgTitle = document.getElementById("title-avatar");
@@ -190,8 +188,6 @@
                             console.log(i + data[i])
                         }
                     })
-
-                    document.querySelector("#form-password input[name=password]").value = data.password;
 
                     const img = document.getElementById('edit-avatar-img');
                     if (data.avatar != null) {
@@ -247,7 +243,7 @@
             icon: 'success',
             confirmButtonText: 'Xác nhận',
         }).then(() => {
-            document.querySelector("#form-password input[name=password]").value = data.password;
+            document.querySelector("#form-password input[name=password]").value = "";
             document.querySelector("#form-password input[name=newPassword]").value = "";
             document.querySelector("#form-password input[name=newPasswordAgain]").value = "";
         });

@@ -12,6 +12,8 @@ public interface ISlideService {
 
     Optional<Slide> findSlideById(Long id);
 
+    List<Slide> getAllSlideActiveTrue();
+
     // Save and update
     Slide saveSlide(Slide slide);
 
