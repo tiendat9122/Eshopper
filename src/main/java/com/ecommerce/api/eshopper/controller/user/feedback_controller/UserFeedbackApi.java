@@ -2,7 +2,10 @@ package com.ecommerce.api.eshopper.controller.user.feedback_controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,11 +38,12 @@ public class UserFeedbackApi {
     private final IProductService productService;
 
     @GetMapping("/get")
-    public ResponseEntity<?> getProductFeedback(@RequestParam(name = "productId") Long productId) {
+    public ResponseEntity<?> getProductFeedback(@RequestParam(name = "productId") Long productId,
+                                                @RequestParam(name = "page") Optional<Integer> page) {
 
         try {
             if(productId != null) {
-                List<Feedback> feedbacks = feedbackService.getFeedbackProduct(productId);
+                Page<Feedback> feedbacks = feedbackService.getFeedbackProduct(productId, Pageable.ofSize(4).withPage(page.orElse(0)));
                 return new ResponseEntity<>(feedbacks, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Coudn't found any feedback about this product", HttpStatus.BAD_REQUEST);

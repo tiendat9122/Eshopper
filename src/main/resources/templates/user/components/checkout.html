@@ -172,8 +172,29 @@
             var cardBillTotal = document.getElementById("card-bill-sum").innerText = formattedTotalBill;
             document.querySelector("#form-checkout input[name=totalBill]").value = orders.totalBill;
 
-            const datane = JSON.stringify(Object.fromEntries(new FormData(formCheckout).entries()));
-            console.log(datane);
+            /* Kiểm tra url có chứa thông tin trả về từ VNPay hay không */
+            var currentUrl = window.location.href;
+
+            if (currentUrl.includes('?')) {
+              var urlParams = new URLSearchParams(currentUrl);
+
+              var vnpResponseCode = urlParams.get('vnp_ResponseCode');
+
+              if (vnpResponseCode == "00") {
+                const data = JSON.stringify(Object.fromEntries(new FormData(formCheckout).entries()));
+                fetch('/user/checkout/pay', {
+                  method: 'PUT',
+                  body: data,
+                  headers: { ...genConfig().headers },
+                }).then(res => {
+                  if (res.ok) {
+                    thongBaoThanhToanThanhCong();
+                  } else {
+                    document.getElementById("message-checkout-err").innerText = "Đơn hàng của bạn chưa có sản phẩm nào!"
+                  }
+                })
+              }
+            }
 
           })
         }
@@ -232,18 +253,17 @@
     /* 2. Hàm thực hiện đặt hàng và thanh toán trực tiếp */
     function thanhToanTrucTiep() {
       const data = JSON.stringify(Object.fromEntries(new FormData(formCheckout).entries()));
-      console.log(data);
-      // fetch('/user/checkout/pay', {
-      //   method: 'PUT',
-      //   body: data,
-      //   headers: { ...genConfig().headers },
-      // }).then(res => {
-      //   if (res.ok) {
-      //     thongBaoThanhToanThanhCong();
-      //   } else {
-      //     document.getElementById("message-checkout-err").innerText = "Đơn hàng của bạn chưa có sản phẩm nào!"
-      //   }
-      // })
+      fetch('/user/checkout/pay', {
+        method: 'PUT',
+        body: data,
+        headers: { ...genConfig().headers },
+      }).then(res => {
+        if (res.ok) {
+          thongBaoThanhToanThanhCong();
+        } else {
+          document.getElementById("message-checkout-err").innerText = "Đơn hàng của bạn chưa có sản phẩm nào!"
+        }
+      })
     }
     /*
     Kết thúc thanh toán trực tiếp
@@ -258,7 +278,7 @@
       const totalBill = formCheckout.querySelector("input[name=totalBill]").value;
       if (totalBill != "") {
         const data = JSON.stringify(Object.fromEntries(new FormData(formCheckout).entries()));
-        fetch('/api/payment/create_payment', {
+        fetch('/user/checkout/vnpay', {
           method: 'POST',
           body: data,
           headers: { ...genConfig().headers },
@@ -274,45 +294,6 @@
       } else {
         document.getElementById("message-checkout-err").innerText = "Đơn hàng của bạn chưa có sản phẩm nào!"
       }
-    }
-
-    var currentUrl = window.location.href;
-    console.log(currentUrl);
-
-    if (currentUrl.includes('?')) {
-      // Tạo một đối tượng URLSearchParams từ URL
-      var urlParams = new URLSearchParams(currentUrl);
-
-      // Lấy giá trị của các tham số từ đối tượng URLSearchParams
-      var vnpAmount = urlParams.get('vnp_Amount');
-      var vnpBankCode = urlParams.get('vnp_BankCode');
-      var vnpBankTranNo = urlParams.get('vnp_BankTranNo');
-      var vnpCardType = urlParams.get('vnp_CardType');
-      var vnpOrderInfo = urlParams.get('vnp_OrderInfo');
-      var vnpPayDate = urlParams.get('vnp_PayDate');
-      var vnpResponseCode = urlParams.get('vnp_ResponseCode');
-      var vnpTmnCode = urlParams.get('vnp_TmnCode');
-      var vnpTransactionNo = urlParams.get('vnp_TransactionNo');
-      var vnpTransactionStatus = urlParams.get('vnp_TransactionStatus');
-      var vnpTxnRef = urlParams.get('vnp_TxnRef');
-      var vnpSecureHash = urlParams.get('vnp_SecureHash');
-
-      // Hiển thị giá trị của các tham số ra console hoặc thực hiện các thao tác khác
-      console.log('vnp_Amount:', vnpAmount);
-      console.log('vnp_BankCode:', vnpBankCode);
-      console.log('vnp_BankTranNo:', vnpBankTranNo);
-      console.log('vnp_CardType:', vnpCardType);
-      console.log('vnp_OrderInfo:', vnpOrderInfo);
-      console.log('vnp_PayDate:', vnpPayDate);
-      console.log('vnp_ResponseCode:', vnpResponseCode);
-      console.log('vnp_TmnCode:', vnpTmnCode);
-      console.log('vnp_TransactionNo:', vnpTransactionNo);
-      console.log('vnp_TransactionStatus:', vnpTransactionStatus);
-      console.log('vnp_TxnRef:', vnpTxnRef);
-      console.log('vnp_SecureHash:', vnpSecureHash);
-
-    } else {
-      console.log('URL không chứa tham số.');
     }
     /*
     Kết thúc thanh toán bằng VNPay

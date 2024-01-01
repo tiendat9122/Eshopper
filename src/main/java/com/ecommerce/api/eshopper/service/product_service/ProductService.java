@@ -3,6 +3,9 @@ package com.ecommerce.api.eshopper.service.product_service;
 import java.util.List;
 import java.util.Optional;
 
+import com.ecommerce.api.eshopper.dto.ProductQuantityDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ecommerce.api.eshopper.entity.Category;
@@ -60,8 +63,8 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<Product> findProductByKeyWord(String name) {
-        return productRepository.findByKeyword(name);
+    public Page<Product> findProductByKeyWord(String name, Pageable page) {
+        return productRepository.findByKeyword(name, page);
     }
     
     @Override
@@ -72,6 +75,16 @@ public class ProductService implements IProductService {
     @Override
     public List<Product> getAllProductHotActiveTrue() {
         return productRepository.findHotActiveProductsLimitedTo8();
+    }
+
+    @Override
+    public List<Product> getAllProductByCategoryId(Long categoryId) {
+        return productRepository.findByCategoriesId(categoryId);
+    }
+
+    @Override
+    public List<ProductQuantityDto> getAllProductQuantitySold() {
+        return productRepository.findTopProductsByMaxQuantityWithLimit8();
     }
 
     // Save and update

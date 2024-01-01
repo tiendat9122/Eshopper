@@ -39,17 +39,30 @@
         <div class="col-lg-6 col-6 text-left">
             <form action="">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
-                    <div class="input-group-append">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm sản phẩm">
+                    <a href="#" class="input-group-append">
                         <span class="input-group-text bg-transparent text-primary">
                             <i class="fa fa-search"></i>
                         </span>
-                    </div>
+                    </a>
                 </div>
             </form>
         </div>
         <div id="nav-cart-logout" class="col-lg-3 col-6 text-right">
         </div>
+
+        <script>
+            function updateHref() {
+                // Lấy giá trị từ ô input
+                var inputValue = document.getElementById('searchInput').value;
+    
+                // Gán giá trị vào thuộc tính href của thẻ a
+                var searchLink = document.getElementById('searchLink');
+                searchLink.href = "/eshopper/store" + inputValue; // Thay đổi "your-base-url" bằng đường dẫn cơ sở của bạn
+    
+                // Bạn có thể chuyển hướng trang hoặc thực hiện các xử lý khác ở đây
+            }
+        </script>
     </div>
 
     <script>

@@ -1,17 +1,24 @@
 package com.ecommerce.api.eshopper;
 
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.core5.ssl.SSLContextBuilder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.web.client.RestTemplate;
+
+import javax.net.ssl.SSLContext;
 
 @SpringBootApplication
 @EnableWebSecurity
 @EnableJpaRepositories
 @EnableScheduling
 public class EshopperApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(EshopperApplication.class, args);
 	}

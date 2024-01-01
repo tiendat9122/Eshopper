@@ -15,8 +15,12 @@ import com.ecommerce.api.eshopper.service.user_service.IUserService;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Request;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,10 +33,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -56,7 +57,7 @@ public class UserProductApi {
 
     @GetMapping("/get")
     public ResponseEntity<?> getProduct(@RequestParam(name = "id", required = false) Long id) {
-        
+
         try {
             if (id != null) {
                 Product product = productService.findProductById(id)
@@ -73,15 +74,14 @@ public class UserProductApi {
     }
 
     @GetMapping("/find")
-    public ResponseEntity<?> findProductByNameAndAuthor(@RequestParam(name = "name", required = false) String name) {
+    public ResponseEntity<?> findProductByNameAndAuthor(@RequestParam(name = "name", required = false) Optional<String> name,
+                                                        @RequestParam(name = "page") Optional<Integer> page ) {
 
         try {
-            if(name != null) {
-                List<Product> products = productService.findProductByKeyWord(name);
+
+                Page<Product> products = productService.findProductByKeyWord(name.orElse(""), Pageable.ofSize(12).withPage(page.orElse(0)));
                 return new ResponseEntity<>(products, HttpStatus.OK);
-            } 
-            List<Product> products = productService.findAllProductIsActive();
-            return new ResponseEntity<>(products, HttpStatus.OK);
+
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }

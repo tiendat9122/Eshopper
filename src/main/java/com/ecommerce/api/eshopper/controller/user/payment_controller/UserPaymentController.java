@@ -18,7 +18,7 @@ import java.util.*;
 @RequestMapping("/api/payment")
 public class UserPaymentController {
 
-    @PostMapping("/create_payment")
+//    @PostMapping("/create_payment")
     public ResponseEntity<?> createPayment(@RequestBody OrdersDto ordersDto) throws UnsupportedEncodingException {
 
         long amount = (long) (ordersDto.getTotalBill())*100;
@@ -86,7 +86,7 @@ public class UserPaymentController {
     }
 
     // Gan vao nut hoac cai gi do de tra ve cho nguoi dung xem
-    @GetMapping("/payment_info")
+//    @GetMapping("/payment_info")
     public ResponseEntity<?> transaction(@RequestParam(value = "vnp_Amount") String amount,
                                          @RequestParam(value = "vnp_BackCode") String bankCode,
                                          @RequestParam(value = "vnp_OrderInfo") String orderInfo,

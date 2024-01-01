@@ -25,8 +25,8 @@
                             tiết cửa hàng</a>
                         <a class="text-dark mb-2" href="cart.html"><i class="fa fa-angle-right mr-2"></i>Giỏ
                             hàng</a>
-                        <a class="text-dark mb-2" href="checkout.html"><i
-                                class="fa fa-angle-right mr-2"></i>Thanh toán</a>
+                        <a class="text-dark mb-2" href="checkout.html"><i class="fa fa-angle-right mr-2"></i>Thanh
+                            toán</a>
                         <a class="text-dark" href="contact.html"><i class="fa fa-angle-right mr-2"></i>Liên
                             hệ</a>
                     </div>
@@ -42,8 +42,8 @@
                             tiết cửa hàng</a>
                         <a class="text-dark mb-2" href="cart.html"><i class="fa fa-angle-right mr-2"></i>Giỏ
                             hàng</a>
-                        <a class="text-dark mb-2" href="checkout.html"><i
-                                class="fa fa-angle-right mr-2"></i>Thanh toán</a>
+                        <a class="text-dark mb-2" href="checkout.html"><i class="fa fa-angle-right mr-2"></i>Thanh
+                            toán</a>
                         <a class="text-dark" href="contact.html"><i class="fa fa-angle-right mr-2"></i>Liên
                             hệ</a>
                     </div>
@@ -82,4 +82,36 @@
             <img class="img-fluid" src="/content/user/assets/img/payments.png" alt="">
         </div>
     </div>
+
+    <!-- Messenger Plugin chat Code -->
+    <div id="fb-root"></div>
+
+    <!-- Your Plugin chat code -->
+    <div id="fb-customer-chat" class="fb-customerchat">
+    </div>
+
+    <script>
+        var chatbox = document.getElementById('fb-customer-chat');
+        chatbox.setAttribute("page_id", "177416602129654");
+        chatbox.setAttribute("attribution", "biz_inbox");
+    </script>
+
+    <!-- Your SDK code -->
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                xfbml: true,
+                version: 'v18.0'
+            });
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+
 </div>

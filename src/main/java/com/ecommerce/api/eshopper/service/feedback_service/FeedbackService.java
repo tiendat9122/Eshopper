@@ -3,6 +3,8 @@ package com.ecommerce.api.eshopper.service.feedback_service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ecommerce.api.eshopper.entity.Feedback;
@@ -27,8 +29,8 @@ public class FeedbackService implements IFeedbackService {
     }
 
     @Override
-    public List<Feedback> getFeedbackProduct(Long productId) {
-        return feedbackRepository.findByProduct_Id(productId);
+    public Page<Feedback> getFeedbackProduct(Long productId, Pageable pageable) {
+        return feedbackRepository.findByProduct_Id(productId, pageable);
     }
 
     @Override

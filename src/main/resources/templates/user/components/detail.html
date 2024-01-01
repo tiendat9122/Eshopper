@@ -17,6 +17,8 @@
       }
     }
 
+    const productId = getIdProduct();
+
     function napChiTiet() {
       var id = getIdProduct();
       fetch('/user/product/get?id=' + id, {
@@ -62,65 +64,7 @@
                 })
             }
 
-            fetch("/user/feedback/get?productId=" + product.id, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            }).then(res => {
-              if (res.ok) {
-                res.json().then(dataFeedback => {
-                  var countFeedback = 0;
-                  dataFeedback.forEach((item) => {
-                    const feedback = document.createElement("div");
-                    feedback.classList.add(
-                      ..."media mb-4".split(" ")
-                    );
-                    feedback.innerHTML = `
-                      <img src="/user/download/${item.user.avatar}" alt="Avatar" class="img-fluid mr-3 mt-1" style="width: 45px" />
-                      <div class="media-body">
-                        <h6>${item.user.email}<small> - <i>${item.commentDate}</i></small></h6>
-                        <div class="text-primary mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i></div>
-                        <p>${item.comment}</p>
-                      </div>
-                      `;
 
-                    const feedbacks = document.getElementById("feedbacks");
-                    const lastChild = feedbacks.lastElementChild;
-
-                    if (lastChild) {
-                      feedbacks.insertBefore(feedback, lastChild.nextSibling);
-                    } else {
-                      feedbacks.appendChild(feedback);
-                    }
-
-                    countFeedback++;
-
-                  })
-
-                  const totalRate = document.getElementById("total-rate");
-                  totalRate.innerText = "(" + countFeedback + " đánh giá)"
-
-                  const totalReview = document.getElementById("total-review");
-                  totalReview.innerText = "Đánh giá (" + countFeedback + ")";
-
-                  // Load comment form
-                  if (user != null) {
-                    const loadCommentForm = document.getElementById('commentForm');
-                    const loadUserIdCommentForm = document.querySelector('#commentForm input[name=userId]');
-                    const loadProductIdCommentForm = document.querySelector('#commentForm input[name=productId]');
-                    const loadEmailCommentForm = document.querySelector('#commentForm input[name=email]');
-                    const loadFullNameCommentForm = document.querySelector('#commentForm input[name=full_name]');
-
-                    loadUserIdCommentForm.value = user.id
-                    loadProductIdCommentForm.value = product.id
-                    loadEmailCommentForm.value = user.email
-                    loadFullNameCommentForm.value = user.full_name
-                  }
-
-                })
-              }
-            })
           })
         }
       })
@@ -253,16 +197,16 @@
         <div class="d-flex pt-2">
           <p class="text-dark font-weight-medium mb-0 mr-2">Chia sẻ:</p>
           <div class="d-inline-flex">
-            <a class="text-dark px-2" href="">
+            <a class="text-dark px-2" href="https://www.facebook.com/">
               <i class="fab fa-facebook-f"></i>
             </a>
-            <a class="text-dark px-2" href="">
+            <a class="text-dark px-2" href="https://twitter.com/?lang=en">
               <i class="fab fa-twitter"></i>
             </a>
-            <a class="text-dark px-2" href="">
+            <a class="text-dark px-2" href="https://www.instagram.com/">
               <i class="fab fa-linkedin-in"></i>
             </a>
-            <a class="text-dark px-2" href="">
+            <a class="text-dark px-2" href="https://www.pinterest.com/">
               <i class="fab fa-pinterest"></i>
             </a>
           </div>
@@ -285,6 +229,39 @@
             <div class="row">
               <div id="feedbacks" class="col-md-6">
                 <!-- <h4 id="total-feedback" class="mb-4">Bình luận</h4> -->
+
+                <nav aria-label="Page navigation">
+                  <ul class="pagination justify-content-center mb-3" id="page-list">
+
+                    <li class="page-item" style="cursor:pointer;" data-name="first-page" onclick="trangDau()">
+                      <a class="page-link">Trang đầu</a>
+                    </li>
+
+
+                    <li class="page-item" style="cursor:pointer;" data-name="previous-page" onclick="luiTrang()">
+                      <a class="page-link" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                      </a>
+                    </li>
+
+                    <!-- <li class="page-item" data-name="page-number">
+                        <a class="page-link">x</a>
+                      </li> -->
+
+                    <li class="page-item" style="cursor:pointer;" data-name="next-page" onclick="tienTrang()">
+                      <a class="page-link" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                      </a>
+                    </li>
+
+                    <li class="page-item" style="cursor:pointer;" data-name="last-page" onclick="trangCuoi()">
+                      <a class="page-link">Trang cuối</a>
+                    </li>
+
+                  </ul>
+                </nav>
 
               </div>
 
@@ -321,57 +298,97 @@
                 </form>
 
                 <script>
-                  function capNhatBinhLuan() {
-                    document.getElementById('feedbacks').innerHTML = '';
-                    var id = getIdProduct();
-                    fetch('/user/product/get?id=' + id, {
-                      ...genConfig()
+
+                  // Load comment form
+                  if (user != null) {
+                    const loadCommentForm = document.getElementById('commentForm');
+                    const loadUserIdCommentForm = document.querySelector('#commentForm input[name=userId]');
+                    const loadProductIdCommentForm = document.querySelector('#commentForm input[name=productId]');
+                    const loadEmailCommentForm = document.querySelector('#commentForm input[name=email]');
+                    const loadFullNameCommentForm = document.querySelector('#commentForm input[name=full_name]');
+
+                    loadUserIdCommentForm.value = user.id
+                    loadProductIdCommentForm.value = productId;
+                    loadEmailCommentForm.value = user.email
+                    loadFullNameCommentForm.value = user.full_name
+                  }
+
+                  var totalPage;
+                  var pageNumber = 0;
+
+                  function tienTrang() {
+                    if (pageNumber == totalPage) return;
+                    pageNumber += 1;
+                    napDanhSachBinhLuan(pageNumber);
+                  }
+
+                  function luiTrang() {
+                    if (pageNumber == 0) return;
+                    pageNumber -= 1;
+                    napDanhSachBinhLuan(pageNumber);
+                  }
+
+                  function trangDau() {
+                    pageNumber = 0;
+                    napDanhSachBinhLuan(pageNumber);
+                  }
+
+                  function trangCuoi() {
+                    napDanhSachBinhLuan(totalPage);
+                  }
+
+                  function napDanhSachBinhLuan(page) {
+                    fetch("/user/feedback/get?productId=" + productId + "&page=" + page, {
+                      method: 'GET',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
                     }).then(res => {
                       if (res.ok) {
-                        res.json().then(product => {
-                          fetch("/user/feedback/get?productId=" + product.id, {
-                            ...genConfig()
-                          }).then(res => {
-                            if (res.ok) {
-                              res.json().then(dataFeedback => {
-                                var countFeedback = 0;
-                                dataFeedback.forEach((item) => {
-                                  const feedback = document.createElement("div");
-                                  feedback.classList.add(..."media mb-4".split(" "));
-                                  feedback.innerHTML = `
-                                    <img src="/userauth/download/${item.user.avatar}" alt="Avatar" class="img-fluid mr-3 mt-1" style="width: 45px" />
-                                    <div class="media-body">
-                                      <h6>${item.user.email}<small> - <i>${item.commentDate}</i></small></h6>
-                                      <div class="text-primary mb-2"><i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star-half-alt"></i> <i class="far fa-star"></i></div>
-                                      <p>${item.comment}</p>
-                                    </div>
-                                    `;
+                        res.json().then(dataFeedback => {
+                          pageNumber = dataFeedback.number;
+                          totalPage = dataFeedback.totalPages - 1;
 
-                                  const feedbacks = document.getElementById("feedbacks");
-                                  const lastChild = feedbacks.lastElementChild;
+                          const feedbacks = document.getElementById("feedbacks");
+                          feedbacks.querySelectorAll('.feedback-item').forEach(i => i.remove())
 
-                                  if (lastChild) {
-                                    feedbacks.insertBefore(feedback, lastChild.nextSibling);
-                                  } else {
-                                    feedbacks.appendChild(feedback);
-                                  }
+                          dataFeedback.content.forEach((item) => {
+                            const feedback = document.createElement("div");
+                            feedback.classList.add(
+                              ..."media mb-4 feedback-item".split(" ")
+                            );
+                            feedback.innerHTML = `
+                      <img src="/user/download/${item.user.avatar}" alt="Avatar" class="img-fluid mr-3 mt-1" style="width: 45px" />
+                      <div class="media-body">
+                        <h6>${item.user.email}<small> - <i>${item.commentDate}</i></small></h6>
+                        <div class="text-primary mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i></div>
+                        <p>${item.comment}</p>
+                      </div>
+                      `;
 
-                                  countFeedback++;
+                            const feedbacks = document.getElementById("feedbacks");
+                            const lastChild = feedbacks.lastElementChild;
 
-                                })
-
-                                const totalRate = document.getElementById("total-rate");
-                                totalRate.innerText = "(" + countFeedback + " đánh giá)"
-
-                                const totalReview = document.getElementById("total-review");
-                                totalReview.innerText = "Đánh giá (" + countFeedback + ")";
-                              })
+                            if (lastChild) {
+                              feedbacks.insertBefore(feedback, lastChild.nextSibling);
+                            } else {
+                              feedbacks.appendChild(feedback);
                             }
+
                           })
+
+                          const totalRate = document.getElementById("total-rate");
+                          totalRate.innerText = "(" + dataFeedback.totalElements + " đánh giá)"
+
+                          const totalReview = document.getElementById("total-review");
+                          totalReview.innerText = "Đánh giá (" + dataFeedback.totalElements + ")";
+
                         })
                       }
                     })
                   }
+
+                  napDanhSachBinhLuan(pageNumber);
 
                   function binhLuan() {
                     if (user != null) {
@@ -387,7 +404,7 @@
                         .then(res => {
                           if (res.ok) {
                             document.querySelector('#commentForm textarea[name="comment"]').value = ''
-                            capNhatBinhLuan()
+                            napDanhSachBinhLuan(0)
                           }
                         })
                     } else {

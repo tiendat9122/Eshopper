@@ -1,13 +1,14 @@
 package com.ecommerce.api.eshopper.controller.admin.product_controller;
 
 import com.ecommerce.api.eshopper.dto.ProductDto;
+import com.ecommerce.api.eshopper.dto.ProductQuantityDto;
 import com.ecommerce.api.eshopper.entity.Author;
 import com.ecommerce.api.eshopper.entity.Category;
 import com.ecommerce.api.eshopper.entity.OrderDetail;
 import com.ecommerce.api.eshopper.entity.Product;
+import com.ecommerce.api.eshopper.repository.ProductRepository;
 import com.ecommerce.api.eshopper.service.author_service.IAuthorService;
 import com.ecommerce.api.eshopper.service.category_service.ICategoryService;
-import com.ecommerce.api.eshopper.service.orderdetail_service.IOrderDetailService;
 import com.ecommerce.api.eshopper.service.product_service.IProductService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -40,10 +41,14 @@ public class ProductApi {
 
     private final IAuthorService authorService;
 
-    private final IOrderDetailService orderDetailService;
-
     @Value("${file.upload-dir}")
     private String FILE_DIRECTORY;
+
+    @GetMapping("/quantity")
+    public ResponseEntity<?> getProductQuantity() {
+        List<ProductQuantityDto> productQuantityDtos = productService.getAllProductQuantitySold();
+        return new ResponseEntity<>(productQuantityDtos, HttpStatus.OK);
+    }
 
     @GetMapping("/get")
     public ResponseEntity<?> getProduct(@RequestParam(name = "id", required = false) Long id) {
@@ -175,6 +180,17 @@ public class ProductApi {
             product.setCategories(categories);
 
             Product productInserted = productService.saveProduct(product);
+
+//            for(Long categoryId :  categoryIds) {
+//                Category categoryFilter = categoryService.findCategoryById(categoryId).orElseThrow(() -> new EntityNotFoundException("Cannot find category with id = " + categoryId));
+//                List<Product> productsInCategory = productService.getAllProductByCategoryId(categoryId);
+//                long totalProduct = (long)productsInCategory.size();
+//                int number = 1;
+//                long number2 = (long) number;
+//                categoryFilter.setTotalProduct(totalProduct);
+//                Category categoryUpdated = categoryService.saveCategory(categoryFilter);
+//            }
+
             return new ResponseEntity<>(productInserted, HttpStatus.OK);
         } catch (EntityNotFoundException exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);

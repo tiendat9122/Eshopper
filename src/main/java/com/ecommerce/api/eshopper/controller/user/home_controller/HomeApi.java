@@ -1,5 +1,6 @@
 package com.ecommerce.api.eshopper.controller.user.home_controller;
 
+import com.ecommerce.api.eshopper.dto.ProductQuantityDto;
 import com.ecommerce.api.eshopper.entity.Advertise;
 import com.ecommerce.api.eshopper.entity.Category;
 import com.ecommerce.api.eshopper.entity.Product;
@@ -89,6 +90,27 @@ public class HomeApi {
 
     }
 
+    @GetMapping("/category/download/{picture}")
+    @ResponseBody
+    public ResponseEntity<ByteArrayResource> getCategoryPicture(@PathVariable(name = "picture") String picture) {
+
+        if (!picture.equals("") || picture != null) {
+            try {
+                Path filename = Paths.get(FILE_DIRECTORY, "categories", picture);
+                byte[] buffer = Files.readAllBytes(filename);
+                ByteArrayResource byteArrayResource = new ByteArrayResource(buffer);
+                return ResponseEntity.ok()
+                        .contentLength(buffer.length)
+                        .contentType(MediaType.parseMediaType("image/png"))
+                        .body(byteArrayResource);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return ResponseEntity.badRequest().build();
+
+    }
+
     // Trending
     @GetMapping("/trending")
     public ResponseEntity<?> getHomeTrending() {
@@ -100,6 +122,19 @@ public class HomeApi {
 
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    // Best Seller
+    @GetMapping("/bestseller")
+    public ResponseEntity<?> getProductQuantitySold() {
+
+        try {
+            List<ProductQuantityDto> productQuantityDtos = productService.getAllProductQuantitySold();
+            return new ResponseEntity<>(productQuantityDtos, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
         }
 
     }

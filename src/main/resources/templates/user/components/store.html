@@ -152,89 +152,6 @@
                   </div>
                 </div>
               </form>
-
-              <script>
-
-                function themVaoGioFind(productId) {
-                  fetch("/user/orderdetail/get?productId=" + productId + "&userId=" + user.id, { ...genConfig() })
-                    .then((res) => res.json())
-                    .then((data) => {
-                      var iconContainer = document.getElementById("iconAddOrderDetailFind-" + productId);
-                      var icon = document.createElement("div");
-                      icon.classList.add("icon-add-orderdetail");
-                      icon.innerHTML = `<i class="fas fa-shopping-cart text-primary mr-1"></i>`;
-                      iconContainer.appendChild(icon);
-                    })
-                }
-
-                $(document).ready(function () {
-                  // Sự kiện khi nhấn nút tìm kiếm
-                  $("#searchBtn").click(function (e) {
-                    e.preventDefault();
-                    performSearch();
-                  });
-
-                  // Sự kiện khi nhập và xóa trong ô tìm kiếm
-                  $("#searchInput").on("input", function (e) {
-                    performSearch();
-                  });
-
-                  // Hàm thực hiện gọi API tìm kiếm
-                  function performSearch() {
-                    var searchTerm = $("#searchInput").val();
-                    // Gọi API tìm kiếm với searchTerm
-
-                    // Ví dụ sử dụng AJAX để gọi API
-                    $.ajax({
-                      url: "/user/product/find?name=" + searchTerm,
-                      type: "GET",
-                      headers: { ...genConfig() },
-                      data: { query: searchTerm },
-                      success: function (data) {
-                        // Xử lý dữ liệu trả về từ API, có thể là hiển thị kết quả trên trang web
-                        console.log(data);
-                        $(".product-item").remove();
-                        data.forEach((item) => {
-                          const product = document.createElement("div");
-                          product.classList.add(
-                            ..."col-lg-4 col-md-6 col-sm-12 pb-1 product-item".split(" ")
-                          );
-
-                          product.innerHTML = `
-                          <div class="card product-item border-0 mb-4">
-                              <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                                  <img class="img-fluid w-100" src="/user/product/download/${item.picture}" alt="">
-                              </div>
-                              <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                                  <h6 class="text-truncate mb-3">${item.name}</h6>
-                                  <div class="d-flex justify-content-center">
-                                      <h6>$${item.retail}</h6><h6 class="text-muted ml-2"><del>$${item.retail}</del></h6>
-                                  </div>
-                              </div>
-                              <div class="card-footer d-flex justify-content-between bg-light border">
-                                  <a href="/eshopper/product/detail?id=${item.id}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem sản phẩm</a>
-
-                                  <div class="button-add-detail-container">
-                                    <div class="icon-add-orderdetail-container">
-                                        <div id="iconAddOrderDetailFind-${item.id}" class="icon-add-orderdetail"></div>
-                                    </div>
-                                      <a onclick="themVaoGioFind(${item.id})" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
-                                  </div>
-
-                              </div>
-                          </div>
-                                `;
-                          const products = document.getElementById("products");
-                          products.insertBefore(product, products.lastElementChild);
-                        });
-                      },
-                      error: function (error) {
-                        console.error("Error during search:", error);
-                      }
-                    });
-                  }
-                });
-              </script>
               <!-- Search Product End -->
 
 
@@ -254,80 +171,37 @@
 
           <!-- Search and Sort Product End -->
 
-          <script>
-
-            const page = /*[[${page}]]*/ 0;
-            const size = /*[[${size}]]*/ 0;
-            // fetch("/user/product/find?page=" + page + "&size=" + size)
-            fetch("/user/product/find?name=", {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            })
-              .then((res) => res.json())
-              .then((data) => {
-                data.forEach((item) => {
-                  const product = document.createElement("div");
-                  product.classList.add(
-                    ..."col-lg-4 col-md-6 col-sm-12 pb-1 product-item".split(" ")
-                  );
-
-                  const formattedRetail = item.retail.toLocaleString('vi-VN', {
-                    style: 'currency',
-                    currency: 'VND',
-                  });
-
-                  product.innerHTML = `
-                    <div class="card product-item border-0 mb-4">
-                        <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                            <img class="img-fluid w-100" src = "/user/product/download/${item.picture}" alt="">
-                        </div>
-                        <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                            <h6 class="text-truncate mb-3">${item.name}</h6>
-                            <div class="d-flex justify-content-center">
-                                <h6>${formattedRetail}</h6>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex justify-content-between bg-light border">
-                            <a href="/eshopper/product/detail?id=${item.id}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem sản phẩm</a>
-
-                            <div class="button-add-detail-container">
-                              <div class="icon-add-orderdetail-container">
-                                  <div id="iconAddOrderDetail-${item.id}" class="icon-add-orderdetail"></div>
-                              </div>
-                                <a onclick="themVaoGio(${item.id})" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
-                            </div>
-                        </div>
-                    </div>
-                                `;
-
-                  const products = document.getElementById("products");
-                  products.insertBefore(product, products.lastElementChild);
-                });
-              });
-          </script>
-          <!--  -->
           <div class="col-12 pb-1">
             <nav aria-label="Page navigation">
-              <ul class="pagination justify-content-center mb-3">
-                <li class="page-item disabled">
-                  <a class="page-link" href="#" aria-label="Previous">
+              <ul class="pagination justify-content-center mb-3" id="page-list">
+
+                <li class="page-item" style="cursor:pointer;" data-name="first-page" onclick="trangDau()">
+                  <a class="page-link">Trang đầu</a>
+                </li>
+
+                
+                <li class="page-item" style="cursor:pointer;" data-name="previous-page" onclick="luiTrang()">
+                  <a class="page-link" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                     <span class="sr-only">Previous</span>
                   </a>
                 </li>
-                <li class="page-item active">
-                  <a class="page-link" href="#">1</a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                  <a class="page-link" href="#" aria-label="Next">
+
+                <!-- <li class="page-item" data-name="page-number">
+                  <a class="page-link">x</a>
+                </li> -->
+
+                <li class="page-item" style="cursor:pointer;" data-name="next-page" onclick="tienTrang()">
+                  <a class="page-link" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                     <span class="sr-only">Next</span>
                   </a>
                 </li>
+
+                <li class="page-item" style="cursor:pointer;" data-name="last-page" onclick="trangCuoi()">
+                  <a class="page-link">Trang cuối</a>
+                </li>
+
               </ul>
             </nav>
           </div>
@@ -337,4 +211,114 @@
     </div>
   </div>
   <!-- Shop End -->
+
+  <script>
+
+    var name = "";
+
+    var totalPage;
+    var pageNumber = 0;
+
+    function tienTrang() {
+      if (pageNumber == totalPage) return;
+      pageNumber += 1;
+      napDanhSachSanPham(name, pageNumber);
+    }
+
+    function luiTrang() {
+      if (pageNumber == 0) return;
+      pageNumber -= 1;
+      napDanhSachSanPham(name, pageNumber);
+    }
+
+    function trangDau() {
+      pageNumber = 0;
+      napDanhSachSanPham(name, pageNumber);
+    }
+
+    function trangCuoi() {
+      napDanhSachSanPham(name, totalPage);
+    }
+
+    // function chuyenTrang(d) {
+    //   pageNumber = d.dataset.page;
+    //   napDanhSachSanPham(name, pageNumber);
+    // }
+
+    $(document).ready(function () {
+      // Sự kiện khi nhấn nút tìm kiếm
+      $("#searchBtn").click(function (e) {
+        e.preventDefault();
+        performSearch();
+      });
+
+      // Sự kiện khi nhập và xóa trong ô tìm kiếm
+      $("#searchInput").on("input", function (e) {
+        performSearch();
+      });
+
+      // Hàm thực hiện gọi API tìm kiếm
+      function performSearch() {
+        name = $("#searchInput").val();
+        napDanhSachSanPham(name, pageNumber);
+      }
+    });
+
+    function napDanhSachSanPham(name, page) {
+      fetch("/user/product/find?name=" + name + "&page=" + page, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          pageNumber = data.number;
+          totalPage = data.totalPages - 1;
+
+          const products = document.getElementById("products");
+          products.querySelectorAll('.product-item').forEach(i => i.remove())
+
+          data.content.forEach((item) => {
+            const product = document.createElement("div");
+            product.classList.add(
+              ..."col-lg-4 col-md-6 col-sm-12 pb-1 product-item".split(" ")
+            );
+
+            const formattedRetail = item.retail.toLocaleString('vi-VN', {style: 'currency', currency: 'VND',});
+
+            product.innerHTML = `
+              <div class="card product-item border-0 mb-4">
+                  <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                      <img class="img-fluid w-100" src = "/user/product/download/${item.picture}" alt="">
+                  </div>
+                  <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                      <h6 class="text-truncate mb-3">${item.name}</h6>
+                      <div class="d-flex justify-content-center">
+                          <h6>${formattedRetail}</h6>
+                      </div>
+                  </div>
+                  <div class="card-footer d-flex justify-content-between bg-light border">
+                      <a href="/eshopper/product/detail?id=${item.id}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem sản phẩm</a>
+
+                      <div class="button-add-detail-container">
+                        <div class="icon-add-orderdetail-container">
+                            <div id="iconAddOrderDetail-${item.id}" class="icon-add-orderdetail"></div>
+                        </div>
+                          <a onclick="themVaoGio(${item.id})" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào giỏ</a>
+                      </div>
+                  </div>
+              </div>
+              `;
+
+            products.insertBefore(product, products.lastElementChild);
+
+          });
+        });
+    }
+
+    napDanhSachSanPham(name, pageNumber);
+
+  </script>
+
 </div>

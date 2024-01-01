@@ -1,7 +1,10 @@
 package com.ecommerce.api.eshopper.repository;
 
+import com.ecommerce.api.eshopper.dto.ProductQuantityDto;
 import com.ecommerce.api.eshopper.entity.Product;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,12 +28,24 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
            "JOIN p.author a " +
            "WHERE p.active = true " +
            "AND (LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(a.name) LIKE LOWER(CONCAT('%', :keyword, '%')))")
-    List<Product> findByKeyword(@Param("keyword") String keyword);
+    Page<Product> findByKeyword(@Param("keyword") String keyword, Pageable page);
 
     @Query("SELECT p FROM Product p ORDER BY RAND() LIMIT 5")
     List<Product> findRandomProducts();
 
     @Query("SELECT p FROM Product p WHERE p.active = true AND p.hot = true ORDER BY p.id DESC LIMIT 8")
     List<Product> findHotActiveProductsLimitedTo8();
-    
+
+    List<Product> findByCategoriesId(Long categoryId);
+
+    //Query list Product have the most of quantity amout sold
+    @Query(value = "SELECT new com.ecommerce.api.eshopper.dto.ProductQuantityDto(p, SUM(od.quantity) as totalQuantity) " +
+            "FROM Product p " +
+            "JOIN OrderDetail od ON p.id = od.product.id " +
+            "JOIN od.orders o " +
+            "WHERE o.state = true " +
+            "GROUP BY p " +
+            "ORDER BY totalQuantity DESC LIMIT 8")
+//    List<ProductQuantityDto> findProductsByMaxQuantity();
+    List<ProductQuantityDto> findTopProductsByMaxQuantityWithLimit8();
 }
