@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserCategoryController {
 
     @GetMapping("/category")
-    public String userCategory(@RequestParam(name = "id") Long id, Model model) {
+    public String userCategory(Model model) {
         model.addAttribute("eshopperContentFragment", "user/components/category.html");
         return "user/layouts/app";
     }

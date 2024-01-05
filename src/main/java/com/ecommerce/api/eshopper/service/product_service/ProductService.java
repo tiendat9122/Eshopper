@@ -87,6 +87,16 @@ public class ProductService implements IProductService {
         return productRepository.findTopProductsByMaxQuantityWithLimit8();
     }
 
+    @Override
+    public Page<Product> getAllProductByCategoryAndName(Long categoryId, String productName, Pageable pageable) {
+        return productRepository.findByCategoryIdAndProductName(categoryId, productName, pageable);
+    }
+
+    @Override
+    public Page<Product> getAllProductByAuthorAndName(Long authorId, String productName, Pageable pageable) {
+        return productRepository.findByAuthorIdAndProductName(authorId, productName, pageable);
+    }
+
     // Save and update
     @Override
     public List<Product> saveAllProduct(List<Product> products) {

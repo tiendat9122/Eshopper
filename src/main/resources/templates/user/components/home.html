@@ -1,6 +1,7 @@
 <!-- Page Header Start -->
 <div th:fragment="eshopperContent">
 
+    <!-- Bắt đầu slide -->
     <div class="container-fluid mb-5">
         <div class="row justify-content-end px-xl-5">
             <div class="col-lg-12 mt-3">
@@ -50,8 +51,7 @@
             }
         })
     </script>
-
-    <!-- Page Header End -->
+    <!-- Kết thúc Slide -->
 
 
     <!-- Featured Start -->
@@ -86,7 +86,7 @@
     <!-- Featured End -->
 
 
-    <!-- Categories Start -->
+    <!-- Bắt đầu Thể loại -->
     <div class="container-fluid pt-5">
         <div id="categories-home" class="row px-xl-5 pb-3">
         </div>
@@ -122,16 +122,14 @@
             }
         })
     </script>
-
-    <!-- Categories End -->
-
+    <!-- Kết thúc thể loại -->
 
     <!-- Offer Start -->
     <div class="container-fluid offer pt-5">
         <div class="row px-xl-5">
             <div class="col-md-6 pb-4">
                 <div class="position-relative bg-secondary text-center text-md-right text-white mb-2 py-5 px-5">
-                    <img src="/content/user/assets/img/offer-1.png" alt="">
+                    <img src="" alt="">
                     <div class="position-relative" style="z-index: 1;">
                         <h5 class="text-uppercase text-primary mb-3">GIẢM GIÁ 20% MỌI MẶT HÀNG</h5>
                         <h1 class="mb-4 font-weight-semi-bold">Trọn bộ kỹ năng sống</h1>
@@ -141,7 +139,7 @@
             </div>
             <div class="col-md-6 pb-4">
                 <div class="position-relative bg-secondary text-center text-md-left text-white mb-2 py-5 px-5">
-                    <img src="/content/user/assets/img/offer-2.png" alt="">
+                    <img src="" alt="">
                     <div class="position-relative" style="z-index: 1;">
                         <h5 class="text-uppercase text-primary mb-3">GIẢM GIÁ 20% MỌI MẶT HÀNG</h5>
                         <h1 class="mb-4 font-weight-semi-bold">Trọn bộ tiểu thuyết</h1>
@@ -154,7 +152,7 @@
     <!-- Offer End -->
 
 
-    <!-- Products Start -->
+    <!-- Bắt đầu xu hướng -->
     <div class="container-fluid pt-5">
         <div class="text-center mb-4">
             <h2 class="section-title px-5"><span class="px-2">Xu hướng</span></h2>
@@ -164,9 +162,7 @@
     </div>
 
     <script>
-
         const trendingHome = document.getElementById("trending-home");
-
         fetch("/user/home/trending", {
             method: 'GET',
             headers: {
@@ -217,8 +213,7 @@
         })
 
     </script>
-
-    <!-- Products End -->
+    <!-- Kết thúc xu hướng -->
 
 
     <!-- Subscribe Start -->
@@ -227,8 +222,8 @@
             <div class="col-md-6 col-12 py-5">
                 <div class="text-center mb-2 pb-2">
                     <h2 class="section-title px-5 mb-3"><span class="bg-secondary px-2">Nhận thông báo mới</span></h2>
-                    <p>Amet lorem at rebum amet dolores. Elitr lorem dolor sed amet diam labore at justo ipsum eirmod
-                        duo labore labore.</p>
+                    <p>Hãy nhập địa chỉ email của bạn để chúng tôi có thể đem tới cho bạn thông tin những cuốn sách đang
+                        được bán chạy nhất.</p>
                 </div>
                 <form action="">
                     <div class="input-group">
@@ -244,7 +239,7 @@
     <!-- Subscribe End -->
 
 
-    <!-- Best Seller Start -->
+    <!-- Bắt đầu bán chạy -->
     <div class="container-fluid pt-5">
         <div class="text-center mb-4">
             <h2 class="section-title px-5"><span class="px-2">Bán chạy</span></h2>
@@ -315,66 +310,40 @@
     <!-- Best Seller End -->
 
 
-    <!-- Vendor Start -->
-    <div class="container-fluid py-5">
-        <div class="row px-xl-5">
-            <div class="col">
-                <div id="advertise-carousel" class="owl-carousel vendor-carousel">
-                    <div class="vendor-item border p-4">
-                        <img src="/user/home/advertise/download/atomizedmedia_picture_file1703584484856.jpg" alt="">
-                    </div>
-                </div>
-            </div>
+    <!-- Bắt đầu Quảng cáo -->
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Nhà tài trợ</span></h2>
+        </div>
+        <div id="advertise-carousel" class="row px-xl-5 pb-3">
         </div>
     </div>
+    <!-- Kết thúc quảng cáo -->
 
     <script>
-
         const advertiseCarousel = document.getElementById("advertise-carousel");
 
-        // fetch("/user/home/advertise", {
-        //     ...genConfig()
-        // }).then(res => {
-        //     if (res.ok) {
-        //         res.json().then(advertise => {
-
-        //             for (var i = 0; i < advertise.length; i++) {
-        //                 const advertiseCarouselItem = document.createElement("div");
-        //                 advertiseCarouselItem.classList.add(..."vendor-item border p-4".split(" "));
-        //                 advertiseCarouselItem.innerHTML = `<img src="/user/home/advertise/download/atomizedmedia_picture_file1703584484856.jpg" alt="">`;
-
-        //                 advertiseCarousel.appendChild(advertiseCarouselItem);
-
-
-        //             }
-
-        //         })
-        //     }
-        // })
-
+        // Nạp hình ảnh quảng cáo
         fetch("/user/home/advertise", {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            ...genConfig()
         }).then(res => {
             if (res.ok) {
-                return res.json()
+                res.json().then(advertise => {
+                    advertise.forEach(item => {
+                        const advertiseItem = document.createElement('div');
+                        advertiseItem.classList.add(..."col-lg-2 col-md-6 col-sm-12 pb-1".split(" "));
+                        advertiseItem.innerHTML = `
+                            <div class="card product-item border-0 mb-4">
+                                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                                    <img class="img-fluid w-100" src="/user/home/advertise/download/${item.picture}" alt="">
+                                </div>
+                            </div>
+                            `;
+                        advertiseCarousel.appendChild(advertiseItem);                        
+                    })
+                })
             }
-        }).then(data => {
-            console.log(data);
         })
-        
-        for (var i = 1; i < 9; i++) {
-            const advertiseCarouselItem = document.createElement("div");
-            advertiseCarouselItem.classList.add(..."vendor-item border p-4".split(" "));
-            advertiseCarouselItem.innerHTML = `<img src="/user/home/advertise/download/atomizedmedia_picture_file1703584484856.jpg" alt="">`;
-
-            advertiseCarousel.appendChild(advertiseCarouselItem);
-        }
-
-
-
 
     </script>
 

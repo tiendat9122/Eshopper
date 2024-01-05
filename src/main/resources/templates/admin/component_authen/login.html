@@ -126,7 +126,7 @@
                         if (res.ok) {
                             res.json().then(userInfo => {
                                 localStorage.setItem("user", JSON.stringify(userInfo))
-                                location.href = "/admin/user";
+                                location.href = "/admin/product";
                             })
                         }
                     })

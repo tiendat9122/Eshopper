@@ -1,4 +1,5 @@
 <div th:fragment="eshopperContent">
+
   <!-- Page Header Start -->
   <div class="container-fluid bg-secondary mb-5">
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
@@ -153,19 +154,7 @@
                 </div>
               </form>
               <!-- Search Product End -->
-
-
-              <div class="dropdown ml-4">
-                <button class="btn border dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false">
-                  Sắp xếp
-                </button>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId">
-                  <a class="dropdown-item" href="#">Mới nhất</a>
-                  <a class="dropdown-item" href="#">Thịnh hành</a>
-                  <a class="dropdown-item" href="#">Yêu thích</a>
-                </div>
-              </div>
+              
             </div>
           </div>
 
@@ -179,11 +168,10 @@
                   <a class="page-link">Trang đầu</a>
                 </li>
 
-                
+
                 <li class="page-item" style="cursor:pointer;" data-name="previous-page" onclick="luiTrang()">
                   <a class="page-link" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
-                    <span class="sr-only">Previous</span>
                   </a>
                 </li>
 
@@ -194,7 +182,6 @@
                 <li class="page-item" style="cursor:pointer;" data-name="next-page" onclick="tienTrang()">
                   <a class="page-link" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Next</span>
                   </a>
                 </li>
 
@@ -215,9 +202,27 @@
   <script>
 
     var name = "";
-
+    
     var totalPage;
     var pageNumber = 0;
+
+    
+    // Tìm kiếm sản phẩm bằng URL
+    var currentUrl = window.location.href;
+    if (currentUrl.includes('?')) {
+      // Create a URLSearchParams object from the URL
+      var urlSearchParams = new URLSearchParams(currentUrl.split('?')[1]);
+      
+      // Retrieve the value of the 'name' parameter
+      var nameParameter = urlSearchParams.get('name');
+      
+      name = nameParameter;
+      
+      napDanhSachSanPham(name, 0);
+      
+    } else {
+      napDanhSachSanPham(name, pageNumber);
+    }
 
     function tienTrang() {
       if (pageNumber == totalPage) return;
@@ -240,18 +245,7 @@
       napDanhSachSanPham(name, totalPage);
     }
 
-    // function chuyenTrang(d) {
-    //   pageNumber = d.dataset.page;
-    //   napDanhSachSanPham(name, pageNumber);
-    // }
-
     $(document).ready(function () {
-      // Sự kiện khi nhấn nút tìm kiếm
-      $("#searchBtn").click(function (e) {
-        e.preventDefault();
-        performSearch();
-      });
-
       // Sự kiện khi nhập và xóa trong ô tìm kiếm
       $("#searchInput").on("input", function (e) {
         performSearch();
@@ -260,6 +254,7 @@
       // Hàm thực hiện gọi API tìm kiếm
       function performSearch() {
         name = $("#searchInput").val();
+        pageNumber = 0;
         napDanhSachSanPham(name, pageNumber);
       }
     });
@@ -285,7 +280,7 @@
               ..."col-lg-4 col-md-6 col-sm-12 pb-1 product-item".split(" ")
             );
 
-            const formattedRetail = item.retail.toLocaleString('vi-VN', {style: 'currency', currency: 'VND',});
+            const formattedRetail = item.retail.toLocaleString('vi-VN', { style: 'currency', currency: 'VND', });
 
             product.innerHTML = `
               <div class="card product-item border-0 mb-4">
@@ -317,7 +312,7 @@
         });
     }
 
-    napDanhSachSanPham(name, pageNumber);
+
 
   </script>
 

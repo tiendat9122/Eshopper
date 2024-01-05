@@ -36,18 +36,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
+        if(authorizationHeader == null) {
+            try {
+                var cookie = Collections.list(request.getHeaders("cookie")).stream().findFirst().orElseThrow();
+                var start = cookie.indexOf("AUTHORIZATION=") + "AUTHORIZATION=".length();
+                var end = cookie.indexOf(";", start);
+                authorizationHeader = cookie.substring( start, end);
+            } catch (Exception e) {
+                authorizationHeader = "";
+            }
+        }
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 String token = authorizationHeader.substring("Bearer ".length());
-                if (token.length() == 0) {
-                    try {
-                        token = Stream.of(request.getCookies()).filter(i -> i.getName().equals("AUTHORIZATION"))
-                                .findFirst()
-                                .orElseThrow().getValue().substring("Bearer ".length());
-                    } catch (Exception e) {
-                        token = "";
-                    }
-                }
+
 
                 if (token.length() != 0) {
 
@@ -77,7 +79,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 new ObjectMapper().writeValue(response.getOutputStream(), error);
             }
         } else {
-            filterChain.doFilter(request, response);
+
+        filterChain.doFilter(request, response);
         }
 
     }

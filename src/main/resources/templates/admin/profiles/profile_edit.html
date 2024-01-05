@@ -200,6 +200,7 @@
             }
         })
 
+    // Thay đổi avatar    
     const uploadAvatar = document.querySelector("#form-info input[name=avatar_file]");
     uploadAvatar.addEventListener("change", (e) => {
         const file = e.target.files[0]
@@ -211,11 +212,13 @@
         fileReader.readAsDataURL(file)
     })
 
+    // Xóa avatar
     function xoaAvatar() {
         document.querySelector('#form-info input[name=avatar]').value = "";
         document.getElementById("edit-avatar-img").src = "/content/admin/assets/media/avatars/avatar13.jpg";
     }
 
+    // Cập nhật thông tin
     function capNhatThongTin() {
         const form = document.getElementById("form-info");
         data = new FormData(form);
@@ -236,6 +239,7 @@
         })
     }
 
+    // Hàm thông báo đổi mật khẩu thành công
     function thongThayDoiThanhCong(data) {
         Swal.fire({
             title: 'Thông báo',
@@ -249,6 +253,7 @@
         });
     }
 
+    // Hàm gán vào nút đổi mật khẩu
     function doiMatKhau() {
         var newPassword = document.querySelector("#form-password input[name=newPassword]").value;
         var newPasswordAgain = document.querySelector("#form-password input[name=newPasswordAgain]").value;

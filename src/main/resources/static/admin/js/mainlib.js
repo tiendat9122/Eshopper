@@ -16,7 +16,7 @@ function parseJwt(token) {
 
 //Xử lý sau khi đăng xuất. Không thể nhấn nút back trở lại
 if (localStorage.getItem("jwt") == null) {
-  location.href = "/admin/login";
+  location.href = "/adminauth/login";
 } else {
   const data = parseJwt(localStorage.getItem("jwt"));
   const date = new Date(0);
@@ -52,7 +52,7 @@ function getJwtToken() {
 //Xử lý đăng xuất. Xóa JWT được lưu trong Local Storage
 function dangXuat() {
   localStorage.clear();
-  location.href = "/admin/login";
+  location.href = "/adminauth/login";
 }
 
 function disableSubmit(e) {

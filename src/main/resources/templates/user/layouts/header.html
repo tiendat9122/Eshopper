@@ -39,14 +39,33 @@
         <div class="col-lg-6 col-6 text-left">
             <form action="">
                 <div class="input-group">
-                    <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm sản phẩm">
-                    <a href="#" class="input-group-append">
+                    <input type="text" id="find-product-input" class="form-control" placeholder="Tìm kiếm sản phẩm">
+                    <a href="" class="input-group-append" id="find-product-button">
                         <span class="input-group-text bg-transparent text-primary">
                             <i class="fa fa-search"></i>
                         </span>
                     </a>
                 </div>
             </form>
+
+            <script>
+                $(document).ready(function () {
+                    const findProductButton = document.getElementById("find-product-button");
+
+                    // Sự kiện khi nhập và xóa trong ô tìm kiếm sản phẩm
+                    $("#find-product-input").on("input", function (e) {
+                        performFind();
+                    });
+
+                    // Hàm thực hiện gọi API tìm kiếm
+                    function performFind() {
+                        charSearch = $("#find-product-input").val();
+                        console.log(charSearch);
+                        findProductButton.href = "/eshopper/store?name=" + charSearch;
+                    }
+                });
+            </script>
+
         </div>
         <div id="nav-cart-logout" class="col-lg-3 col-6 text-right">
         </div>
@@ -55,11 +74,11 @@
             function updateHref() {
                 // Lấy giá trị từ ô input
                 var inputValue = document.getElementById('searchInput').value;
-    
+
                 // Gán giá trị vào thuộc tính href của thẻ a
                 var searchLink = document.getElementById('searchLink');
                 searchLink.href = "/eshopper/store" + inputValue; // Thay đổi "your-base-url" bằng đường dẫn cơ sở của bạn
-    
+
                 // Bạn có thể chuyển hướng trang hoặc thực hiện các xử lý khác ở đây
             }
         </script>
@@ -73,7 +92,6 @@
             navCartLogout.innerHTML = `
                 <a id="nav-cart-button" href="/eshopper/cart" class="btn border">
                     <i class="fas fa-shopping-cart text-primary"></i>
-                    <span class="badge">0</span>
                 </a>
                 <a class="btn border" onclick="dangXuatUser()">
                     <i class="fas fa-sign-out-alt text-primary"></i>

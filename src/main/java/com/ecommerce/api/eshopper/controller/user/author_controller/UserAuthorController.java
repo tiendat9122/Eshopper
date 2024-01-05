@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserAuthorController {
 
     @GetMapping("/author")
-    public String userAuthor(@RequestParam(name = "id") Long id, Model model) {
+    public String userAuthor(Model model) {
         model.addAttribute("eshopperContentFragment", "user/components/author.html");
         return "user/layouts/app";
     }

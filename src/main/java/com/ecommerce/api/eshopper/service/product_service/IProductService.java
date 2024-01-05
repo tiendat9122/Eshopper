@@ -33,6 +33,10 @@ public interface IProductService {
 
     List<ProductQuantityDto> getAllProductQuantitySold();
 
+    Page<Product> getAllProductByCategoryAndName(Long categoryId, String productName, Pageable pageable);
+
+    Page<Product> getAllProductByAuthorAndName(Long authorId, String productName, Pageable pageable);
+
     // Save and update
     List<Product> saveAllProduct(List<Product> products);
 

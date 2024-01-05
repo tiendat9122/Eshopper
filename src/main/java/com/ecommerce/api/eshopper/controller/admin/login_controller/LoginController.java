@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/adminauth")
 public class LoginController {
 
     //Login controller

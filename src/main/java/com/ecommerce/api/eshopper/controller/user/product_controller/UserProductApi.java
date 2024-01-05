@@ -182,4 +182,36 @@ public class UserProductApi {
         }
     }
 
+    @GetMapping("/findbycate")
+    public ResponseEntity<?> getProductByCateAndName(@RequestParam(name = "categoryId") Long categoryId,
+                                                 @RequestParam(name = "name") Optional<String> name,
+                                                 @RequestParam(name = "page") Optional<Integer> page) {
+
+        try {
+
+            Page<Product> products = productService.getAllProductByCategoryAndName(categoryId, name.orElse(""), Pageable.ofSize(12).withPage(page.orElse(0)));
+            return new ResponseEntity<>(products, HttpStatus.OK);
+
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    @GetMapping("/findbyauthor")
+    public ResponseEntity<?> getProductByAuthorAndName(@RequestParam(name = "authorId") Long authorId,
+                                                     @RequestParam(name = "name") Optional<String> name,
+                                                     @RequestParam(name = "page") Optional<Integer> page) {
+
+        try {
+
+            Page<Product> products = productService.getAllProductByAuthorAndName(authorId, name.orElse(""), Pageable.ofSize(12).withPage(page.orElse(0)));
+            return new ResponseEntity<>(products, HttpStatus.OK);
+
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+    }
+
 }

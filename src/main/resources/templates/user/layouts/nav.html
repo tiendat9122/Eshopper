@@ -35,7 +35,7 @@
                     <div class="navbar-nav mr-auto py-0">
                         <a href="/eshopper/home" class="nav-item nav-link">Trang chủ</a>
                         <a href="/eshopper/store" class="nav-item nav-link">Sản phẩm</a>
-                        <a href="" class="nav-item nav-link">Giới thiệu</a>
+                        <!-- <a href="" class="nav-item nav-link">Giới thiệu</a> -->
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Mua hàng</a>
                             <div class="dropdown-menu rounded-0 m-0">
@@ -103,7 +103,7 @@
         const navCategories = document.getElementById("nav-categories");
         const navAuthors = document.getElementById("nav-authors");
 
-        fetch("/category/get", {
+        fetch("/user/category/get", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -122,7 +122,7 @@
             }
         })
 
-        fetch("/author/get", {
+        fetch("/user/author/get", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

@@ -35,8 +35,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    private final RoleCustomRepo roleCustomRepo;
-
     private final UserRepository userRepository;
 
     @Bean
@@ -49,13 +47,6 @@ public class ApplicationConfig {
     public UserDetailsService userDetailsService() {
         return username -> {
             User user = userRepository.findByEmail(username);
-//            Set<Role> role = null;
-//            if(user != null) {
-//                role = userRepository.findRolesByEmail(user.getEmail());
-//            }
-//            Set<Role> set = new HashSet<>();
-//            set.addAll(role.stream().map(c->c.getName()).map(Role::new).toList());
-//            user.setRole(set);
             return user;
         };
     }

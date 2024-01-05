@@ -45,9 +45,11 @@
 
             document.querySelector(`#product_info p[name=summary]`).innerText = product.summary
 
+            document.querySelector(`#product_info label[name=categories]`).innerText = product.categories.map(i=>i.name).join(" / ")
+
             if (product.author != null) {
               document.querySelector(`#product_info label[name=author]`).innerText = product.author.name
-              fetch('/author/get?id=' + product.author.id,
+              fetch('/user/author/get?id=' + product.author.id,
                 {
                   method: 'GET',
                   headers: {
@@ -135,7 +137,7 @@
         <div class="d-flex mb-3">
           <p class="text-dark font-weight-medium mb-0 mr-3">Thể loại:</p>
           <div class="custom-control custom-control-inline">
-            <label name="author" class="" for="size-1">Chưa cập nhật</label>
+            <label name="categories" class="" for="size-1">Chưa cập nhật</label>
           </div>
         </div>
         <div class="d-flex mb-3">
@@ -358,13 +360,13 @@
                               ..."media mb-4 feedback-item".split(" ")
                             );
                             feedback.innerHTML = `
-                      <img src="/user/download/${item.user.avatar}" alt="Avatar" class="img-fluid mr-3 mt-1" style="width: 45px" />
-                      <div class="media-body">
-                        <h6>${item.user.email}<small> - <i>${item.commentDate}</i></small></h6>
-                        <div class="text-primary mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i></div>
-                        <p>${item.comment}</p>
-                      </div>
-                      `;
+                            <img src="/user/download/${item.user.avatar}" alt="Avatar" class="img-fluid mr-3 mt-1" style="width: 45px" />
+                            <div class="media-body">
+                              <h6>${item.user.email}<small> - <i>${item.commentDate}</i></small></h6>
+                              <div class="text-primary mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i></div>
+                              <p>${item.comment}</p>
+                            </div>
+                            `;
 
                             const feedbacks = document.getElementById("feedbacks");
                             const lastChild = feedbacks.lastElementChild;
@@ -421,119 +423,5 @@
     </div>
   </div>
   <!-- Shop Detail End -->
-
-  <!-- Products Start -->
-  <!-- <div class="container-fluid py-5">
-    <div class="text-center mb-4">
-      <h2 class="section-title px-5">
-        <span class="px-2">Đề xuất</span>
-      </h2>
-    </div>
-    <div class="row px-xl-5">
-      <div class="col">
-        <div id="products" class="owl-carousel related-carousel">
-          <div class="card product-item border-0">
-            <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-              <img class="img-fluid w-100" src="/content/user/img_user_default/default_user_product.png" alt="" />
-            </div>
-            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-              <h6 class="text-truncate mb-3">Tên sản phẩm</h6>
-              <div class="d-flex justify-content-center">
-                <h6>88.888 đ</h6>
-                <h6 class="text-muted ml-2"><del>88.888 đ</del></h6>
-              </div>
-            </div>
-            <div class="card-footer d-flex justify-content-between bg-light border">
-              <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-              <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào
-                giỏ</a>
-            </div>
-          </div>
-          <div class="card product-item border-0">
-            <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-              <img class="img-fluid w-100" src="/content/user/img_user_default/default_user_product.png" alt="" />
-            </div>
-            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-              <h6 class="text-truncate mb-3">Tên sản phẩm</h6>
-              <div class="d-flex justify-content-center">
-                <h6>88.888 đ</h6>
-                <h6 class="text-muted ml-2"><del>88.888 đ</del></h6>
-              </div>
-            </div>
-            <div class="card-footer d-flex justify-content-between bg-light border">
-              <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-              <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào
-                giỏ</a>
-            </div>
-          </div>
-          <div class="card product-item border-0">
-            <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-              <img class="img-fluid w-100" src="/content/user/img_user_default/default_user_product.png" alt="" />
-            </div>
-            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-              <h6 class="text-truncate mb-3">Tên sản phẩm</h6>
-              <div class="d-flex justify-content-center">
-                <h6>88.888 đ</h6>
-                <h6 class="text-muted ml-2"><del>88.888 đ</del></h6>
-              </div>
-            </div>
-            <div class="card-footer d-flex justify-content-between bg-light border">
-              <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-              <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào
-                giỏ</a>
-            </div>
-          </div>
-          <div class="card product-item border-0">
-            <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-              <img class="img-fluid w-100" src="/content/user/img_user_default/default_user_product.png" alt="" />
-            </div>
-            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-              <h6 class="text-truncate mb-3">Tên sản phẩm</h6>
-              <div class="d-flex justify-content-center">
-                <h6>88.888 đ</h6>
-                <h6 class="text-muted ml-2"><del>88.888 đ</del></h6>
-              </div>
-            </div>
-            <div class="card-footer d-flex justify-content-between bg-light border">
-              <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-              <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào
-                giỏ</a>
-            </div>
-          </div>
-          <div class="card product-item border-0">
-            <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-              <img class="img-fluid w-100" src="/content/user/img_user_default/default_user_product.png" alt="" />
-            </div>
-            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-              <h6 class="text-truncate mb-3">Tên sản phẩm</h6>
-              <div class="d-flex justify-content-center">
-                <h6>88.888 đ</h6>
-                <h6 class="text-muted ml-2"><del>88.888 đ</del></h6>
-              </div>
-            </div>
-            <div class="card-footer d-flex justify-content-between bg-light border">
-              <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Xem chi tiết</a>
-              <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Thêm vào
-                giỏ</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div> -->
-  <!-- Products End -->
-
-  <!-- JavaScript Libraries -->
-  <!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-      <script src="lib/easing/easing.min.js"></script>
-      <script src="lib/owlcarousel/owl.carousel.min.js"></script> -->
-
-  <!-- Contact Javascript File -->
-  <!-- <script src="mail/jqBootstrapValidation.min.js"></script>
-      <script src="mail/contact.js"></script> -->
-
-  <!-- Template Javascript -->
-  <!-- <script src="js/main.js"></script> -->
 
 </div>

@@ -71,7 +71,7 @@
               if (res.ok) {
                 res.json().then(userInfo => {
                   localStorage.setItem("user", JSON.stringify(userInfo))
-                  location.href = "/eshopper/store";
+                  location.href = "/eshopper/home";
                 })
               }
             })

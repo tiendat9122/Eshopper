@@ -48,4 +48,21 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "ORDER BY totalQuantity DESC LIMIT 8")
 //    List<ProductQuantityDto> findProductsByMaxQuantity();
     List<ProductQuantityDto> findTopProductsByMaxQuantityWithLimit8();
+
+    @Query("SELECT p FROM Product p INNER JOIN p.categories c " +
+            "WHERE c.id = :categoryId AND LOWER(p.name) LIKE %:productName% AND p.active = true")
+    Page<Product> findByCategoryIdAndProductName(
+            @Param("categoryId") Long categoryId,
+            @Param("productName") String productName,
+            Pageable pageable
+    );
+
+    @Query("SELECT p FROM Product p INNER JOIN p.author a " +
+            "WHERE a.id = :authorId AND LOWER(p.name) LIKE %:productName% AND p.active = true")
+    Page<Product> findByAuthorIdAndProductName(
+            @Param("authorId") Long authorId,
+            @Param("productName") String productName,
+            Pageable pageable
+    );
+
 }

@@ -1,31 +1,26 @@
 package com.ecommerce.api.eshopper.controller.admin.login_controller;
 
 import com.ecommerce.api.eshopper.auth.AuthenticationRequest;
-import com.ecommerce.api.eshopper.dto.*;
+import com.ecommerce.api.eshopper.dto.ForgotDto;
+import com.ecommerce.api.eshopper.dto.MailInfo;
+import com.ecommerce.api.eshopper.dto.UserDto;
 import com.ecommerce.api.eshopper.entity.Forgot;
-import com.ecommerce.api.eshopper.entity.Role;
 import com.ecommerce.api.eshopper.entity.User;
 import com.ecommerce.api.eshopper.service.authentication_service.AuthenticationService;
 import com.ecommerce.api.eshopper.service.forgot_service.IForgotService;
 import com.ecommerce.api.eshopper.service.mailer_service.IMailerService;
 import com.ecommerce.api.eshopper.service.role_service.IRoleService;
 import com.ecommerce.api.eshopper.service.user_service.IUserService;
-
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
-import org.apache.coyote.Response;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Random;
 
 @RestController
 @RequiredArgsConstructor
